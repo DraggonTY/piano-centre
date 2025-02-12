@@ -20,6 +20,15 @@ interface Piano {
   condition: string | null;
   image_url: string | null;
   created_at: string | null;
+  manufacturer: string | null;
+  model_year: string | null;
+  serial_number: string | null;
+  width_cm: number | null;
+  height_cm: number | null;
+  depth_cm: number | null;
+  keyboard_keys: number | null;
+  pedals: number | null;
+  finish: string | null;
 }
 
 const AddPianoForm = ({ onSuccess }: { onSuccess: () => void }) => {
@@ -28,6 +37,15 @@ const AddPianoForm = ({ onSuccess }: { onSuccess: () => void }) => {
   const [price, setPrice] = useState("");
   const [type, setType] = useState("");
   const [condition, setCondition] = useState("");
+  const [manufacturer, setManufacturer] = useState("");
+  const [modelYear, setModelYear] = useState("");
+  const [serialNumber, setSerialNumber] = useState("");
+  const [width, setWidth] = useState("");
+  const [height, setHeight] = useState("");
+  const [depth, setDepth] = useState("");
+  const [keys, setKeys] = useState("");
+  const [pedals, setPedals] = useState("");
+  const [finish, setFinish] = useState("");
   const [image, setImage] = useState<File | null>(null);
   const [loading, setLoading] = useState(false);
   const { toast } = useToast();
@@ -63,6 +81,15 @@ const AddPianoForm = ({ onSuccess }: { onSuccess: () => void }) => {
         price: parseFloat(price),
         type,
         condition,
+        manufacturer,
+        model_year: modelYear,
+        serial_number: serialNumber,
+        width_cm: width ? parseFloat(width) : null,
+        height_cm: height ? parseFloat(height) : null,
+        depth_cm: depth ? parseFloat(depth) : null,
+        keyboard_keys: keys ? parseInt(keys) : null,
+        pedals: pedals ? parseInt(pedals) : null,
+        finish,
         image_url,
       });
 
@@ -91,15 +118,43 @@ const AddPianoForm = ({ onSuccess }: { onSuccess: () => void }) => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
+    <form onSubmit={handleSubmit} className="space-y-4 max-h-[80vh] overflow-y-auto px-4">
       <div className="space-y-2">
-        <Label htmlFor="name">Model Name</Label>
+        <Label htmlFor="name">Model Name *</Label>
         <Input
           id="name"
           value={name}
           onChange={(e) => setName(e.target.value)}
           required
         />
+      </div>
+      <div className="space-y-2">
+        <Label htmlFor="manufacturer">Manufacturer</Label>
+        <Input
+          id="manufacturer"
+          value={manufacturer}
+          onChange={(e) => setManufacturer(e.target.value)}
+          placeholder="e.g., Steinway & Sons"
+        />
+      </div>
+      <div className="grid grid-cols-2 gap-4">
+        <div className="space-y-2">
+          <Label htmlFor="modelYear">Model Year</Label>
+          <Input
+            id="modelYear"
+            value={modelYear}
+            onChange={(e) => setModelYear(e.target.value)}
+            placeholder="e.g., 2021"
+          />
+        </div>
+        <div className="space-y-2">
+          <Label htmlFor="serialNumber">Serial Number</Label>
+          <Input
+            id="serialNumber"
+            value={serialNumber}
+            onChange={(e) => setSerialNumber(e.target.value)}
+          />
+        </div>
       </div>
       <div className="space-y-2">
         <Label htmlFor="description">Description</Label>
@@ -111,7 +166,7 @@ const AddPianoForm = ({ onSuccess }: { onSuccess: () => void }) => {
         />
       </div>
       <div className="space-y-2">
-        <Label htmlFor="price">Price</Label>
+        <Label htmlFor="price">Price *</Label>
         <Input
           id="price"
           type="number"
@@ -120,23 +175,85 @@ const AddPianoForm = ({ onSuccess }: { onSuccess: () => void }) => {
           required
         />
       </div>
-      <div className="space-y-2">
-        <Label htmlFor="type">Category</Label>
-        <Input
-          id="type"
-          value={type}
-          onChange={(e) => setType(e.target.value)}
-          placeholder="Grand, Upright, Digital, etc."
-        />
+      <div className="grid grid-cols-2 gap-4">
+        <div className="space-y-2">
+          <Label htmlFor="type">Category</Label>
+          <Input
+            id="type"
+            value={type}
+            onChange={(e) => setType(e.target.value)}
+            placeholder="Grand, Upright, Digital, etc."
+          />
+        </div>
+        <div className="space-y-2">
+          <Label htmlFor="condition">Condition</Label>
+          <Input
+            id="condition"
+            value={condition}
+            onChange={(e) => setCondition(e.target.value)}
+            placeholder="New, Restored, Vintage, etc."
+          />
+        </div>
       </div>
       <div className="space-y-2">
-        <Label htmlFor="condition">Condition</Label>
+        <Label htmlFor="finish">Finish</Label>
         <Input
-          id="condition"
-          value={condition}
-          onChange={(e) => setCondition(e.target.value)}
-          placeholder="New, Restored, Vintage, etc."
+          id="finish"
+          value={finish}
+          onChange={(e) => setFinish(e.target.value)}
+          placeholder="e.g., Polished Ebony"
         />
+      </div>
+      <div className="grid grid-cols-3 gap-4">
+        <div className="space-y-2">
+          <Label htmlFor="width">Width (cm)</Label>
+          <Input
+            id="width"
+            type="number"
+            value={width}
+            onChange={(e) => setWidth(e.target.value)}
+          />
+        </div>
+        <div className="space-y-2">
+          <Label htmlFor="height">Height (cm)</Label>
+          <Input
+            id="height"
+            type="number"
+            value={height}
+            onChange={(e) => setHeight(e.target.value)}
+          />
+        </div>
+        <div className="space-y-2">
+          <Label htmlFor="depth">Depth (cm)</Label>
+          <Input
+            id="depth"
+            type="number"
+            value={depth}
+            onChange={(e) => setDepth(e.target.value)}
+          />
+        </div>
+      </div>
+      <div className="grid grid-cols-2 gap-4">
+        <div className="space-y-2">
+          <Label htmlFor="keys">Number of Keys</Label>
+          <Input
+            id="keys"
+            type="number"
+            value={keys}
+            onChange={(e) => setKeys(e.target.value)}
+            placeholder="e.g., 88"
+          />
+        </div>
+        <div className="space-y-2">
+          <Label htmlFor="pedals">Number of Pedals</Label>
+          <Input
+            id="pedals"
+            type="number"
+            value={pedals}
+            onChange={(e) => setPedals(e.target.value)}
+            placeholder="e.g., 3"
+          />
+        </div>
       </div>
       <div className="space-y-2">
         <Label htmlFor="image">Product Image</Label>
@@ -193,7 +310,7 @@ const Pianos = () => {
             <DialogTrigger asChild>
               <Button variant="outline">Add New Piano</Button>
             </DialogTrigger>
-            <DialogContent>
+            <DialogContent className="sm:max-w-[600px]">
               <DialogHeader>
                 <DialogTitle>Add New Piano to Inventory</DialogTitle>
               </DialogHeader>
@@ -222,18 +339,62 @@ const Pianos = () => {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <p className="text-gray-600 mb-4">{piano.description}</p>
-              {piano.type && (
-                <p className="text-sm">
-                  <span className="font-semibold">Category:</span> {piano.type}
-                </p>
-              )}
-              {piano.condition && (
-                <p className="text-sm">
-                  <span className="font-semibold">Condition:</span>{" "}
-                  {piano.condition}
-                </p>
-              )}
+              <div className="space-y-4">
+                {piano.manufacturer && (
+                  <p className="text-sm">
+                    <span className="font-semibold">Manufacturer:</span> {piano.manufacturer}
+                  </p>
+                )}
+                {piano.model_year && (
+                  <p className="text-sm">
+                    <span className="font-semibold">Model Year:</span> {piano.model_year}
+                  </p>
+                )}
+                <p className="text-gray-600">{piano.description}</p>
+                <div className="grid grid-cols-2 gap-2 text-sm">
+                  {piano.type && (
+                    <p>
+                      <span className="font-semibold">Category:</span> {piano.type}
+                    </p>
+                  )}
+                  {piano.condition && (
+                    <p>
+                      <span className="font-semibold">Condition:</span> {piano.condition}
+                    </p>
+                  )}
+                  {piano.finish && (
+                    <p>
+                      <span className="font-semibold">Finish:</span> {piano.finish}
+                    </p>
+                  )}
+                  {piano.keyboard_keys && (
+                    <p>
+                      <span className="font-semibold">Keys:</span> {piano.keyboard_keys}
+                    </p>
+                  )}
+                  {piano.pedals && (
+                    <p>
+                      <span className="font-semibold">Pedals:</span> {piano.pedals}
+                    </p>
+                  )}
+                </div>
+                {(piano.width_cm || piano.height_cm || piano.depth_cm) && (
+                  <div className="text-sm">
+                    <p className="font-semibold mb-1">Dimensions:</p>
+                    <div className="grid grid-cols-3 gap-2">
+                      {piano.width_cm && (
+                        <p>W: {piano.width_cm}cm</p>
+                      )}
+                      {piano.height_cm && (
+                        <p>H: {piano.height_cm}cm</p>
+                      )}
+                      {piano.depth_cm && (
+                        <p>D: {piano.depth_cm}cm</p>
+                      )}
+                    </div>
+                  </div>
+                )}
+              </div>
             </CardContent>
             <CardFooter>
               <Button className="w-full">Schedule a Viewing</Button>
