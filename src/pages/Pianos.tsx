@@ -28,6 +28,7 @@ const AddPianoForm = ({ onSuccess }: { onSuccess: () => void }) => {
   const [price, setPrice] = useState("");
   const [type, setType] = useState("");
   const [condition, setCondition] = useState("");
+  const [image, setImage] = useState<File | null>(null);
   const [loading, setLoading] = useState(false);
   const { toast } = useToast();
 
@@ -35,28 +36,58 @@ const AddPianoForm = ({ onSuccess }: { onSuccess: () => void }) => {
     e.preventDefault();
     setLoading(true);
 
-    const { error } = await supabase.from("pianos").insert({
-      name,
-      description,
-      price: parseFloat(price),
-      type,
-      condition,
-    });
+    try {
+      let image_url = null;
 
-    if (error) {
-      toast({
-        variant: "destructive",
-        title: "Error creating listing",
-        description: error.message,
+      if (image) {
+        const fileExt = image.name.split('.').pop();
+        const fileName = `${Math.random()}.${fileExt}`;
+        const { error: uploadError, data } = await supabase.storage
+          .from('piano-images')
+          .upload(fileName, image);
+
+        if (uploadError) {
+          throw uploadError;
+        }
+
+        const { data: { publicUrl } } = supabase.storage
+          .from('piano-images')
+          .getPublicUrl(fileName);
+
+        image_url = publicUrl;
+      }
+
+      const { error } = await supabase.from("pianos").insert({
+        name,
+        description,
+        price: parseFloat(price),
+        type,
+        condition,
+        image_url,
       });
-    } else {
+
+      if (error) throw error;
+
       toast({
         title: "Success!",
         description: "Your piano has been listed.",
       });
       onSuccess();
+    } catch (error: any) {
+      toast({
+        variant: "destructive",
+        title: "Error creating listing",
+        description: error.message,
+      });
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
+  };
+
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      setImage(e.target.files[0]);
+    }
   };
 
   return (
@@ -102,6 +133,16 @@ const AddPianoForm = ({ onSuccess }: { onSuccess: () => void }) => {
           id="condition"
           value={condition}
           onChange={(e) => setCondition(e.target.value)}
+        />
+      </div>
+      <div className="space-y-2">
+        <Label htmlFor="image">Image</Label>
+        <Input
+          id="image"
+          type="file"
+          accept="image/*"
+          onChange={handleImageChange}
+          className="cursor-pointer"
         />
       </div>
       <Button type="submit" className="w-full" disabled={loading}>
