@@ -8,6 +8,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { useAuth } from "@/providers/AuthProvider";
 import { AddPianoForm } from "@/components/piano/AddPianoForm";
 import { PianoCard } from "@/components/piano/PianoCard";
+import { PianoFilters } from "@/components/piano/PianoFilters";
 import { Piano } from "@/types/piano";
 
 const Pianos = () => {
@@ -15,9 +16,13 @@ const Pianos = () => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [searchParams] = useSearchParams();
   const category = searchParams.get("category");
+  const types = searchParams.getAll("type");
+  const conditions = searchParams.getAll("condition");
+  const minPrice = searchParams.get("minPrice");
+  const maxPrice = searchParams.get("maxPrice");
 
   const { data: pianos, refetch } = useQuery({
-    queryKey: ["pianos", category],
+    queryKey: ["pianos", category, types, conditions, minPrice, maxPrice],
     queryFn: async () => {
       let query = supabase
         .from("pianos")
@@ -26,6 +31,22 @@ const Pianos = () => {
 
       if (category) {
         query = query.eq("category", category);
+      }
+
+      if (types.length > 0) {
+        query = query.in("type", types);
+      }
+
+      if (conditions.length > 0) {
+        query = query.in("condition", conditions);
+      }
+
+      if (minPrice) {
+        query = query.gte("price", minPrice);
+      }
+
+      if (maxPrice) {
+        query = query.lte("price", maxPrice);
       }
 
       const { data, error } = await query;
@@ -91,17 +112,25 @@ const Pianos = () => {
         </div>
       )}
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-        {pianos?.map((piano) => (
-          <PianoCard key={piano.id} piano={piano} />
-        ))}
-      </div>
+      <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
+        <aside className="lg:col-span-1">
+          <PianoFilters />
+        </aside>
+        
+        <div className="lg:col-span-3">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            {pianos?.map((piano) => (
+              <PianoCard key={piano.id} piano={piano} />
+            ))}
+          </div>
 
-      {(!pianos || pianos.length === 0) && (
-        <div className="text-center py-12">
-          <p className="text-gray-500">No pianos currently in stock. Please check back soon.</p>
+          {(!pianos || pianos.length === 0) && (
+            <div className="text-center py-12">
+              <p className="text-gray-500">No pianos currently match your filters. Try adjusting your search criteria.</p>
+            </div>
+          )}
         </div>
-      )}
+      </div>
     </div>
   );
 };
