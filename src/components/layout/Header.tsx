@@ -1,4 +1,3 @@
-
 import { Link } from "react-router-dom";
 import { useIsMobile } from "@/hooks/use-mobile";
 import {
@@ -11,6 +10,9 @@ import {
   navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu";
 import { cn } from "@/lib/utils";
+import { useAuth } from "@/providers/AuthProvider";
+import { supabase } from "@/integrations/supabase/client";
+import { Button } from "@/components/ui/button";
 
 const ListItem = ({ className, title, href, children }: {
   className?: string;
@@ -40,6 +42,11 @@ const ListItem = ({ className, title, href, children }: {
 
 export const Header = () => {
   const isMobile = useIsMobile();
+  const { session } = useAuth();
+
+  const handleLogout = async () => {
+    await supabase.auth.signOut();
+  };
 
   return (
     <header className="bg-white border-b border-gray-200 fixed w-full top-0 z-50">
@@ -105,15 +112,11 @@ export const Header = () => {
           </div>
           
           <div className="flex-1 flex justify-end">
-            <NavigationMenu>
-              <NavigationMenuList>
-                <NavigationMenuItem>
-                  <Link to="/auth" className={navigationMenuTriggerStyle()}>
-                    Sign In
-                  </Link>
-                </NavigationMenuItem>
-              </NavigationMenuList>
-            </NavigationMenu>
+            {session && (
+              <Button variant="outline" onClick={handleLogout}>
+                Sign Out
+              </Button>
+            )}
           </div>
         </nav>
       </div>

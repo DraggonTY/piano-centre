@@ -120,7 +120,12 @@ const Pianos = () => {
         <div className="lg:col-span-3">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {pianos?.map((piano) => (
-              <PianoCard key={piano.id} piano={piano} />
+              <PianoCard 
+                key={piano.id} 
+                piano={piano} 
+                onDelete={refetch}
+                onUpdate={refetch}
+              />
             ))}
           </div>
 
