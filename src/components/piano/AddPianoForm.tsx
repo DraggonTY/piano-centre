@@ -1,11 +1,12 @@
 
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/components/ui/use-toast";
 import { supabase } from "@/integrations/supabase/client";
+import { BasicInfoFields } from "./form/BasicInfoFields";
+import { CategoryFields } from "./form/CategoryFields";
+import { DimensionsFields } from "./form/DimensionsFields";
+import { ImageUploadField } from "./form/ImageUploadField";
 
 interface AddPianoFormProps {
   onSuccess: () => void;
@@ -101,166 +102,43 @@ export const AddPianoForm = ({ onSuccess }: AddPianoFormProps) => {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4 max-h-[80vh] overflow-y-auto px-4">
-      <div className="space-y-2">
-        <Label htmlFor="name">Model Name *</Label>
-        <Input
-          id="name"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          required
-        />
-      </div>
-      <div className="space-y-2">
-        <Label htmlFor="manufacturer">Manufacturer</Label>
-        <Input
-          id="manufacturer"
-          value={manufacturer}
-          onChange={(e) => setManufacturer(e.target.value)}
-          placeholder="e.g., Steinway & Sons"
-        />
-      </div>
-      <div className="grid grid-cols-2 gap-4">
-        <div className="space-y-2">
-          <Label htmlFor="modelYear">Model Year</Label>
-          <Input
-            id="modelYear"
-            value={modelYear}
-            onChange={(e) => setModelYear(e.target.value)}
-            placeholder="e.g., 2021"
-          />
-        </div>
-        <div className="space-y-2">
-          <Label htmlFor="serialNumber">Serial Number</Label>
-          <Input
-            id="serialNumber"
-            value={serialNumber}
-            onChange={(e) => setSerialNumber(e.target.value)}
-          />
-        </div>
-      </div>
-      <div className="space-y-2">
-        <Label htmlFor="description">Description</Label>
-        <Textarea
-          id="description"
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
-          placeholder="Enter detailed specifications and features..."
-        />
-      </div>
-      <div className="space-y-2">
-        <Label htmlFor="price">Price *</Label>
-        <Input
-          id="price"
-          type="number"
-          value={price}
-          onChange={(e) => setPrice(e.target.value)}
-          required
-        />
-      </div>
-      <div className="grid grid-cols-2 gap-4">
-        <div className="space-y-2">
-          <Label htmlFor="category">Category *</Label>
-          <select
-            id="category"
-            value={category}
-            onChange={(e) => setCategory(e.target.value)}
-            className="w-full border border-gray-300 rounded-md px-3 py-2"
-            required
-          >
-            <option value="new">New</option>
-            <option value="used">Used</option>
-            <option value="digital">Digital</option>
-          </select>
-        </div>
-        <div className="space-y-2">
-          <Label htmlFor="type">Type</Label>
-          <Input
-            id="type"
-            value={type}
-            onChange={(e) => setType(e.target.value)}
-            placeholder="Grand, Upright, Digital, etc."
-          />
-        </div>
-      </div>
-      <div className="space-y-2">
-        <Label htmlFor="condition">Condition</Label>
-        <Input
-          id="condition"
-          value={condition}
-          onChange={(e) => setCondition(e.target.value)}
-          placeholder="New, Restored, Vintage, etc."
-        />
-      </div>
-      <div className="space-y-2">
-        <Label htmlFor="finish">Finish</Label>
-        <Input
-          id="finish"
-          value={finish}
-          onChange={(e) => setFinish(e.target.value)}
-          placeholder="e.g., Polished Ebony"
-        />
-      </div>
-      <div className="grid grid-cols-3 gap-4">
-        <div className="space-y-2">
-          <Label htmlFor="width">Width (cm)</Label>
-          <Input
-            id="width"
-            type="number"
-            value={width}
-            onChange={(e) => setWidth(e.target.value)}
-          />
-        </div>
-        <div className="space-y-2">
-          <Label htmlFor="height">Height (cm)</Label>
-          <Input
-            id="height"
-            type="number"
-            value={height}
-            onChange={(e) => setHeight(e.target.value)}
-          />
-        </div>
-        <div className="space-y-2">
-          <Label htmlFor="depth">Depth (cm)</Label>
-          <Input
-            id="depth"
-            type="number"
-            value={depth}
-            onChange={(e) => setDepth(e.target.value)}
-          />
-        </div>
-      </div>
-      <div className="grid grid-cols-2 gap-4">
-        <div className="space-y-2">
-          <Label htmlFor="keys">Number of Keys</Label>
-          <Input
-            id="keys"
-            type="number"
-            value={keys}
-            onChange={(e) => setKeys(e.target.value)}
-            placeholder="e.g., 88"
-          />
-        </div>
-        <div className="space-y-2">
-          <Label htmlFor="pedals">Number of Pedals</Label>
-          <Input
-            id="pedals"
-            type="number"
-            value={pedals}
-            onChange={(e) => setPedals(e.target.value)}
-            placeholder="e.g., 3"
-          />
-        </div>
-      </div>
-      <div className="space-y-2">
-        <Label htmlFor="image">Product Image</Label>
-        <Input
-          id="image"
-          type="file"
-          accept="image/*"
-          onChange={handleImageChange}
-          className="cursor-pointer"
-        />
-      </div>
+      <BasicInfoFields
+        name={name}
+        setName={setName}
+        manufacturer={manufacturer}
+        setManufacturer={setManufacturer}
+        modelYear={modelYear}
+        setModelYear={setModelYear}
+        serialNumber={serialNumber}
+        setSerialNumber={setSerialNumber}
+        description={description}
+        setDescription={setDescription}
+      />
+      <CategoryFields
+        category={category}
+        setCategory={setCategory}
+        type={type}
+        setType={setType}
+        condition={condition}
+        setCondition={setCondition}
+        finish={finish}
+        setFinish={setFinish}
+        price={price}
+        setPrice={setPrice}
+      />
+      <DimensionsFields
+        width={width}
+        setWidth={setWidth}
+        height={height}
+        setHeight={setHeight}
+        depth={depth}
+        setDepth={setDepth}
+        keys={keys}
+        setKeys={setKeys}
+        pedals={pedals}
+        setPedals={setPedals}
+      />
+      <ImageUploadField handleImageChange={handleImageChange} />
       <Button type="submit" className="w-full" disabled={loading}>
         {loading ? "Adding..." : "Add to Inventory"}
       </Button>
