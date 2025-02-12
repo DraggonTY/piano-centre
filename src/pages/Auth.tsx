@@ -1,6 +1,6 @@
 
 import { useState } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate, useLocation, Link } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -8,6 +8,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/components/ui/use-toast";
+import { HelpCircle } from "lucide-react";
 
 const Auth = () => {
   const [email, setEmail] = useState("");
@@ -68,10 +69,21 @@ const Auth = () => {
     <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
       <Card className="w-full max-w-md">
         <CardHeader>
-          <CardTitle className="text-center">Welcome to Piano Marketplace</CardTitle>
-          <CardDescription className="text-center">
-            Sign in to your account or create a new one
-          </CardDescription>
+          <div className="flex justify-between items-center">
+            <div>
+              <CardTitle className="text-2xl">Welcome to Piano Marketplace</CardTitle>
+              <CardDescription>
+                Sign in to your account or create a new one
+              </CardDescription>
+            </div>
+            <Link 
+              to="/auth/documentation" 
+              className="text-gray-500 hover:text-gray-700"
+              title="View Authentication Documentation"
+            >
+              <HelpCircle className="h-5 w-5" />
+            </Link>
+          </div>
         </CardHeader>
         <CardContent>
           <Tabs defaultValue="signin" className="w-full">
