@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
@@ -102,7 +103,7 @@ export const AddPianoForm = ({ onSuccess, initialData }: AddPianoFormProps) => {
         const { error: updateError } = await supabase
           .from("pianos")
           .update(pianoData)
-          .eq('id', initialData.id);
+          .match({ id: initialData.id });
 
         if (updateError) throw updateError;
       } else {
@@ -115,6 +116,10 @@ export const AddPianoForm = ({ onSuccess, initialData }: AddPianoFormProps) => {
       }
 
       onSuccess();
+      toast({
+        title: initialData ? "Piano Updated" : "Piano Added",
+        description: initialData ? "The piano has been updated successfully." : "New piano has been added to inventory.",
+      });
     } catch (error: any) {
       console.error('Error details:', error);
       toast({
