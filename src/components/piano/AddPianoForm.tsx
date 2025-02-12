@@ -103,7 +103,7 @@ export const AddPianoForm = ({ onSuccess, initialData }: AddPianoFormProps) => {
         const { error: updateError } = await supabase
           .from("pianos")
           .update(pianoData)
-          .match({ id: initialData.id });
+          .eq('id', initialData.id);
 
         if (updateError) throw updateError;
       } else {

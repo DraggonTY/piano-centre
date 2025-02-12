@@ -32,7 +32,7 @@ export const PianoCard = ({ piano, onDelete, onUpdate }: PianoCardProps) => {
       const { error } = await supabase
         .from("pianos")
         .delete()
-        .match({ id: piano.id });
+        .eq('id', piano.id);
 
       if (error) throw error;
 
