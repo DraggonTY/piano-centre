@@ -17,4 +17,5 @@ export interface Piano {
   keyboard_keys: number | null;
   pedals: number | null;
   finish: string | null;
+  category: string;
 }

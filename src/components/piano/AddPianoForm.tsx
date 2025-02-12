@@ -34,7 +34,6 @@ export const AddPianoForm = ({ onSuccess, initialData }: AddPianoFormProps) => {
   const [loading, setLoading] = useState(false);
   const { toast } = useToast();
 
-  // Initialize form with initial data if provided
   useEffect(() => {
     if (initialData) {
       setName(initialData.name);
@@ -99,19 +98,21 @@ export const AddPianoForm = ({ onSuccess, initialData }: AddPianoFormProps) => {
         image_url,
       };
 
-      if (initialData) {
-        // Update existing piano
+      if (initialData?.id) {
+        // Update existing piano with explicit id check
         const { error } = await supabase
           .from("pianos")
           .update(pianoData)
-          .eq("id", initialData.id);
+          .eq('id', initialData.id)
+          .select();
 
         if (error) throw error;
       } else {
         // Insert new piano
         const { error } = await supabase
           .from("pianos")
-          .insert(pianoData);
+          .insert([pianoData])
+          .select();
 
         if (error) throw error;
       }
@@ -122,6 +123,7 @@ export const AddPianoForm = ({ onSuccess, initialData }: AddPianoFormProps) => {
       });
       onSuccess();
     } catch (error: any) {
+      console.error('Error details:', error);
       toast({
         variant: "destructive",
         title: initialData ? "Error updating piano" : "Error adding piano",
