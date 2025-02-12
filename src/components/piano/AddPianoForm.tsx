@@ -98,13 +98,11 @@ export const AddPianoForm = ({ onSuccess, initialData }: AddPianoFormProps) => {
       };
 
       if (initialData?.id) {
-        // Update existing piano using upsert
+        // Update existing piano
         const { error: updateError } = await supabase
           .from("pianos")
-          .upsert({
-            id: initialData.id,
-            ...pianoData
-          });
+          .update(pianoData)
+          .eq('id', initialData.id);
 
         if (updateError) throw updateError;
       } else {
