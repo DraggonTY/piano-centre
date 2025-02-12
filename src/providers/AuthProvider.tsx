@@ -1,6 +1,6 @@
 
 import { createContext, useContext, useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { Session } from "@supabase/supabase-js";
 import { supabase } from "@/integrations/supabase/client";
 
@@ -10,6 +10,9 @@ interface AuthContextType {
 }
 
 const AuthContext = createContext<AuthContextType>({ session: null, loading: true });
+
+// Define which routes require authentication
+const protectedRoutes = ['/admin'];
 
 export const useAuth = () => {
   const context = useContext(AuthContext);
@@ -23,12 +26,19 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
     // Get initial session
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session);
       setLoading(false);
+      
+      // Check if current route needs auth
+      const needsAuth = protectedRoutes.some(route => location.pathname.startsWith(route));
+      if (needsAuth && !session) {
+        navigate('/auth', { state: { from: location.pathname } });
+      }
     });
 
     // Listen for auth changes
@@ -36,13 +46,16 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((_event, session) => {
       setSession(session);
-      if (!session) {
-        navigate('/auth');
+      
+      // Check if current route needs auth
+      const needsAuth = protectedRoutes.some(route => location.pathname.startsWith(route));
+      if (needsAuth && !session) {
+        navigate('/auth', { state: { from: location.pathname } });
       }
     });
 
     return () => subscription.unsubscribe();
-  }, [navigate]);
+  }, [navigate, location]);
 
   return (
     <AuthContext.Provider value={{ session, loading }}>
