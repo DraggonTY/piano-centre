@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
@@ -99,10 +100,11 @@ export const AddPianoForm = ({ onSuccess, initialData }: AddPianoFormProps) => {
 
       if (initialData?.id) {
         // Update existing piano
-        const { error: updateError } = await supabase
+        const { data, error: updateError } = await supabase
           .from("pianos")
           .update(pianoData)
-          .match({ id: initialData.id });
+          .eq("id", initialData.id)
+          .select();
 
         if (updateError) throw updateError;
       } else {

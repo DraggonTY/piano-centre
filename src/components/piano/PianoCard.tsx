@@ -32,7 +32,8 @@ export const PianoCard = ({ piano, onDelete, onUpdate }: PianoCardProps) => {
       const { error } = await supabase
         .from("pianos")
         .delete()
-        .eq("id", piano.id);
+        .eq("id", piano.id)
+        .select();
 
       if (error) throw error;
 
@@ -42,11 +43,12 @@ export const PianoCard = ({ piano, onDelete, onUpdate }: PianoCardProps) => {
       });
 
       if (onDelete) onDelete();
-    } catch (error) {
+    } catch (error: any) {
+      console.error('Delete error:', error);
       toast({
         variant: "destructive",
         title: "Error",
-        description: "Failed to delete piano listing",
+        description: "Failed to delete piano listing: " + error.message,
       });
     }
   };
