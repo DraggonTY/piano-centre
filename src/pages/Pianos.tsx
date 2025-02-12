@@ -1,6 +1,7 @@
 
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
+import { useSearchParams } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
@@ -12,14 +13,22 @@ import { Piano } from "@/types/piano";
 const Pianos = () => {
   const { session } = useAuth();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [searchParams] = useSearchParams();
+  const category = searchParams.get("category");
 
   const { data: pianos, refetch } = useQuery({
-    queryKey: ["pianos"],
+    queryKey: ["pianos", category],
     queryFn: async () => {
-      const { data, error } = await supabase
+      let query = supabase
         .from("pianos")
         .select("*")
         .order("created_at", { ascending: false });
+
+      if (category) {
+        query = query.eq("category", category);
+      }
+
+      const { data, error } = await query;
 
       if (error) throw error;
       return data as Piano[];
@@ -31,13 +40,38 @@ const Pianos = () => {
     refetch();
   };
 
+  const getCategoryTitle = () => {
+    switch (category) {
+      case "new":
+        return "New Pianos";
+      case "used":
+        return "Used Pianos";
+      case "digital":
+        return "Digital Pianos";
+      default:
+        return "Our Collection";
+    }
+  };
+
+  const getCategoryDescription = () => {
+    switch (category) {
+      case "new":
+        return "Experience the pristine sound and touch of our new piano collection.";
+      case "used":
+        return "Discover our selection of carefully maintained pre-owned pianos.";
+      case "digital":
+        return "Explore our range of advanced digital pianos with modern features.";
+      default:
+        return "Discover our carefully curated selection of premium pianos, from elegant grand pianos to professional digital instruments.";
+    }
+  };
+
   return (
     <div className="container mx-auto py-12 px-4">
       <div className="max-w-3xl mx-auto text-center mb-12">
-        <h1 className="text-4xl font-bold mb-4">Our Collection</h1>
+        <h1 className="text-4xl font-bold mb-4">{getCategoryTitle()}</h1>
         <p className="text-lg text-gray-600">
-          Discover our carefully curated selection of premium pianos, from elegant grand pianos
-          to professional digital instruments.
+          {getCategoryDescription()}
         </p>
       </div>
 

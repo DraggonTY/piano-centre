@@ -11,6 +11,7 @@ export type Database = {
     Tables: {
       pianos: {
         Row: {
+          category: string
           condition: string | null
           created_at: string | null
           depth_cm: number | null
@@ -30,6 +31,7 @@ export type Database = {
           width_cm: number | null
         }
         Insert: {
+          category: string
           condition?: string | null
           created_at?: string | null
           depth_cm?: number | null
@@ -49,6 +51,7 @@ export type Database = {
           width_cm?: number | null
         }
         Update: {
+          category?: string
           condition?: string | null
           created_at?: string | null
           depth_cm?: number | null
