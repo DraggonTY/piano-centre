@@ -1,5 +1,5 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
 import { supabase } from "@/integrations/supabase/client";
@@ -7,12 +7,14 @@ import { BasicInfoFields } from "./form/BasicInfoFields";
 import { CategoryFields } from "./form/CategoryFields";
 import { DimensionsFields } from "./form/DimensionsFields";
 import { ImageUploadField } from "./form/ImageUploadField";
+import { Piano } from "@/types/piano";
 
 interface AddPianoFormProps {
   onSuccess: () => void;
+  initialData?: Piano;
 }
 
-export const AddPianoForm = ({ onSuccess }: AddPianoFormProps) => {
+export const AddPianoForm = ({ onSuccess, initialData }: AddPianoFormProps) => {
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [price, setPrice] = useState("");
@@ -32,12 +34,33 @@ export const AddPianoForm = ({ onSuccess }: AddPianoFormProps) => {
   const [loading, setLoading] = useState(false);
   const { toast } = useToast();
 
+  // Initialize form with initial data if provided
+  useEffect(() => {
+    if (initialData) {
+      setName(initialData.name);
+      setDescription(initialData.description || "");
+      setPrice(initialData.price.toString());
+      setType(initialData.type || "");
+      setCondition(initialData.condition || "");
+      setManufacturer(initialData.manufacturer || "");
+      setModelYear(initialData.model_year || "");
+      setSerialNumber(initialData.serial_number || "");
+      setWidth(initialData.width_cm?.toString() || "");
+      setHeight(initialData.height_cm?.toString() || "");
+      setDepth(initialData.depth_cm?.toString() || "");
+      setKeys(initialData.keyboard_keys?.toString() || "");
+      setPedals(initialData.pedals?.toString() || "");
+      setFinish(initialData.finish || "");
+      setCategory(initialData.category);
+    }
+  }, [initialData]);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
 
     try {
-      let image_url = null;
+      let image_url = initialData?.image_url || null;
 
       if (image) {
         const fileExt = image.name.split('.').pop();
@@ -57,7 +80,7 @@ export const AddPianoForm = ({ onSuccess }: AddPianoFormProps) => {
         image_url = publicUrl;
       }
 
-      const { error } = await supabase.from("pianos").insert({
+      const pianoData = {
         name,
         description,
         price: parseFloat(price),
@@ -74,19 +97,34 @@ export const AddPianoForm = ({ onSuccess }: AddPianoFormProps) => {
         finish,
         category,
         image_url,
-      });
+      };
 
-      if (error) throw error;
+      if (initialData) {
+        // Update existing piano
+        const { error } = await supabase
+          .from("pianos")
+          .update(pianoData)
+          .eq("id", initialData.id);
+
+        if (error) throw error;
+      } else {
+        // Insert new piano
+        const { error } = await supabase
+          .from("pianos")
+          .insert(pianoData);
+
+        if (error) throw error;
+      }
 
       toast({
         title: "Success!",
-        description: "New piano added to inventory.",
+        description: initialData ? "Piano updated successfully." : "New piano added to inventory.",
       });
       onSuccess();
     } catch (error: any) {
       toast({
         variant: "destructive",
-        title: "Error adding piano",
+        title: initialData ? "Error updating piano" : "Error adding piano",
         description: error.message,
       });
     } finally {
@@ -140,7 +178,7 @@ export const AddPianoForm = ({ onSuccess }: AddPianoFormProps) => {
       />
       <ImageUploadField handleImageChange={handleImageChange} />
       <Button type="submit" className="w-full" disabled={loading}>
-        {loading ? "Adding..." : "Add to Inventory"}
+        {loading ? (initialData ? "Updating..." : "Adding...") : (initialData ? "Update Piano" : "Add to Inventory")}
       </Button>
     </form>
   );
