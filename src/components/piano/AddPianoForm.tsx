@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
@@ -98,26 +97,22 @@ export const AddPianoForm = ({ onSuccess, initialData }: AddPianoFormProps) => {
         image_url,
       };
 
-      let error;
-      
       if (initialData?.id) {
         // Update existing piano
         const { error: updateError } = await supabase
           .from("pianos")
           .update(pianoData)
-          .eq("id", initialData.id);
-        
-        error = updateError;
+          .match({ id: initialData.id });
+
+        if (updateError) throw updateError;
       } else {
         // Insert new piano
         const { error: insertError } = await supabase
           .from("pianos")
-          .insert(pianoData);
-        
-        error = insertError;
-      }
+          .insert([pianoData]);
 
-      if (error) throw error;
+        if (insertError) throw insertError;
+      }
 
       toast({
         title: "Success!",
