@@ -98,24 +98,26 @@ export const AddPianoForm = ({ onSuccess, initialData }: AddPianoFormProps) => {
         image_url,
       };
 
+      let error;
+      
       if (initialData?.id) {
-        // Update existing piano with explicit id check
-        const { error } = await supabase
+        // Update existing piano
+        const { error: updateError } = await supabase
           .from("pianos")
           .update(pianoData)
-          .eq('id', initialData.id)
-          .select();
-
-        if (error) throw error;
+          .eq("id", initialData.id);
+        
+        error = updateError;
       } else {
         // Insert new piano
-        const { error } = await supabase
+        const { error: insertError } = await supabase
           .from("pianos")
-          .insert([pianoData])
-          .select();
-
-        if (error) throw error;
+          .insert(pianoData);
+        
+        error = insertError;
       }
+
+      if (error) throw error;
 
       toast({
         title: "Success!",
