@@ -70,13 +70,13 @@ const AddPianoForm = ({ onSuccess }: { onSuccess: () => void }) => {
 
       toast({
         title: "Success!",
-        description: "Your piano has been listed.",
+        description: "New piano added to inventory.",
       });
       onSuccess();
     } catch (error: any) {
       toast({
         variant: "destructive",
-        title: "Error creating listing",
+        title: "Error adding piano",
         description: error.message,
       });
     } finally {
@@ -93,7 +93,7 @@ const AddPianoForm = ({ onSuccess }: { onSuccess: () => void }) => {
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       <div className="space-y-2">
-        <Label htmlFor="name">Piano Name</Label>
+        <Label htmlFor="name">Model Name</Label>
         <Input
           id="name"
           value={name}
@@ -107,6 +107,7 @@ const AddPianoForm = ({ onSuccess }: { onSuccess: () => void }) => {
           id="description"
           value={description}
           onChange={(e) => setDescription(e.target.value)}
+          placeholder="Enter detailed specifications and features..."
         />
       </div>
       <div className="space-y-2">
@@ -120,11 +121,12 @@ const AddPianoForm = ({ onSuccess }: { onSuccess: () => void }) => {
         />
       </div>
       <div className="space-y-2">
-        <Label htmlFor="type">Type</Label>
+        <Label htmlFor="type">Category</Label>
         <Input
           id="type"
           value={type}
           onChange={(e) => setType(e.target.value)}
+          placeholder="Grand, Upright, Digital, etc."
         />
       </div>
       <div className="space-y-2">
@@ -133,10 +135,11 @@ const AddPianoForm = ({ onSuccess }: { onSuccess: () => void }) => {
           id="condition"
           value={condition}
           onChange={(e) => setCondition(e.target.value)}
+          placeholder="New, Restored, Vintage, etc."
         />
       </div>
       <div className="space-y-2">
-        <Label htmlFor="image">Image</Label>
+        <Label htmlFor="image">Product Image</Label>
         <Input
           id="image"
           type="file"
@@ -146,7 +149,7 @@ const AddPianoForm = ({ onSuccess }: { onSuccess: () => void }) => {
         />
       </div>
       <Button type="submit" className="w-full" disabled={loading}>
-        {loading ? "Creating..." : "Create Listing"}
+        {loading ? "Adding..." : "Add to Inventory"}
       </Button>
     </form>
   );
@@ -175,43 +178,54 @@ const Pianos = () => {
   };
 
   return (
-    <div className="container mx-auto py-8">
-      <div className="flex justify-between items-center mb-8">
-        <h1 className="text-3xl font-bold">Piano Marketplace</h1>
-        {session && (
+    <div className="container mx-auto py-12 px-4">
+      <div className="max-w-3xl mx-auto text-center mb-12">
+        <h1 className="text-4xl font-bold mb-4">Our Collection</h1>
+        <p className="text-lg text-gray-600">
+          Discover our carefully curated selection of premium pianos, from elegant grand pianos
+          to professional digital instruments.
+        </p>
+      </div>
+
+      {session && (
+        <div className="mb-12 text-center">
           <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
             <DialogTrigger asChild>
-              <Button>List a Piano</Button>
+              <Button variant="outline">Add New Piano</Button>
             </DialogTrigger>
             <DialogContent>
               <DialogHeader>
-                <DialogTitle>Create a New Listing</DialogTitle>
+                <DialogTitle>Add New Piano to Inventory</DialogTitle>
               </DialogHeader>
               <AddPianoForm onSuccess={handleSuccess} />
             </DialogContent>
           </Dialog>
-        )}
-      </div>
+        </div>
+      )}
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
         {pianos?.map((piano) => (
-          <Card key={piano.id}>
+          <Card key={piano.id} className="overflow-hidden hover:shadow-lg transition-shadow">
             {piano.image_url && (
-              <img
-                src={piano.image_url}
-                alt={piano.name}
-                className="w-full h-48 object-cover"
-              />
+              <div className="aspect-[4/3] overflow-hidden">
+                <img
+                  src={piano.image_url}
+                  alt={piano.name}
+                  className="w-full h-full object-cover transform hover:scale-105 transition-transform duration-300"
+                />
+              </div>
             )}
             <CardHeader>
-              <CardTitle>{piano.name}</CardTitle>
-              <CardDescription>${piano.price.toLocaleString()}</CardDescription>
+              <CardTitle className="text-xl">{piano.name}</CardTitle>
+              <CardDescription className="text-lg font-semibold text-primary">
+                ${piano.price.toLocaleString()}
+              </CardDescription>
             </CardHeader>
             <CardContent>
-              <p className="text-sm text-gray-600">{piano.description}</p>
+              <p className="text-gray-600 mb-4">{piano.description}</p>
               {piano.type && (
-                <p className="text-sm mt-2">
-                  <span className="font-semibold">Type:</span> {piano.type}
+                <p className="text-sm">
+                  <span className="font-semibold">Category:</span> {piano.type}
                 </p>
               )}
               {piano.condition && (
@@ -222,7 +236,7 @@ const Pianos = () => {
               )}
             </CardContent>
             <CardFooter>
-              <Button className="w-full">Contact Seller</Button>
+              <Button className="w-full">Schedule a Viewing</Button>
             </CardFooter>
           </Card>
         ))}
@@ -230,7 +244,7 @@ const Pianos = () => {
 
       {(!pianos || pianos.length === 0) && (
         <div className="text-center py-12">
-          <p className="text-gray-500">No pianos listed yet.</p>
+          <p className="text-gray-500">No pianos currently in stock. Please check back soon.</p>
         </div>
       )}
     </div>
