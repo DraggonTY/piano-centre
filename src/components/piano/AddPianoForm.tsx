@@ -79,38 +79,53 @@ export const AddPianoForm = ({ onSuccess, initialData }: AddPianoFormProps) => {
         image_url = publicUrl;
       }
 
-      const pianoData = {
-        name,
-        description,
-        price: parseFloat(price),
-        type,
-        condition,
-        manufacturer,
-        model_year: modelYear,
-        serial_number: serialNumber,
-        width_cm: width ? parseFloat(width) : null,
-        height_cm: height ? parseFloat(height) : null,
-        depth_cm: depth ? parseFloat(depth) : null,
-        keyboard_keys: keys ? parseInt(keys) : null,
-        pedals: pedals ? parseInt(pedals) : null,
-        finish,
-        category,
-        image_url,
-      };
-
       if (initialData?.id) {
         // Update existing piano
         const { error: updateError } = await supabase
           .from("pianos")
-          .update(pianoData)
-          .eq("id", initialData.id);
+          .update({
+            name,
+            description,
+            price: parseFloat(price),
+            type,
+            condition,
+            manufacturer,
+            model_year: modelYear,
+            serial_number: serialNumber,
+            width_cm: width ? parseFloat(width) : null,
+            height_cm: height ? parseFloat(height) : null,
+            depth_cm: depth ? parseFloat(depth) : null,
+            keyboard_keys: keys ? parseInt(keys) : null,
+            pedals: pedals ? parseInt(pedals) : null,
+            finish,
+            category,
+            image_url,
+          })
+          .eq('id', initialData.id);
 
         if (updateError) throw updateError;
       } else {
         // Insert new piano
         const { error: insertError } = await supabase
           .from("pianos")
-          .insert([pianoData]);
+          .insert([{
+            name,
+            description,
+            price: parseFloat(price),
+            type,
+            condition,
+            manufacturer,
+            model_year: modelYear,
+            serial_number: serialNumber,
+            width_cm: width ? parseFloat(width) : null,
+            height_cm: height ? parseFloat(height) : null,
+            depth_cm: depth ? parseFloat(depth) : null,
+            keyboard_keys: keys ? parseInt(keys) : null,
+            pedals: pedals ? parseInt(pedals) : null,
+            finish,
+            category,
+            image_url,
+          }]);
 
         if (insertError) throw insertError;
       }
