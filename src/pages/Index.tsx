@@ -1,39 +1,44 @@
 
 import { motion } from "framer-motion";
 import { ChevronDown } from "lucide-react";
+import { useQuery } from "@tanstack/react-query";
+import { supabase } from "@/lib/supabase";
+import { useToast } from "@/components/ui/use-toast";
 
-// Temporary hardcoded piano data
-const featuredPianos = [
-  {
-    id: 1,
-    name: "Steinway Model D Concert Grand",
-    description: "The flagship of Steinway's concert grand pianos, renowned for its incomparable sound and responsiveness.",
-    price: 189000,
-    image: "https://images.unsplash.com/photo-1552422535-c45813c61732?auto=format&fit=crop&q=80",
-    condition: "New",
-    type: "Grand Piano"
-  },
-  {
-    id: 2,
-    name: "Yamaha C7X Grand Piano",
-    description: "A magnificent 7'6\" grand piano that delivers powerful, precise sound perfect for larger venues.",
-    price: 89999,
-    image: "https://images.unsplash.com/photo-1520523839897-bd0b52f945a0?auto=format&fit=crop&q=80",
-    condition: "New",
-    type: "Grand Piano"
-  },
-  {
-    id: 3,
-    name: "Bösendorfer 214VC",
-    description: "Vienna Concert grand piano featuring the renowned Bösendorfer sound with rich bass and singing treble.",
-    price: 245000,
-    image: "https://images.unsplash.com/photo-1571974599782-87624638e8dd?auto=format&fit=crop&q=80",
-    condition: "New",
-    type: "Grand Piano"
-  }
-];
+interface Piano {
+  id: number;
+  name: string;
+  description: string;
+  price: number;
+  image_url: string;
+  condition: string;
+  type: string;
+}
 
 const Index = () => {
+  const { toast } = useToast();
+
+  const { data: pianos, isLoading } = useQuery({
+    queryKey: ['pianos'],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('pianos')
+        .select('*')
+        .order('created_at', { ascending: false });
+      
+      if (error) {
+        toast({
+          variant: "destructive",
+          title: "Error fetching pianos",
+          description: error.message,
+        });
+        throw error;
+      }
+      
+      return data as Piano[];
+    },
+  });
+
   return (
     <div className="min-h-screen">
       {/* Hero Section */}
@@ -90,7 +95,18 @@ const Index = () => {
             </p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {featuredPianos.map((piano, i) => (
+            {isLoading ? (
+              // Loading skeletons
+              [...Array(3)].map((_, i) => (
+                <div key={i} className="glass-card p-6 animate-pulse">
+                  <div className="aspect-[4/3] mb-4 bg-gray-200 rounded-lg"></div>
+                  <div className="h-6 bg-gray-200 rounded mb-2"></div>
+                  <div className="h-4 bg-gray-200 rounded mb-2"></div>
+                  <div className="h-4 bg-gray-200 rounded mb-4"></div>
+                  <div className="h-10 bg-gray-200 rounded"></div>
+                </div>
+              ))
+            ) : pianos?.map((piano, i) => (
               <motion.div
                 key={piano.id}
                 initial={{ opacity: 0, y: 20 }}
@@ -101,7 +117,7 @@ const Index = () => {
               >
                 <div className="aspect-[4/3] mb-4 rounded-lg overflow-hidden">
                   <img 
-                    src={piano.image} 
+                    src={piano.image_url} 
                     alt={piano.name}
                     className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                   />
