@@ -100,11 +100,10 @@ export const AddPianoForm = ({ onSuccess, initialData }: AddPianoFormProps) => {
 
       if (initialData?.id) {
         // Update existing piano
-        const { data, error: updateError } = await supabase
+        const { error: updateError } = await supabase
           .from("pianos")
           .update(pianoData)
-          .eq("id", initialData.id)
-          .select();
+          .eq("id", initialData.id);
 
         if (updateError) throw updateError;
       } else {
@@ -116,10 +115,6 @@ export const AddPianoForm = ({ onSuccess, initialData }: AddPianoFormProps) => {
         if (insertError) throw insertError;
       }
 
-      toast({
-        title: "Success!",
-        description: initialData ? "Piano updated successfully." : "New piano added to inventory.",
-      });
       onSuccess();
     } catch (error: any) {
       console.error('Error details:', error);
