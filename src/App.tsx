@@ -7,6 +7,12 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "./providers/AuthProvider";
 import Index from "./pages/Index";
 import Auth from "./pages/Auth";
+import AuthDocumentation from "./pages/AuthDocumentation";
+import PianoManagementDocs from "./pages/PianoManagementDocs";
+import AdminDocs from "./pages/AdminDocs";
+import UserGuideDocs from "./pages/UserGuideDocs";
+import TechnicalDocs from "./pages/TechnicalDocs";
+import FAQDocs from "./pages/FAQDocs";
 import Pianos from "./pages/Pianos";
 import NotFound from "./pages/NotFound";
 
@@ -22,6 +28,12 @@ const App = () => (
           <Routes>
             <Route path="/" element={<Index />} />
             <Route path="/auth" element={<Auth />} />
+            <Route path="/auth/documentation" element={<AuthDocumentation />} />
+            <Route path="/docs/piano-management" element={<PianoManagementDocs />} />
+            <Route path="/docs/admin" element={<AdminDocs />} />
+            <Route path="/docs/user-guide" element={<UserGuideDocs />} />
+            <Route path="/docs/technical" element={<TechnicalDocs />} />
+            <Route path="/docs/faq" element={<FAQDocs />} />
             <Route path="/pianos" element={<Pianos />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
