@@ -20,49 +20,74 @@ const Auth = () => {
 
   const from = (location.state as { from?: string })?.from || "/";
 
+  const handleError = (error: any) => {
+    let errorMessage = "An unexpected error occurred";
+    
+    // Parse the error message from the response body if available
+    try {
+      const errorBody = JSON.parse(error.body);
+      if (errorBody.message === "Invalid login credentials") {
+        errorMessage = "Invalid email or password. Please check your credentials and try again.";
+      } else {
+        errorMessage = errorBody.message;
+      }
+    } catch {
+      // If we can't parse the error body, use the main error message
+      errorMessage = error.message;
+    }
+
+    toast({
+      variant: "destructive",
+      title: "Authentication Error",
+      description: errorMessage,
+    });
+  };
+
   const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     
-    const { error } = await supabase.auth.signUp({
-      email,
-      password,
-    });
+    try {
+      const { error } = await supabase.auth.signUp({
+        email,
+        password,
+      });
 
-    if (error) {
-      toast({
-        variant: "destructive",
-        title: "Error signing up",
-        description: error.message,
-      });
-    } else {
-      toast({
-        title: "Success!",
-        description: "Please check your email to confirm your account.",
-      });
+      if (error) {
+        handleError(error);
+      } else {
+        toast({
+          title: "Success!",
+          description: "Please check your email to confirm your account.",
+        });
+      }
+    } catch (error: any) {
+      handleError(error);
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   };
 
   const handleSignIn = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     
-    const { error } = await supabase.auth.signInWithPassword({
-      email,
-      password,
-    });
-
-    if (error) {
-      toast({
-        variant: "destructive",
-        title: "Error signing in",
-        description: error.message,
+    try {
+      const { error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
       });
-    } else {
-      navigate(from);
+
+      if (error) {
+        handleError(error);
+      } else {
+        navigate(from);
+      }
+    } catch (error: any) {
+      handleError(error);
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   };
 
   return (
@@ -113,6 +138,7 @@ const Auth = () => {
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     required
+                    minLength={6}
                   />
                 </div>
                 <Button type="submit" className="w-full" disabled={loading}>
@@ -142,7 +168,11 @@ const Auth = () => {
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     required
+                    minLength={6}
                   />
+                  <p className="text-sm text-gray-500">
+                    Password must be at least 6 characters long
+                  </p>
                 </div>
                 <Button type="submit" className="w-full" disabled={loading}>
                   {loading ? "Signing up..." : "Sign Up"}
