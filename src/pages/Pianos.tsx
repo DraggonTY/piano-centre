@@ -1,6 +1,6 @@
 
 import { useState } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useSearchParams } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
@@ -15,6 +15,8 @@ const Pianos = () => {
   const { session } = useAuth();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [searchParams] = useSearchParams();
+  const queryClient = useQueryClient();
+  
   const category = searchParams.get("category");
   const types = searchParams.getAll("type");
   const conditions = searchParams.getAll("condition");
@@ -58,7 +60,15 @@ const Pianos = () => {
 
   const handleSuccess = () => {
     setIsDialogOpen(false);
-    refetch();
+    queryClient.invalidateQueries({ queryKey: ["pianos"] });
+  };
+
+  const handleDelete = () => {
+    queryClient.invalidateQueries({ queryKey: ["pianos"] });
+  };
+
+  const handleUpdate = () => {
+    queryClient.invalidateQueries({ queryKey: ["pianos"] });
   };
 
   const getCategoryTitle = () => {
@@ -123,8 +133,8 @@ const Pianos = () => {
               <PianoCard 
                 key={piano.id} 
                 piano={piano} 
-                onDelete={refetch}
-                onUpdate={refetch}
+                onDelete={handleDelete}
+                onUpdate={handleUpdate}
               />
             ))}
           </div>
