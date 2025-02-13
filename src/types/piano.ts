@@ -18,4 +18,6 @@ export interface Piano {
   pedals: number | null;
   finish: string | null;
   category: string;
+  is_featured: boolean;
+  featured_order: number | null;
 }

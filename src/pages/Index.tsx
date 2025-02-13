@@ -11,13 +11,14 @@ import { ContactSection } from "@/components/home/ContactSection";
 const Index = () => {
   const { toast } = useToast();
 
-  const { data: featuredPianos, isLoading } = useQuery({
-    queryKey: ['pianos'],
+  const { data: featuredPianos, isLoading, refetch } = useQuery({
+    queryKey: ['featured-pianos'],
     queryFn: async () => {
       const { data, error } = await supabase
         .from('pianos')
         .select('*')
-        .order('created_at', { ascending: false })
+        .eq('is_featured', true)
+        .order('featured_order', { ascending: true })
         .limit(3);
       
       if (error) {
@@ -36,7 +37,11 @@ const Index = () => {
   return (
     <div className="min-h-screen">
       <HeroSection />
-      <FeaturedPianos pianos={featuredPianos} isLoading={isLoading} />
+      <FeaturedPianos 
+        pianos={featuredPianos} 
+        isLoading={isLoading} 
+        onFeaturedUpdate={refetch}
+      />
       <CategorySection />
       <ContactSection />
     </div>
