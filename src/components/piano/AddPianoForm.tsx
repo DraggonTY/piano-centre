@@ -98,19 +98,27 @@ export const AddPianoForm = ({ onSuccess, initialData }: AddPianoFormProps) => {
         image_url,
       };
 
+      console.log('Piano data to save:', pianoData);
+
       if (initialData?.id) {
-        // Update existing piano
-        const { error: updateError } = await supabase
+        console.log('Updating piano with ID:', initialData.id);
+        const { error: updateError, data } = await supabase
           .from("pianos")
           .update(pianoData)
-          .eq('id', initialData.id);
+          .eq('id', initialData.id)
+          .select();
+
+        console.log('Update response:', { error: updateError, data });
 
         if (updateError) throw updateError;
       } else {
-        // Insert new piano
-        const { error: insertError } = await supabase
+        console.log('Inserting new piano');
+        const { error: insertError, data } = await supabase
           .from("pianos")
-          .insert([pianoData]);
+          .insert([pianoData])
+          .select();
+
+        console.log('Insert response:', { error: insertError, data });
 
         if (insertError) throw insertError;
       }
@@ -121,7 +129,7 @@ export const AddPianoForm = ({ onSuccess, initialData }: AddPianoFormProps) => {
         description: initialData ? "The piano has been updated successfully." : "New piano has been added to inventory.",
       });
     } catch (error: any) {
-      console.error('Error details:', error);
+      console.error('Operation error:', error);
       toast({
         variant: "destructive",
         title: initialData ? "Error updating piano" : "Error adding piano",

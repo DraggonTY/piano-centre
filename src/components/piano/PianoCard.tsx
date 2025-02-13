@@ -29,10 +29,14 @@ export const PianoCard = ({ piano, onDelete, onUpdate }: PianoCardProps) => {
 
   const handleDelete = async () => {
     try {
-      const { error } = await supabase
+      console.log('Attempting to delete piano with ID:', piano.id);
+      const { error, data } = await supabase
         .from("pianos")
         .delete()
-        .eq('id', piano.id);
+        .eq('id', piano.id)
+        .select();
+
+      console.log('Delete response:', { error, data });
 
       if (error) throw error;
 
