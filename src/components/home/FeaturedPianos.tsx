@@ -7,6 +7,15 @@ import { useAuth } from "@/providers/AuthProvider";
 import { useToast } from "@/components/ui/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { useState, useEffect } from "react";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Loader2 } from "lucide-react";
 
 interface FeaturedPianosProps {
   pianos?: Piano[];
@@ -19,6 +28,10 @@ export const FeaturedPianos = ({ pianos, isLoading, onFeaturedUpdate }: Featured
   const { toast } = useToast();
   const [isAdmin, setIsAdmin] = useState(false);
   const [updating, setUpdating] = useState(false);
+  const [allPianos, setAllPianos] = useState<Piano[]>([]);
+  const [loadingPianos, setLoadingPianos] = useState(false);
+  const [selectedPianos, setSelectedPianos] = useState<number[]>([]);
+  const [dialogOpen, setDialogOpen] = useState(false);
 
   // Check if user is admin
   const checkAdminStatus = async () => {
@@ -41,29 +54,69 @@ export const FeaturedPianos = ({ pianos, isLoading, onFeaturedUpdate }: Featured
     checkAdminStatus();
   }, [session?.user?.id]);
 
-  const handleFeatureToggle = async (piano: Piano) => {
+  // Load all pianos when dialog opens
+  useEffect(() => {
+    const loadAllPianos = async () => {
+      if (!dialogOpen) return;
+      setLoadingPianos(true);
+      try {
+        const { data, error } = await supabase
+          .from('pianos')
+          .select('*')
+          .order('created_at', { ascending: false });
+        
+        if (error) throw error;
+        setAllPianos(data || []);
+        
+        // Set initial selected pianos
+        const featured = data?.filter(p => p.is_featured) || [];
+        setSelectedPianos(featured.map(p => p.id));
+      } catch (error: any) {
+        toast({
+          variant: "destructive",
+          title: "Error loading pianos",
+          description: error.message,
+        });
+      } finally {
+        setLoadingPianos(false);
+      }
+    };
+
+    loadAllPianos();
+  }, [dialogOpen]);
+
+  const handleFeatureToggle = async (pianoIds: number[]) => {
     if (!session?.user?.id) return;
     setUpdating(true);
 
     try {
-      const { error } = await supabase
+      // First, unfeature all pianos
+      await supabase
         .from('pianos')
         .update({
-          is_featured: !piano.is_featured,
-          featured_order: !piano.is_featured ? 
-            (pianos?.filter(p => p.is_featured).length || 0) + 1 : 
-            null
+          is_featured: false,
+          featured_order: null
         })
-        .eq('id', piano.id);
+        .eq('is_featured', true);
 
-      if (error) throw error;
+      // Then, feature the selected pianos with order
+      for (let i = 0; i < pianoIds.length; i++) {
+        await supabase
+          .from('pianos')
+          .update({
+            is_featured: true,
+            featured_order: i + 1
+          })
+          .eq('id', pianoIds[i]);
+      }
 
       toast({
         title: "Success",
-        description: `Piano ${piano.is_featured ? 'removed from' : 'added to'} featured list.`,
+        description: "Featured pianos updated successfully",
       });
 
       if (onFeaturedUpdate) onFeaturedUpdate();
+      setDialogOpen(false);
     } catch (error: any) {
       toast({
         variant: "destructive",
@@ -73,6 +126,23 @@ export const FeaturedPianos = ({ pianos, isLoading, onFeaturedUpdate }: Featured
     } finally {
       setUpdating(false);
     }
+  };
+
+  const handlePianoSelect = (pianoId: number, checked: boolean) => {
+    if (checked && selectedPianos.length >= 3) {
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: "You can only select up to 3 featured pianos",
+      });
+      return;
+    }
+
+    setSelectedPianos(prev => 
+      checked 
+        ? [...prev, pianoId]
+        : prev.filter(id => id !== pianoId)
+    );
   };
 
   return (
@@ -122,31 +192,97 @@ export const FeaturedPianos = ({ pianos, isLoading, onFeaturedUpdate }: Featured
                   </span>
                   <span className="text-sm text-gray-500">{piano.condition}</span>
                 </div>
-                <div className="flex gap-2">
-                  <Link to={`/pianos`} className="flex-1">
-                    <Button className="w-full">View Details</Button>
-                  </Link>
-                  {isAdmin && (
-                    <Button
-                      variant={piano.is_featured ? "destructive" : "outline"}
-                      disabled={updating}
-                      onClick={() => handleFeatureToggle(piano)}
-                      className="whitespace-nowrap"
-                    >
-                      {piano.is_featured ? "Unfeature" : "Feature"}
-                    </Button>
-                  )}
-                </div>
+                <Link to={`/pianos`} className="w-full">
+                  <Button className="w-full">View Details</Button>
+                </Link>
               </div>
             </motion.div>
           ))}
         </div>
-        <div className="text-center mt-12">
+        <div className="text-center mt-12 space-y-4">
           <Link to="/pianos">
             <Button variant="outline" size="lg">
               View All Pianos
             </Button>
           </Link>
+          
+          {isAdmin && session?.user && (
+            <div>
+              <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+                <DialogTrigger asChild>
+                  <Button variant="ghost" className="mx-auto block">
+                    Edit Featured Pianos
+                  </Button>
+                </DialogTrigger>
+                <DialogContent className="max-w-2xl">
+                  <DialogHeader>
+                    <DialogTitle>Select Featured Pianos</DialogTitle>
+                  </DialogHeader>
+                  <div className="max-h-[60vh] overflow-y-auto">
+                    {loadingPianos ? (
+                      <div className="flex items-center justify-center p-4">
+                        <Loader2 className="h-6 w-6 animate-spin" />
+                      </div>
+                    ) : (
+                      <div className="space-y-4">
+                        {allPianos.map((piano) => (
+                          <div key={piano.id} className="flex items-start space-x-4 p-4 border rounded-lg">
+                            {piano.image_url && (
+                              <img 
+                                src={piano.image_url} 
+                                alt={piano.name}
+                                className="w-20 h-20 object-cover rounded"
+                              />
+                            )}
+                            <div className="flex-1">
+                              <div className="flex items-center space-x-2">
+                                <Checkbox
+                                  id={`piano-${piano.id}`}
+                                  checked={selectedPianos.includes(piano.id)}
+                                  onCheckedChange={(checked) => 
+                                    handlePianoSelect(piano.id, checked as boolean)
+                                  }
+                                />
+                                <label 
+                                  htmlFor={`piano-${piano.id}`}
+                                  className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                                >
+                                  {piano.name}
+                                </label>
+                              </div>
+                              <p className="mt-1 text-sm text-gray-600">{piano.description}</p>
+                              <p className="mt-1 text-sm font-medium">${piano.price.toLocaleString()}</p>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                  <div className="flex justify-end space-x-2 mt-4">
+                    <Button
+                      variant="outline"
+                      onClick={() => setDialogOpen(false)}
+                    >
+                      Cancel
+                    </Button>
+                    <Button
+                      onClick={() => handleFeatureToggle(selectedPianos)}
+                      disabled={updating || loadingPianos}
+                    >
+                      {updating ? (
+                        <>
+                          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                          Updating...
+                        </>
+                      ) : (
+                        'Save Changes'
+                      )}
+                    </Button>
+                  </div>
+                </DialogContent>
+              </Dialog>
+            </div>
+          )}
         </div>
       </div>
     </section>
