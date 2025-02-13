@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { useAuth } from "@/providers/AuthProvider";
 import { useToast } from "@/components/ui/use-toast";
 import { supabase } from "@/integrations/supabase/client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 interface FeaturedPianosProps {
   pianos?: Piano[];
@@ -37,7 +37,7 @@ export const FeaturedPianos = ({ pianos, isLoading, onFeaturedUpdate }: Featured
   };
 
   // Run admin check when session changes
-  useState(() => {
+  useEffect(() => {
     checkAdminStatus();
   }, [session?.user?.id]);
 
