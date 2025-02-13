@@ -28,6 +28,7 @@ export type Database = {
           price: number
           serial_number: string | null
           type: string | null
+          user_id: string
           width_cm: number | null
         }
         Insert: {
@@ -48,6 +49,7 @@ export type Database = {
           price: number
           serial_number?: string | null
           type?: string | null
+          user_id: string
           width_cm?: number | null
         }
         Update: {
@@ -68,6 +70,7 @@ export type Database = {
           price?: number
           serial_number?: string | null
           type?: string | null
+          user_id?: string
           width_cm?: number | null
         }
         Relationships: []

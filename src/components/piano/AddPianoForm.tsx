@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
@@ -7,6 +8,7 @@ import { CategoryFields } from "./form/CategoryFields";
 import { DimensionsFields } from "./form/DimensionsFields";
 import { ImageUploadField } from "./form/ImageUploadField";
 import { Piano } from "@/types/piano";
+import { useAuth } from "@/providers/AuthProvider";
 
 interface AddPianoFormProps {
   onSuccess: () => void;
@@ -14,6 +16,8 @@ interface AddPianoFormProps {
 }
 
 export const AddPianoForm = ({ onSuccess, initialData }: AddPianoFormProps) => {
+  const { session } = useAuth();
+  const { toast } = useToast();
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [price, setPrice] = useState("");
@@ -31,7 +35,6 @@ export const AddPianoForm = ({ onSuccess, initialData }: AddPianoFormProps) => {
   const [category, setCategory] = useState("new");
   const [image, setImage] = useState<File | null>(null);
   const [loading, setLoading] = useState(false);
-  const { toast } = useToast();
 
   useEffect(() => {
     if (initialData) {
@@ -55,6 +58,16 @@ export const AddPianoForm = ({ onSuccess, initialData }: AddPianoFormProps) => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    if (!session?.user?.id) {
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: "You must be logged in to perform this action",
+      });
+      return;
+    }
+
     setLoading(true);
 
     try {
@@ -95,12 +108,10 @@ export const AddPianoForm = ({ onSuccess, initialData }: AddPianoFormProps) => {
         finish,
         category,
         image_url,
+        user_id: session.user.id
       };
 
-      console.log('Piano data to save:', pianoData);
-
       if (initialData?.id) {
-        console.log('Updating piano with ID:', initialData.id);
         const { error: updateError } = await supabase
           .from("pianos")
           .update(pianoData)
@@ -108,7 +119,6 @@ export const AddPianoForm = ({ onSuccess, initialData }: AddPianoFormProps) => {
 
         if (updateError) throw updateError;
       } else {
-        console.log('Inserting new piano');
         const { error: insertError } = await supabase
           .from("pianos")
           .insert([pianoData]);
