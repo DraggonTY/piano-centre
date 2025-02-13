@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
@@ -102,23 +101,17 @@ export const AddPianoForm = ({ onSuccess, initialData }: AddPianoFormProps) => {
 
       if (initialData?.id) {
         console.log('Updating piano with ID:', initialData.id);
-        const { error: updateError, data } = await supabase
+        const { error: updateError } = await supabase
           .from("pianos")
           .update(pianoData)
-          .eq('id', initialData.id)
-          .select();
-
-        console.log('Update response:', { error: updateError, data });
+          .eq('id', initialData.id);
 
         if (updateError) throw updateError;
       } else {
         console.log('Inserting new piano');
-        const { error: insertError, data } = await supabase
+        const { error: insertError } = await supabase
           .from("pianos")
-          .insert([pianoData])
-          .select();
-
-        console.log('Insert response:', { error: insertError, data });
+          .insert([pianoData]);
 
         if (insertError) throw insertError;
       }

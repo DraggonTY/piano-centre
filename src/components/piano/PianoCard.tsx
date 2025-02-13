@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Pencil, Trash } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
@@ -30,13 +29,10 @@ export const PianoCard = ({ piano, onDelete, onUpdate }: PianoCardProps) => {
   const handleDelete = async () => {
     try {
       console.log('Attempting to delete piano with ID:', piano.id);
-      const { error, data } = await supabase
+      const { error } = await supabase
         .from("pianos")
         .delete()
-        .eq('id', piano.id)
-        .select();
-
-      console.log('Delete response:', { error, data });
+        .eq('id', piano.id);
 
       if (error) throw error;
 
