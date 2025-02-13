@@ -34,23 +34,26 @@ export const FeaturedPianos = ({ pianos, isLoading, onFeaturedUpdate }: Featured
   const [dialogOpen, setDialogOpen] = useState(false);
 
   // Check if user is admin
-  const checkAdminStatus = async () => {
-    if (!session?.user?.id) return;
-    
-    const { data, error } = await supabase
-      .from('user_roles')
-      .select('role')
-      .eq('user_id', session.user.id)
-      .eq('role', 'admin')
-      .single();
-
-    if (!error && data) {
-      setIsAdmin(true);
-    }
-  };
-
-  // Run admin check when session changes
   useEffect(() => {
+    const checkAdminStatus = async () => {
+      // Reset admin status when session changes
+      setIsAdmin(false);
+      
+      if (!session?.user?.id) return;
+      
+      const { data, error } = await supabase
+        .from('user_roles')
+        .select('role')
+        .eq('user_id', session.user.id)
+        .eq('role', 'admin')
+        .single();
+
+      if (!error && data) {
+        setIsAdmin(true);
+      }
+    };
+
+    // Run the check immediately when session changes
     checkAdminStatus();
   }, [session?.user?.id]);
 
