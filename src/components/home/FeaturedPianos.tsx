@@ -1,4 +1,3 @@
-
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import { Piano } from "@/types/piano";
@@ -13,6 +12,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
+  DialogDescription,
 } from "@/components/ui/dialog";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Loader2 } from "lucide-react";
@@ -33,10 +33,8 @@ export const FeaturedPianos = ({ pianos, isLoading, onFeaturedUpdate }: Featured
   const [selectedPianos, setSelectedPianos] = useState<number[]>([]);
   const [dialogOpen, setDialogOpen] = useState(false);
 
-  // Check if user is admin
   useEffect(() => {
     const checkAdminStatus = async () => {
-      // Reset admin status when session changes
       setIsAdmin(false);
       
       if (!session?.user?.id) return;
@@ -53,11 +51,9 @@ export const FeaturedPianos = ({ pianos, isLoading, onFeaturedUpdate }: Featured
       }
     };
 
-    // Run the check immediately when session changes
     checkAdminStatus();
   }, [session?.user?.id]);
 
-  // Load all pianos when dialog opens
   useEffect(() => {
     const loadAllPianos = async () => {
       if (!dialogOpen) return;
@@ -71,7 +67,6 @@ export const FeaturedPianos = ({ pianos, isLoading, onFeaturedUpdate }: Featured
         if (error) throw error;
         setAllPianos(data || []);
         
-        // Set initial selected pianos
         const featured = data?.filter(p => p.is_featured) || [];
         setSelectedPianos(featured.map(p => p.id));
       } catch (error: any) {
@@ -93,7 +88,6 @@ export const FeaturedPianos = ({ pianos, isLoading, onFeaturedUpdate }: Featured
     setUpdating(true);
 
     try {
-      // First, unfeature all pianos
       await supabase
         .from('pianos')
         .update({
@@ -102,7 +96,6 @@ export const FeaturedPianos = ({ pianos, isLoading, onFeaturedUpdate }: Featured
         })
         .eq('is_featured', true);
 
-      // Then, feature the selected pianos with order
       for (let i = 0; i < pianoIds.length; i++) {
         await supabase
           .from('pianos')
@@ -220,6 +213,9 @@ export const FeaturedPianos = ({ pianos, isLoading, onFeaturedUpdate }: Featured
                 <DialogContent className="max-w-2xl">
                   <DialogHeader>
                     <DialogTitle>Select Featured Pianos</DialogTitle>
+                    <DialogDescription>
+                      Choose up to 3 pianos to feature on the homepage. Selected pianos will be displayed in the order they are chosen.
+                    </DialogDescription>
                   </DialogHeader>
                   <div className="max-h-[60vh] overflow-y-auto">
                     {loadingPianos ? (
