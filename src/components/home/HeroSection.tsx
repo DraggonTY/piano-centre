@@ -9,7 +9,7 @@ export const HeroSection = () => {
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
       <div className="absolute inset-0 bg-gradient-to-b from-black/60 to-black/30" 
            style={{
-             backgroundImage: "url('https://images.unsplash.com/photo-1505248207594-9f9912dda70a?auto=format&fit=crop&q=80')",
+             backgroundImage: "url('/lovable-uploads/7e5e0c70-42f6-4f9c-97d1-d1f961510cea.png')",
              backgroundSize: "cover",
              backgroundPosition: "center",
              backgroundAttachment: "fixed"
