@@ -8,7 +8,7 @@ export const HeroSection = () => {
   return (
     <section className="relative h-[600px] w-full overflow-hidden">
       <img 
-        src="/lovable-uploads/7e5e0c70-42f6-4f9c-97d1-d1f961510cea.png"
+        src="/lovable-uploads/0ac4679a-cee5-408f-a113-3252ab86e84b.png"
         alt="Piano showroom"
         className="absolute inset-0 w-full h-full object-cover object-center"
         style={{ maxWidth: 'none' }}
