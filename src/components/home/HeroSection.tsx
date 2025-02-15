@@ -6,56 +6,57 @@ import { Button } from "@/components/ui/button";
 
 export const HeroSection = () => {
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
-      <div className="absolute inset-0 bg-gradient-to-b from-black/60 to-black/30" 
-           style={{
-             backgroundImage: "url('/lovable-uploads/7e5e0c70-42f6-4f9c-97d1-d1f961510cea.png')",
-             backgroundSize: "cover",
-             backgroundPosition: "center",
-             backgroundAttachment: "fixed"
-           }}
+    <section className="relative h-[600px] w-full overflow-hidden">
+      <img 
+        src="/lovable-uploads/7e5e0c70-42f6-4f9c-97d1-d1f961510cea.png"
+        alt="Piano showroom"
+        className="absolute inset-0 w-full h-full object-cover object-center"
+        style={{ maxWidth: 'none' }}
       />
-      <motion.div 
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8 }}
-        className="container relative z-10 text-center px-4"
-      >
-        <span className="inline-block mb-4 px-3 py-1 bg-white/10 backdrop-blur-sm rounded-full text-sm font-medium text-white">
-          Excellence in Music Since 1980
-        </span>
-        <h1 className="font-serif text-4xl md:text-6xl lg:text-7xl font-bold mb-6 text-white">
-          Discover Your Perfect Piano
-        </h1>
-        <p className="text-lg md:text-xl max-w-2xl mx-auto mb-8 text-gray-200">
-          Experience our curated selection of world-class pianos, each crafted to perfection
-          and ready to bring music to your home.
-        </p>
-        <div className="flex flex-col sm:flex-row gap-4 justify-center">
-          <Link to="/pianos">
-            <Button 
-              size="lg" 
-              className="bg-primary hover:bg-primary/90 text-white px-8"
-            >
-              View Collection
-            </Button>
-          </Link>
-          <Link to="/contact">
-            <Button 
-              size="lg" 
-              variant="outline" 
-              className="border-2 border-white text-white hover:bg-white/10"
-            >
-              Schedule a Visit
-            </Button>
-          </Link>
-        </div>
-      </motion.div>
+      <div className="absolute inset-0 bg-black/40" />
+      <div className="relative z-10 flex items-center justify-center h-full">
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
+          className="text-center text-white space-y-6 px-4"
+        >
+          <span className="inline-block mb-4 px-3 py-1 bg-white/10 backdrop-blur-sm rounded-full text-sm font-medium">
+            Excellence in Music Since 1980
+          </span>
+          <h1 className="font-serif text-5xl md:text-6xl font-bold">
+            Discover Your Perfect Piano
+          </h1>
+          <p className="text-xl md:text-2xl max-w-2xl mx-auto">
+            Experience our curated selection of world-class pianos, each crafted to perfection
+            and ready to bring music to your home.
+          </p>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center mt-6">
+            <Link to="/pianos">
+              <Button 
+                size="lg" 
+                className="bg-primary hover:bg-primary/90 text-white px-8"
+              >
+                View Collection
+              </Button>
+            </Link>
+            <Link to="/contact">
+              <Button 
+                size="lg" 
+                variant="outline" 
+                className="border-2 border-white text-white hover:bg-white/10"
+              >
+                Schedule a Visit
+              </Button>
+            </Link>
+          </div>
+        </motion.div>
+      </div>
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 1, duration: 1 }}
-        className="absolute bottom-8 left-1/2 -translate-x-1/2 animate-bounce"
+        className="absolute bottom-8 left-1/2 -translate-x-1/2 animate-bounce z-10"
       >
         <ChevronDown className="w-6 h-6 text-white" />
       </motion.div>
