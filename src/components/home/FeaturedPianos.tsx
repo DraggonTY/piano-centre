@@ -28,9 +28,15 @@ export const FeaturedPianos = ({ pianos, isLoading, onFeaturedUpdate }: Featured
 
   useEffect(() => {
     const checkAdminStatus = async () => {
+      console.log("Checking admin status...");
+      console.log("Session user ID:", session?.user?.id);
+      
       setIsAdmin(false);
       
-      if (!session?.user?.id) return;
+      if (!session?.user?.id) {
+        console.log("No user session found");
+        return;
+      }
       
       const { data, error } = await supabase
         .from('user_roles')
@@ -39,8 +45,13 @@ export const FeaturedPianos = ({ pianos, isLoading, onFeaturedUpdate }: Featured
         .eq('role', 'admin')
         .single();
 
+      console.log("Admin check response:", { data, error });
+
       if (!error && data) {
+        console.log("User is admin");
         setIsAdmin(true);
+      } else {
+        console.log("User is not admin or error occurred");
       }
     };
 
@@ -135,6 +146,13 @@ export const FeaturedPianos = ({ pianos, isLoading, onFeaturedUpdate }: Featured
   };
 
   const emptySlots = 4 - (pianos?.length || 0);
+  
+  console.log("Current state:", {
+    isAdmin,
+    emptySlots,
+    sessionExists: !!session,
+    pianos: pianos?.length
+  });
 
   return (
     <section className="py-24 bg-white">
