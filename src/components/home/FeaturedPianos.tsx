@@ -8,11 +8,13 @@ import { useState, useEffect } from "react";
 import { PianoCard } from "./featured/PianoCard";
 import { EmptySlot } from "./featured/EmptySlot";
 import { FeaturedPianosDialog } from "./featured/FeaturedPianosDialog";
+
 interface FeaturedPianosProps {
   pianos?: Piano[];
   isLoading: boolean;
   onFeaturedUpdate?: () => void;
 }
+
 export const FeaturedPianos = ({
   pianos,
   isLoading,
@@ -30,6 +32,7 @@ export const FeaturedPianos = ({
   const [loadingPianos, setLoadingPianos] = useState(false);
   const [selectedPianos, setSelectedPianos] = useState<number[]>([]);
   const [dialogOpen, setDialogOpen] = useState(false);
+
   useEffect(() => {
     const checkAdminStatus = async () => {
       console.log("Checking admin status...");
@@ -56,6 +59,7 @@ export const FeaturedPianos = ({
     };
     checkAdminStatus();
   }, [session?.user?.id]);
+
   useEffect(() => {
     const loadAllPianos = async () => {
       if (!dialogOpen) return;
@@ -83,6 +87,7 @@ export const FeaturedPianos = ({
     };
     loadAllPianos();
   }, [dialogOpen]);
+
   const handleFeatureToggle = async () => {
     if (!session?.user?.id) return;
     setUpdating(true);
@@ -113,6 +118,7 @@ export const FeaturedPianos = ({
       setUpdating(false);
     }
   };
+
   const handlePianoSelect = (pianoId: number, checked: boolean) => {
     if (checked && selectedPianos.length >= 4) {
       toast({
@@ -124,14 +130,12 @@ export const FeaturedPianos = ({
     }
     setSelectedPianos(prev => checked ? [...prev, pianoId] : prev.filter(id => id !== pianoId));
   };
-  const emptySlots = 4 - (pianos?.length || 0);
-  console.log("Current state:", {
-    isAdmin,
-    emptySlots,
-    sessionExists: !!session,
-    pianos: pianos?.length
-  });
-  return <section className="py-24 bg-white">
+
+  const emptySlots = 3 - (pianos?.length || 0);
+  console.log("Current state:", { isAdmin, emptySlots, sessionExists: !!session, pianos: pianos?.length });
+
+  return (
+    <section className="py-24 bg-white">
       <div className="container px-4">
         <div className="text-center mb-16">
           <h2 className="font-serif text-4xl font-bold mb-4">Featured Pianos</h2>
@@ -141,16 +145,30 @@ export const FeaturedPianos = ({
           </p>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {isLoading ? [...Array(4)].map((_, i) => <div key={i} className="bg-gray-50 rounded-lg p-6 animate-pulse">
+          {isLoading ? (
+            [...Array(3)].map((_, i) => (
+              <div key={i} className="bg-gray-50 rounded-lg p-6 animate-pulse">
                 <div className="aspect-[4/3] mb-4 bg-gray-200 rounded-lg"></div>
                 <div className="h-6 bg-gray-200 rounded mb-2"></div>
                 <div className="h-4 bg-gray-200 rounded mb-2"></div>
                 <div className="h-4 bg-gray-200 rounded mb-4"></div>
                 <div className="h-10 bg-gray-200 rounded"></div>
-              </div>) : <>
-              {pianos?.map(piano => <PianoCard key={piano.id} piano={piano} />)}
-              {emptySlots > 0 && isAdmin && [...Array(emptySlots)].map((_, index) => <EmptySlot key={`empty-${index}`} index={index} onClick={() => setDialogOpen(true)} />)}
-            </>}
+              </div>
+            ))
+          ) : (
+            <>
+              {pianos?.map(piano => (
+                <PianoCard key={piano.id} piano={piano} />
+              ))}
+              {emptySlots > 0 && isAdmin && [...Array(emptySlots)].map((_, index) => (
+                <EmptySlot
+                  key={`empty-${index}`}
+                  index={index}
+                  onClick={() => setDialogOpen(true)}
+                />
+              ))}
+            </>
+          )}
         </div>
         <div className="text-center mt-12 space-y-4">
           <Link to="/pianos">
@@ -159,10 +177,22 @@ export const FeaturedPianos = ({
             </Button>
           </Link>
           
-          {isAdmin && session?.user && <div>
-              <FeaturedPianosDialog open={dialogOpen} onOpenChange={setDialogOpen} allPianos={allPianos} selectedPianos={selectedPianos} onPianoSelect={handlePianoSelect} onSave={handleFeatureToggle} loading={loadingPianos} updating={updating} />
-            </div>}
+          {isAdmin && session?.user && (
+            <div>
+              <FeaturedPianosDialog
+                open={dialogOpen}
+                onOpenChange={setDialogOpen}
+                allPianos={allPianos}
+                selectedPianos={selectedPianos}
+                onPianoSelect={handlePianoSelect}
+                onSave={handleFeatureToggle}
+                loading={loadingPianos}
+                updating={updating}
+              />
+            </div>
+          )}
         </div>
       </div>
-    </section>;
+    </section>
+  );
 };
