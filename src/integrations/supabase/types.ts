@@ -9,6 +9,45 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      hero_content: {
+        Row: {
+          created_at: string | null
+          id: string
+          imageUrl: string
+          scheduleVisitLink: string
+          scheduleVisitText: string
+          subtitle: string
+          tagline: string
+          title: string
+          viewCollectionLink: string
+          viewCollectionText: string
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          imageUrl: string
+          scheduleVisitLink: string
+          scheduleVisitText: string
+          subtitle: string
+          tagline: string
+          title: string
+          viewCollectionLink: string
+          viewCollectionText: string
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          imageUrl?: string
+          scheduleVisitLink?: string
+          scheduleVisitText?: string
+          subtitle?: string
+          tagline?: string
+          title?: string
+          viewCollectionLink?: string
+          viewCollectionText?: string
+        }
+        Relationships: []
+      }
       pianos: {
         Row: {
           category: string

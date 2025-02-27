@@ -29,6 +29,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 
 // Create schema for hero section content
 const heroContentSchema = z.object({
+  id: z.string().uuid().optional(),
   title: z.string().min(1, "Title is required"),
   subtitle: z.string().min(1, "Subtitle is required"),
   tagline: z.string().min(1, "Tagline is required"),
@@ -94,22 +95,42 @@ export const HeroSection = () => {
   useEffect(() => {
     const fetchHeroContent = async () => {
       try {
+        // Check if hero content exists
         const { data, error } = await supabase
           .from('hero_content')
           .select('*')
           .single();
         
         if (error) {
-          console.error('Error fetching hero content:', error);
+          // If no content exists, insert default content
+          if (error.code === 'PGRST116') {
+            const { data: insertData, error: insertError } = await supabase
+              .from('hero_content')
+              .insert(defaultHeroContent)
+              .select()
+              .single();
+            
+            if (insertError) {
+              console.error('Error inserting default hero content:', insertError);
+              return;
+            }
+            
+            if (insertData) {
+              setHeroContent(insertData);
+              form.reset(insertData);
+            }
+          } else {
+            console.error('Error fetching hero content:', error);
+          }
           return;
         }
         
         if (data) {
-          setHeroContent(data as HeroContent);
-          form.reset(data as HeroContent);
+          setHeroContent(data);
+          form.reset(data);
         }
       } catch (error) {
-        console.error('Error fetching hero content:', error);
+        console.error('Error in hero content flow:', error);
       }
     };
 
@@ -141,7 +162,7 @@ export const HeroSection = () => {
         const filePath = `${fileName}`;
 
         // Upload to Supabase Storage
-        const { data: uploadData, error: uploadError } = await supabase.storage
+        const { error: uploadError } = await supabase.storage
           .from('hero_images')
           .upload(filePath, imageFile);
 
@@ -159,16 +180,52 @@ export const HeroSection = () => {
         }
       }
 
-      // Update or insert hero content in database
-      const { error } = await supabase
-        .from('hero_content')
-        .upsert(data, { onConflict: 'id' });
-
-      if (error) {
-        throw error;
+      // Determine whether to insert or update based on id
+      let result;
+      if (data.id) {
+        // Update existing record
+        result = await supabase
+          .from('hero_content')
+          .update({
+            title: data.title,
+            subtitle: data.subtitle,
+            tagline: data.tagline,
+            viewCollectionText: data.viewCollectionText,
+            viewCollectionLink: data.viewCollectionLink,
+            scheduleVisitText: data.scheduleVisitText,
+            scheduleVisitLink: data.scheduleVisitLink,
+            imageUrl: data.imageUrl
+          })
+          .eq('id', data.id)
+          .select()
+          .single();
+      } else {
+        // Insert new record
+        result = await supabase
+          .from('hero_content')
+          .insert({
+            title: data.title,
+            subtitle: data.subtitle,
+            tagline: data.tagline,
+            viewCollectionText: data.viewCollectionText,
+            viewCollectionLink: data.viewCollectionLink,
+            scheduleVisitText: data.scheduleVisitText,
+            scheduleVisitLink: data.scheduleVisitLink,
+            imageUrl: data.imageUrl
+          })
+          .select()
+          .single();
       }
 
-      setHeroContent(data);
+      if (result.error) {
+        throw result.error;
+      }
+
+      if (result.data) {
+        setHeroContent(result.data);
+        form.reset(result.data);
+      }
+
       setOpen(false);
       toast({
         title: "Success",
