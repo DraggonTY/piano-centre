@@ -44,7 +44,7 @@ export const HeroSection = () => {
               <Button 
                 size="lg" 
                 variant="outline" 
-                className="border-2 border-white text-white hover:bg-white/10"
+                className="border-2 border-white bg-white text-black hover:bg-black hover:border-black hover:text-white transition-colors"
               >
                 Schedule a Visit
               </Button>
