@@ -35,7 +35,7 @@ export const HeroSection = () => {
             <Link to="/pianos">
               <Button 
                 size="lg" 
-                className="border-2 border-white bg-white text-black hover:bg-black hover:border-black hover:text-white transition-colors px-8"
+                className="border-2 border-black bg-black text-white hover:bg-white hover:border-white hover:text-black transition-all duration-300 px-8 hover:scale-105"
               >
                 View Collection
               </Button>
@@ -44,7 +44,7 @@ export const HeroSection = () => {
               <Button 
                 size="lg" 
                 variant="outline" 
-                className="border-2 border-white bg-white text-black hover:bg-black hover:border-black hover:text-white transition-colors"
+                className="border-2 border-white bg-white text-black hover:bg-black hover:border-black hover:text-white transition-all duration-300 hover:scale-105"
               >
                 Schedule a Visit
               </Button>
