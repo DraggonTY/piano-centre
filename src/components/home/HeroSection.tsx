@@ -106,7 +106,16 @@ export const HeroSection = () => {
           if (error.code === 'PGRST116') {
             const { data: insertData, error: insertError } = await supabase
               .from('hero_content')
-              .insert(defaultHeroContent)
+              .insert({
+                title: defaultHeroContent.title,
+                subtitle: defaultHeroContent.subtitle,
+                tagline: defaultHeroContent.tagline,
+                viewCollectionText: defaultHeroContent.viewCollectionText,
+                viewCollectionLink: defaultHeroContent.viewCollectionLink,
+                scheduleVisitText: defaultHeroContent.scheduleVisitText,
+                scheduleVisitLink: defaultHeroContent.scheduleVisitLink,
+                imageUrl: defaultHeroContent.imageUrl
+              })
               .select()
               .single();
             
@@ -254,12 +263,12 @@ export const HeroSection = () => {
       <div className="absolute inset-0 bg-black/40" />
       
       {isAdmin && (
-        <div className="absolute top-4 right-4 z-20">
+        <div className="absolute top-24 right-4 z-20">
           <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
               <Button 
                 size="sm" 
-                className="bg-purple-600 hover:bg-purple-700 text-white"
+                className="bg-black hover:bg-white hover:text-black text-white border border-white transition-colors"
               >
                 <Edit className="mr-2 h-4 w-4" /> Edit Hero Section
               </Button>
@@ -423,7 +432,7 @@ export const HeroSection = () => {
                     <Button 
                       type="submit" 
                       disabled={loading}
-                      className="bg-purple-600 hover:bg-purple-700"
+                      className="bg-black hover:bg-white hover:text-black text-white border border-black transition-colors"
                     >
                       {loading ? (
                         <>Saving...</>
