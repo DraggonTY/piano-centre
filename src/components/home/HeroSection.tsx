@@ -35,7 +35,7 @@ export const HeroSection = () => {
             <Link to="/pianos">
               <Button 
                 size="lg" 
-                className="bg-primary hover:bg-primary/90 text-white px-8"
+                className="border-2 border-white bg-white text-black hover:bg-black hover:border-black hover:text-white transition-colors px-8"
               >
                 View Collection
               </Button>
