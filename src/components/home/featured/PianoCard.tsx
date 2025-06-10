@@ -42,23 +42,25 @@ export const PianoCard = ({ piano }: PianoCardProps) => {
           <DialogTrigger asChild>
             <Button className="w-full">View Details</Button>
           </DialogTrigger>
-          <DialogContent className="sm:max-w-[600px] max-h-[80vh] overflow-y-auto">
+          <DialogContent className="sm:max-w-[90vw] max-h-[90vh] w-full">
             <DialogHeader>
               <DialogTitle className="text-2xl">{piano.name}</DialogTitle>
             </DialogHeader>
             
-            <div className="space-y-6">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 h-full">
               {piano.image_url && (
-                <div className="aspect-[4/3] overflow-hidden rounded-lg">
-                  <img 
-                    src={piano.image_url} 
-                    alt={piano.name}
-                    className="w-full h-full object-cover"
-                  />
+                <div className="flex-shrink-0">
+                  <div className="aspect-[4/3] overflow-hidden rounded-lg">
+                    <img 
+                      src={piano.image_url} 
+                      alt={piano.name}
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
                 </div>
               )}
               
-              <div className="space-y-4">
+              <div className="space-y-4 min-h-0">
                 <div className="flex justify-between items-start">
                   <div>
                     <p className="text-3xl font-bold text-primary">
@@ -72,12 +74,12 @@ export const PianoCard = ({ piano }: PianoCardProps) => {
 
                 {piano.description && (
                   <div>
-                    <h4 className="font-semibold mb-2">Description</h4>
-                    <p className="text-gray-600">{piano.description}</p>
+                    <h4 className="font-semibold mb-1">Description</h4>
+                    <p className="text-gray-600 text-sm">{piano.description}</p>
                   </div>
                 )}
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="grid grid-cols-2 gap-3 text-sm">
                   {piano.manufacturer && (
                     <div>
                       <span className="font-semibold">Manufacturer:</span>
@@ -118,23 +120,23 @@ export const PianoCard = ({ piano }: PianoCardProps) => {
 
                 {(piano.width_cm || piano.height_cm || piano.depth_cm) && (
                   <div>
-                    <h4 className="font-semibold mb-2">Dimensions</h4>
-                    <div className="grid grid-cols-3 gap-4">
+                    <h4 className="font-semibold mb-1">Dimensions</h4>
+                    <div className="grid grid-cols-3 gap-2 text-sm">
                       {piano.width_cm && (
                         <div>
-                          <span className="text-sm text-gray-500">Width</span>
+                          <span className="text-xs text-gray-500">Width</span>
                           <p className="font-medium">{piano.width_cm}cm</p>
                         </div>
                       )}
                       {piano.height_cm && (
                         <div>
-                          <span className="text-sm text-gray-500">Height</span>
+                          <span className="text-xs text-gray-500">Height</span>
                           <p className="font-medium">{piano.height_cm}cm</p>
                         </div>
                       )}
                       {piano.depth_cm && (
                         <div>
-                          <span className="text-sm text-gray-500">Depth</span>
+                          <span className="text-xs text-gray-500">Depth</span>
                           <p className="font-medium">{piano.depth_cm}cm</p>
                         </div>
                       )}
@@ -142,7 +144,7 @@ export const PianoCard = ({ piano }: PianoCardProps) => {
                   </div>
                 )}
 
-                <div className="pt-4 border-t">
+                <div className="pt-2 border-t">
                   <Button className="w-full" size="lg">
                     Schedule a Viewing
                   </Button>
