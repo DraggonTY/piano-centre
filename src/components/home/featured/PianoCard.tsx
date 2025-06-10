@@ -30,7 +30,6 @@ export const PianoCard = ({ piano }: PianoCardProps) => {
       )}
       <div className="p-6">
         <h3 className="text-xl font-bold mb-2">{piano.name}</h3>
-        <p className="text-gray-600 mb-4 line-clamp-2">{piano.description}</p>
         <div className="flex justify-between items-center mb-4">
           <span className="text-2xl font-bold text-primary">
             ${piano.price.toLocaleString()}

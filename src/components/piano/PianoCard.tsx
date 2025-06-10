@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { Pencil, Trash } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
@@ -25,6 +26,7 @@ export const PianoCard = ({ piano, onDelete, onUpdate }: PianoCardProps) => {
   const { session } = useAuth();
   const { toast } = useToast();
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
+  const [isViewDialogOpen, setIsViewDialogOpen] = useState(false);
 
   const handleDelete = async () => {
     try {
@@ -101,68 +103,146 @@ export const PianoCard = ({ piano, onDelete, onUpdate }: PianoCardProps) => {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="space-y-4">
+          <div className="space-y-2">
             {piano.manufacturer && (
               <p className="text-sm">
                 <span className="font-semibold">Manufacturer:</span> {piano.manufacturer}
               </p>
             )}
-            {piano.model_year && (
+            {piano.condition && (
               <p className="text-sm">
-                <span className="font-semibold">Model Year:</span> {piano.model_year}
+                <span className="font-semibold">Condition:</span> {piano.condition}
               </p>
             )}
-            <p className="text-gray-600">{piano.description}</p>
-            <div className="grid grid-cols-2 gap-2 text-sm">
-              {piano.type && (
-                <p>
-                  <span className="font-semibold">Category:</span> {piano.type}
-                </p>
-              )}
-              {piano.condition && (
-                <p>
-                  <span className="font-semibold">Condition:</span> {piano.condition}
-                </p>
-              )}
-              {piano.finish && (
-                <p>
-                  <span className="font-semibold">Finish:</span> {piano.finish}
-                </p>
-              )}
-              {piano.keyboard_keys && (
-                <p>
-                  <span className="font-semibold">Keys:</span> {piano.keyboard_keys}
-                </p>
-              )}
-              {piano.pedals && (
-                <p>
-                  <span className="font-semibold">Pedals:</span> {piano.pedals}
-                </p>
-              )}
-            </div>
-            {(piano.width_cm || piano.height_cm || piano.depth_cm) && (
-              <div className="text-sm">
-                <p className="font-semibold mb-1">Dimensions:</p>
-                <div className="grid grid-cols-3 gap-2">
-                  {piano.width_cm && (
-                    <p>W: {piano.width_cm}cm</p>
-                  )}
-                  {piano.height_cm && (
-                    <p>H: {piano.height_cm}cm</p>
-                  )}
-                  {piano.depth_cm && (
-                    <p>D: {piano.depth_cm}cm</p>
-                  )}
-                </div>
-              </div>
+            {piano.type && (
+              <p className="text-sm">
+                <span className="font-semibold">Type:</span> {piano.type}
+              </p>
             )}
           </div>
         </CardContent>
-        <CardFooter>
-          <Button className="w-full">Schedule a Viewing</Button>
+        <CardFooter className="space-y-2">
+          <Button className="w-full" onClick={() => setIsViewDialogOpen(true)}>
+            View Details
+          </Button>
         </CardFooter>
       </Card>
 
+      {/* View Details Dialog */}
+      <Dialog open={isViewDialogOpen} onOpenChange={setIsViewDialogOpen}>
+        <DialogContent className="sm:max-w-[90vw] max-h-[90vh] w-full">
+          <DialogHeader>
+            <DialogTitle className="text-2xl">{piano.name}</DialogTitle>
+          </DialogHeader>
+          
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 h-full">
+            {piano.image_url && (
+              <div className="flex-shrink-0">
+                <div className="aspect-[4/3] overflow-hidden rounded-lg">
+                  <img 
+                    src={piano.image_url} 
+                    alt={piano.name}
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+              </div>
+            )}
+            
+            <div className="space-y-4 min-h-0">
+              <div className="flex justify-between items-start">
+                <div>
+                  <p className="text-3xl font-bold text-primary">
+                    ${piano.price.toLocaleString()}
+                  </p>
+                  {piano.condition && (
+                    <p className="text-gray-600">Condition: {piano.condition}</p>
+                  )}
+                </div>
+              </div>
+
+              {piano.description && (
+                <div>
+                  <h4 className="font-semibold mb-1">Description</h4>
+                  <p className="text-gray-600 text-sm">{piano.description}</p>
+                </div>
+              )}
+
+              <div className="grid grid-cols-2 gap-3 text-sm">
+                {piano.manufacturer && (
+                  <div>
+                    <span className="font-semibold">Manufacturer:</span>
+                    <p className="text-gray-600">{piano.manufacturer}</p>
+                  </div>
+                )}
+                {piano.model_year && (
+                  <div>
+                    <span className="font-semibold">Model Year:</span>
+                    <p className="text-gray-600">{piano.model_year}</p>
+                  </div>
+                )}
+                {piano.type && (
+                  <div>
+                    <span className="font-semibold">Type:</span>
+                    <p className="text-gray-600">{piano.type}</p>
+                  </div>
+                )}
+                {piano.finish && (
+                  <div>
+                    <span className="font-semibold">Finish:</span>
+                    <p className="text-gray-600">{piano.finish}</p>
+                  </div>
+                )}
+                {piano.keyboard_keys && (
+                  <div>
+                    <span className="font-semibold">Keys:</span>
+                    <p className="text-gray-600">{piano.keyboard_keys}</p>
+                  </div>
+                )}
+                {piano.pedals && (
+                  <div>
+                    <span className="font-semibold">Pedals:</span>
+                    <p className="text-gray-600">{piano.pedals}</p>
+                  </div>
+                )}
+              </div>
+
+              {(piano.width_cm || piano.height_cm || piano.depth_cm) && (
+                <div>
+                  <h4 className="font-semibold mb-1">Dimensions</h4>
+                  <div className="grid grid-cols-3 gap-2 text-sm">
+                    {piano.width_cm && (
+                      <div>
+                        <span className="text-xs text-gray-500">Width</span>
+                        <p className="font-medium">{piano.width_cm}cm</p>
+                      </div>
+                    )}
+                    {piano.height_cm && (
+                      <div>
+                        <span className="text-xs text-gray-500">Height</span>
+                        <p className="font-medium">{piano.height_cm}cm</p>
+                      </div>
+                    )}
+                    {piano.depth_cm && (
+                      <div>
+                        <span className="text-xs text-gray-500">Depth</span>
+                        <p className="font-medium">{piano.depth_cm}cm</p>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
+
+              <div className="pt-2 border-t">
+                <Button className="w-full" size="lg">
+                  Schedule a Viewing
+                </Button>
+              </div>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Edit Dialog */}
       <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
         <DialogContent className="sm:max-w-[600px]">
           <DialogHeader>
