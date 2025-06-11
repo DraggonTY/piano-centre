@@ -23,7 +23,7 @@ export const MobileHeader = ({ session, onMenuToggle }: MobileHeaderProps) => {
           variant="ghost"
           size="sm"
           onClick={onMenuToggle}
-          className="p-2"
+          className="p-2 hover:bg-gray-100 transition-colors duration-200"
         >
           <Menu className="h-6 w-6" />
         </Button>
@@ -34,7 +34,7 @@ export const MobileHeader = ({ session, onMenuToggle }: MobileHeaderProps) => {
           <img
             src="/lovable-uploads/96414221-6d22-4e38-bd12-abcb86467660.png"
             alt="Piano Centre Edmonton"
-            className="h-20"
+            className="h-28"
           />
         </Link>
       </div>
