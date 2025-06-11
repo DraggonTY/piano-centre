@@ -12,6 +12,11 @@ interface PianoCardProps {
 export const PianoCard = ({ piano }: PianoCardProps) => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
+  // Use key image if available, otherwise use first image from array, or fallback to single image_url
+  const displayImage = piano.key_image_url || 
+                      (piano.image_urls && piano.image_urls.length > 0 ? piano.image_urls[0] : null) || 
+                      piano.image_url;
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -19,10 +24,10 @@ export const PianoCard = ({ piano }: PianoCardProps) => {
       viewport={{ once: true }}
       className="bg-white rounded-lg shadow-lg overflow-hidden group relative"
     >
-      {piano.image_url && (
+      {displayImage && (
         <div className="aspect-[4/3] overflow-hidden">
           <img 
-            src={piano.image_url} 
+            src={displayImage} 
             alt={piano.name}
             className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
           />
@@ -47,11 +52,11 @@ export const PianoCard = ({ piano }: PianoCardProps) => {
             </DialogHeader>
             
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 h-full">
-              {piano.image_url && (
+              {displayImage && (
                 <div className="flex-shrink-0">
                   <div className="aspect-[4/3] overflow-hidden rounded-lg">
                     <img 
-                      src={piano.image_url} 
+                      src={displayImage} 
                       alt={piano.name}
                       className="w-full h-full object-cover"
                     />

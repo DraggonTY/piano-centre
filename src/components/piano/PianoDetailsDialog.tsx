@@ -14,8 +14,8 @@ interface PianoDetailsDialogProps {
 export const PianoDetailsDialog = ({ piano, isOpen, onOpenChange }: PianoDetailsDialogProps) => {
   const [viewDialogImageIndex, setViewDialogImageIndex] = useState(0);
   
-  // Convert single image_url to array for consistency
-  const images = piano.image_url ? [piano.image_url] : [];
+  // Use multiple images if available, fallback to single image_url, or empty array
+  const images = piano.image_urls || (piano.image_url ? [piano.image_url] : []);
   const hasMultipleImages = images.length > 1;
 
   const nextViewDialogImage = () => {

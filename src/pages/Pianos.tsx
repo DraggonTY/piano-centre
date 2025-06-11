@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useSearchParams } from "react-router-dom";
@@ -27,7 +26,7 @@ const Pianos = () => {
     queryFn: async () => {
       let query = supabase
         .from("pianos")
-        .select("*")
+        .select("*, image_urls, key_image_url")
         .order("created_at", { ascending: false });
 
       if (category) {
@@ -53,7 +52,15 @@ const Pianos = () => {
       const { data, error } = await query;
 
       if (error) throw error;
-      return data as Piano[];
+      
+      // Transform data to match Piano interface, providing defaults for new fields
+      const transformedData: Piano[] = (data || []).map(piano => ({
+        ...piano,
+        image_urls: piano.image_urls || null,
+        key_image_url: piano.key_image_url || null
+      }));
+      
+      return transformedData;
     },
   });
 

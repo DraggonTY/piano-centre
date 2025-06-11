@@ -68,12 +68,20 @@ export const FeaturedPianos = ({
         const {
           data,
           error
-        } = await supabase.from('pianos').select('*').order('created_at', {
+        } = await supabase.from('pianos').select('*, image_urls, key_image_url').order('created_at', {
           ascending: false
         });
         if (error) throw error;
-        setAllPianos(data || []);
-        const featured = data?.filter(p => p.is_featured) || [];
+        
+        // Transform data to match Piano interface, providing defaults for new fields
+        const transformedData: Piano[] = (data || []).map(piano => ({
+          ...piano,
+          image_urls: piano.image_urls || null,
+          key_image_url: piano.key_image_url || null
+        }));
+        
+        setAllPianos(transformedData);
+        const featured = transformedData?.filter(p => p.is_featured) || [];
         setSelectedPianos(featured.map(p => p.id));
       } catch (error: any) {
         toast({

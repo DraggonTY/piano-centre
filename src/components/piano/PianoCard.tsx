@@ -20,8 +20,8 @@ export const PianoCard = ({ piano, onDelete, onUpdate }: PianoCardProps) => {
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [isViewDialogOpen, setIsViewDialogOpen] = useState(false);
 
-  // Convert single image_url to array for consistency
-  const images = piano.image_url ? [piano.image_url] : [];
+  // Use multiple images if available, fallback to single image_url, or empty array
+  const images = piano.image_urls || (piano.image_url ? [piano.image_url] : []);
 
   const handleDelete = async () => {
     try {

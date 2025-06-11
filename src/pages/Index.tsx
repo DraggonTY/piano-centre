@@ -16,7 +16,7 @@ const Index = () => {
     queryFn: async () => {
       const { data, error } = await supabase
         .from('pianos')
-        .select('*')
+        .select('*, image_urls, key_image_url')
         .eq('is_featured', true)
         .order('featured_order', { ascending: true })
         .limit(3);
@@ -30,7 +30,14 @@ const Index = () => {
         throw error;
       }
       
-      return data as Piano[];
+      // Transform data to match Piano interface, providing defaults for new fields
+      const transformedData: Piano[] = (data || []).map(piano => ({
+        ...piano,
+        image_urls: piano.image_urls || null,
+        key_image_url: piano.key_image_url || null
+      }));
+      
+      return transformedData;
     },
   });
 
