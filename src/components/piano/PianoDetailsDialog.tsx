@@ -1,9 +1,12 @@
 
 import { useState } from "react";
-import { ChevronLeft, ChevronRight, X } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Piano } from "@/types/piano";
+import { PianoImageGallery } from "./details/PianoImageGallery";
+import { PianoSpecifications } from "./details/PianoSpecifications";
+import { PianoDimensions } from "./details/PianoDimensions";
+import { FullImageModal } from "./details/FullImageModal";
 
 interface PianoDetailsDialogProps {
   piano: Piano;
@@ -17,15 +20,6 @@ export const PianoDetailsDialog = ({ piano, isOpen, onOpenChange }: PianoDetails
   
   // Use multiple images if available, fallback to single image_url, or empty array
   const images = piano.image_urls || (piano.image_url ? [piano.image_url] : []);
-  const hasMultipleImages = images.length > 1;
-
-  const nextViewDialogImage = () => {
-    setViewDialogImageIndex((prev) => (prev + 1) % images.length);
-  };
-
-  const prevViewDialogImage = () => {
-    setViewDialogImageIndex((prev) => (prev - 1 + images.length) % images.length);
-  };
 
   const openFullImage = () => {
     setIsFullImageOpen(true);
@@ -44,55 +38,11 @@ export const PianoDetailsDialog = ({ piano, isOpen, onOpenChange }: PianoDetails
           </DialogHeader>
           
           <div className="flex flex-col lg:grid lg:grid-cols-2 gap-4 sm:gap-6">
-            {images.length > 0 && (
-              <div className="flex-shrink-0 order-1 lg:order-none">
-                <div className="aspect-[4/3] overflow-hidden rounded-lg relative group">
-                  <img 
-                    src={images[viewDialogImageIndex]} 
-                    alt={piano.name}
-                    className="w-full h-full object-cover cursor-pointer"
-                    onClick={openFullImage}
-                  />
-                  
-                  {hasMultipleImages && (
-                    <>
-                      <button
-                        onClick={prevViewDialogImage}
-                        className="absolute left-2 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white rounded-full p-1.5 sm:p-2 opacity-0 group-hover:opacity-100 transition-opacity"
-                      >
-                        <ChevronLeft className="h-4 w-4 sm:h-5 sm:w-5" />
-                      </button>
-                      <button
-                        onClick={nextViewDialogImage}
-                        className="absolute right-2 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white rounded-full p-1.5 sm:p-2 opacity-0 group-hover:opacity-100 transition-opacity"
-                      >
-                        <ChevronRight className="h-4 w-4 sm:h-5 sm:w-5" />
-                      </button>
-                    </>
-                  )}
-                </div>
-                
-                {hasMultipleImages && (
-                  <div className="flex gap-2 mt-3 justify-center overflow-x-auto pb-2">
-                    {images.map((image, index) => (
-                      <button
-                        key={index}
-                        onClick={() => setViewDialogImageIndex(index)}
-                        className={`w-10 h-10 sm:w-12 sm:h-12 rounded border-2 overflow-hidden transition-all flex-shrink-0 ${
-                          index === viewDialogImageIndex ? 'border-primary' : 'border-gray-200'
-                        }`}
-                      >
-                        <img 
-                          src={image} 
-                          alt={`${piano.name} ${index + 1}`}
-                          className="w-full h-full object-cover"
-                        />
-                      </button>
-                    ))}
-                  </div>
-                )}
-              </div>
-            )}
+            <PianoImageGallery 
+              images={images}
+              pianoName={piano.name}
+              onImageClick={openFullImage}
+            />
             
             <div className="space-y-4 min-h-0 order-2 lg:order-none">
               <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-2">
@@ -113,73 +63,8 @@ export const PianoDetailsDialog = ({ piano, isOpen, onOpenChange }: PianoDetails
                 </div>
               )}
 
-              <div>
-                <h4 className="font-semibold mb-2 text-sm sm:text-base">Specifications</h4>
-                <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 text-xs sm:text-sm">
-                  {piano.manufacturer && (
-                    <div>
-                      <span className="text-xs text-gray-500">Manufacturer</span>
-                      <p className="font-medium">{piano.manufacturer}</p>
-                    </div>
-                  )}
-                  {piano.model_year && (
-                    <div>
-                      <span className="text-xs text-gray-500">Model Year</span>
-                      <p className="font-medium">{piano.model_year}</p>
-                    </div>
-                  )}
-                  {piano.type && (
-                    <div>
-                      <span className="text-xs text-gray-500">Type</span>
-                      <p className="font-medium">{piano.type}</p>
-                    </div>
-                  )}
-                  {piano.finish && (
-                    <div>
-                      <span className="text-xs text-gray-500">Finish</span>
-                      <p className="font-medium">{piano.finish}</p>
-                    </div>
-                  )}
-                  {piano.keyboard_keys && (
-                    <div>
-                      <span className="text-xs text-gray-500">Keys</span>
-                      <p className="font-medium">{piano.keyboard_keys}</p>
-                    </div>
-                  )}
-                  {piano.pedals && (
-                    <div>
-                      <span className="text-xs text-gray-500">Pedals</span>
-                      <p className="font-medium">{piano.pedals}</p>
-                    </div>
-                  )}
-                </div>
-              </div>
-
-              {(piano.width_cm || piano.height_cm || piano.depth_cm) && (
-                <div>
-                  <h4 className="font-semibold mb-1 text-sm sm:text-base">Dimensions</h4>
-                  <div className="grid grid-cols-3 gap-2 text-xs sm:text-sm">
-                    {piano.width_cm && (
-                      <div>
-                        <span className="text-xs text-gray-500">Width</span>
-                        <p className="font-medium">{piano.width_cm}cm</p>
-                      </div>
-                    )}
-                    {piano.height_cm && (
-                      <div>
-                        <span className="text-xs text-gray-500">Height</span>
-                        <p className="font-medium">{piano.height_cm}cm</p>
-                      </div>
-                    )}
-                    {piano.depth_cm && (
-                      <div>
-                        <span className="text-xs text-gray-500">Depth</span>
-                        <p className="font-medium">{piano.depth_cm}cm</p>
-                      </div>
-                    )}
-                  </div>
-                </div>
-              )}
+              <PianoSpecifications piano={piano} />
+              <PianoDimensions piano={piano} />
 
               <div className="pt-2 border-t">
                 <Button className="w-full text-sm sm:text-base" size="lg">
@@ -191,23 +76,12 @@ export const PianoDetailsDialog = ({ piano, isOpen, onOpenChange }: PianoDetails
         </DialogContent>
       </Dialog>
 
-      {/* Full-size image modal */}
-      {isFullImageOpen && images.length > 0 && (
-        <div className="fixed inset-0 z-[100] bg-black/90 flex items-center justify-center p-4">
-          <button
-            onClick={closeFullImage}
-            className="absolute top-4 right-4 text-white hover:text-gray-300 z-10"
-          >
-            <X className="h-8 w-8" />
-          </button>
-          <img
-            src={images[viewDialogImageIndex]}
-            alt={piano.name}
-            className="max-w-full max-h-full object-contain"
-            onClick={closeFullImage}
-          />
-        </div>
-      )}
+      <FullImageModal 
+        isOpen={isFullImageOpen}
+        imageUrl={images[viewDialogImageIndex] || ''}
+        pianoName={piano.name}
+        onClose={closeFullImage}
+      />
     </>
   );
 };
