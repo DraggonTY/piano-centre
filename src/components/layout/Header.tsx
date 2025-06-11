@@ -29,7 +29,7 @@ export const Header = () => {
 
   return (
     <header className="bg-white border-b border-gray-200 fixed w-full top-0 z-50">
-      <div className="container mx-auto px-4 py-4">
+      <div className="container mx-auto px-4 py-2">
         <nav className={cn(
           "flex items-center",
           isMobile ? "justify-between" : "justify-between"

@@ -59,7 +59,7 @@ export const MobileMenu = ({ isOpen, onClose, session }: MobileMenuProps) => {
       }`}>
         <div className="flex flex-col h-full">
           {/* Header with close button positioned to match hamburger menu */}
-          <div className="flex items-center px-4 py-4 border-b border-gray-200">
+          <div className="flex items-center px-4 py-2 border-b border-gray-200">
             <div className="flex items-center w-16">
               <Button
                 variant="ghost"

@@ -23,7 +23,7 @@ const App = () => (
         <AuthProvider>
           <div className="min-h-screen flex flex-col">
             <Header />
-            <main className="flex-1 mt-[88px] md:mt-[104px]">
+            <main className="flex-1 mt-[72px] md:mt-[88px]">
               <Routes>
                 <Route path="/" element={<Index />} />
                 <Route path="/auth" element={<Auth />} />
