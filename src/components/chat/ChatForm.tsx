@@ -18,9 +18,7 @@ export const ChatForm = ({ isOpen, onClose }: ChatFormProps) => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // Handle form submission here
     console.log("Form submitted:", formData);
-    // Reset form and close
     setFormData({ name: "", phone: "", message: "" });
     onClose();
   };
@@ -32,16 +30,16 @@ export const ChatForm = ({ isOpen, onClose }: ChatFormProps) => {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed bottom-24 right-6 w-80 bg-white rounded-2xl shadow-2xl z-40 border border-gray-200 overflow-hidden animate-fade-in">
+    <div className="fixed bottom-24 right-6 w-80 bg-card rounded-xl shadow-2xl z-40 border border-border overflow-hidden animate-fade-in">
       {/* Header */}
-      <div className="bg-gradient-to-r from-yellow-400 to-yellow-600 p-6 text-center">
-        <div className="w-16 h-16 bg-white rounded-full mx-auto mb-3 flex items-center justify-center">
+      <div className="bg-primary p-6 text-center">
+        <div className="w-16 h-16 bg-background rounded-full mx-auto mb-3 flex items-center justify-center">
           <div className="text-center">
-            <div className="font-serif font-bold text-lg text-gray-800">PIANO</div>
-            <div className="font-serif italic text-sm text-gray-600 -mt-1">Centre</div>
+            <div className="font-serif font-bold text-lg text-foreground">PIANO</div>
+            <div className="font-serif italic text-sm text-muted-foreground -mt-1">Centre</div>
           </div>
         </div>
-        <p className="text-white text-sm font-medium">
+        <p className="text-primary-foreground text-sm font-medium">
           Someone from our team will be with you shortly.
         </p>
       </div>
@@ -53,7 +51,6 @@ export const ChatForm = ({ isOpen, onClose }: ChatFormProps) => {
             placeholder="Name"
             value={formData.name}
             onChange={(e) => handleInputChange("name", e.target.value)}
-            className="border-gray-300 rounded-lg"
             required
           />
         </div>
@@ -64,7 +61,6 @@ export const ChatForm = ({ isOpen, onClose }: ChatFormProps) => {
             type="tel"
             value={formData.phone}
             onChange={(e) => handleInputChange("phone", e.target.value)}
-            className="border-gray-300 rounded-lg"
             required
           />
         </div>
@@ -74,26 +70,27 @@ export const ChatForm = ({ isOpen, onClose }: ChatFormProps) => {
             placeholder="Message"
             value={formData.message}
             onChange={(e) => handleInputChange("message", e.target.value)}
-            className="border-gray-300 rounded-lg min-h-[80px] resize-none"
+            className="min-h-[80px] resize-none"
             required
           />
         </div>
 
-        <div className="text-xs text-gray-500 text-center">
+        <div className="text-xs text-muted-foreground text-center">
           *By submitting this form, you consent to receive marketing text messages from Piano Centre and comply with our{" "}
-          <span className="text-blue-500 underline cursor-pointer">policy</span>. Message and data rates may apply. Message frequency varies.
+          <span className="text-primary underline cursor-pointer">policy</span>. Message and data rates may apply. Message frequency varies.
         </div>
 
         <Button
           type="submit"
-          className="w-full bg-gray-400 hover:bg-gray-500 text-white rounded-lg py-3"
+          variant="secondary"
+          className="w-full py-3"
         >
           Text Us
         </Button>
       </form>
 
       {/* Footer */}
-      <div className="text-center py-3 text-xs text-gray-400 border-t">
+      <div className="text-center py-3 text-xs text-muted-foreground border-t border-border">
         Powered by Chekkit
       </div>
     </div>
