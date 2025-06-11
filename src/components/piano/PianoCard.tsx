@@ -1,19 +1,13 @@
+
 import { useState } from "react";
-import { Pencil, Trash, ChevronLeft, ChevronRight } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
 import { supabase } from "@/integrations/supabase/client";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { useAuth } from "@/providers/AuthProvider";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { AddPianoForm } from "./AddPianoForm";
+import { Card } from "@/components/ui/card";
 import { Piano } from "@/types/piano";
+import { PianoCardImage } from "./PianoCardImage";
+import { PianoCardContent } from "./PianoCardContent";
+import { PianoDetailsDialog } from "./PianoDetailsDialog";
+import { PianoEditDialog } from "./PianoEditDialog";
 
 interface PianoCardProps {
   piano: Piano;
@@ -22,16 +16,12 @@ interface PianoCardProps {
 }
 
 export const PianoCard = ({ piano, onDelete, onUpdate }: PianoCardProps) => {
-  const { session } = useAuth();
   const { toast } = useToast();
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [isViewDialogOpen, setIsViewDialogOpen] = useState(false);
-  const [currentImageIndex, setCurrentImageIndex] = useState(0);
-  const [viewDialogImageIndex, setViewDialogImageIndex] = useState(0);
 
   // Convert single image_url to array for consistency
   const images = piano.image_url ? [piano.image_url] : [];
-  const hasMultipleImages = images.length > 1;
 
   const handleDelete = async () => {
     try {
@@ -68,274 +58,33 @@ export const PianoCard = ({ piano, onDelete, onUpdate }: PianoCardProps) => {
     });
   };
 
-  const nextImage = () => {
-    setCurrentImageIndex((prev) => (prev + 1) % images.length);
-  };
-
-  const prevImage = () => {
-    setCurrentImageIndex((prev) => (prev - 1 + images.length) % images.length);
-  };
-
-  const nextViewDialogImage = () => {
-    setViewDialogImageIndex((prev) => (prev + 1) % images.length);
-  };
-
-  const prevViewDialogImage = () => {
-    setViewDialogImageIndex((prev) => (prev - 1 + images.length) % images.length);
-  };
-
   return (
     <>
       <Card className="overflow-hidden hover:shadow-lg transition-shadow h-full flex flex-col">
-        <div className="relative">
-          {images.length > 0 && (
-            <div className="aspect-[4/3] overflow-hidden relative group">
-              <img
-                src={images[currentImageIndex]}
-                alt={piano.name}
-                className="w-full h-full object-cover transform hover:scale-105 transition-transform duration-300"
-              />
-              
-              {hasMultipleImages && (
-                <>
-                  <button
-                    onClick={prevImage}
-                    className="absolute left-2 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity"
-                  >
-                    <ChevronLeft className="h-4 w-4" />
-                  </button>
-                  <button
-                    onClick={nextImage}
-                    className="absolute right-2 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity"
-                  >
-                    <ChevronRight className="h-4 w-4" />
-                  </button>
-                </>
-              )}
-            </div>
-          )}
-          
-          {hasMultipleImages && (
-            <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-1">
-              {images.map((_, index) => (
-                <button
-                  key={index}
-                  onClick={() => setCurrentImageIndex(index)}
-                  className={`w-2 h-2 rounded-full transition-colors ${
-                    index === currentImageIndex ? 'bg-white' : 'bg-white/50'
-                  }`}
-                />
-              ))}
-            </div>
-          )}
-
-          {session && (
-            <div className="absolute top-2 right-2">
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button variant="outline" size="icon" className="bg-white h-8 w-8">
-                    <Pencil className="h-3 w-3" />
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent>
-                  <DropdownMenuItem onClick={() => setIsEditDialogOpen(true)}>
-                    Edit
-                  </DropdownMenuItem>
-                  <DropdownMenuItem className="text-red-600" onClick={handleDelete}>
-                    Delete
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
-            </div>
-          )}
-        </div>
-        <CardHeader className="pb-3">
-          <CardTitle className="text-lg leading-tight">{piano.name}</CardTitle>
-          <CardDescription className="text-lg font-semibold text-primary">
-            ${piano.price.toLocaleString()}
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="pb-3 flex-1">
-          <div className="space-y-1 text-sm">
-            {piano.condition && (
-              <p>
-                <span className="font-medium">Condition:</span> {piano.condition}
-              </p>
-            )}
-            {piano.type && (
-              <p>
-                <span className="font-medium">Type:</span> {piano.type}
-              </p>
-            )}
-          </div>
-        </CardContent>
-        <CardFooter className="pt-0">
-          <Button className="w-full" size="sm" onClick={() => setIsViewDialogOpen(true)}>
-            View Details
-          </Button>
-        </CardFooter>
+        <PianoCardImage
+          images={images}
+          pianoName={piano.name}
+          onEdit={() => setIsEditDialogOpen(true)}
+          onDelete={handleDelete}
+        />
+        <PianoCardContent
+          piano={piano}
+          onViewDetails={() => setIsViewDialogOpen(true)}
+        />
       </Card>
 
-      {/* View Details Dialog */}
-      <Dialog open={isViewDialogOpen} onOpenChange={setIsViewDialogOpen}>
-        <DialogContent className="sm:max-w-[90vw] max-h-[90vh] w-full">
-          <DialogHeader>
-            <DialogTitle className="text-2xl">{piano.name}</DialogTitle>
-          </DialogHeader>
-          
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 h-full">
-            {images.length > 0 && (
-              <div className="flex-shrink-0">
-                <div className="aspect-[4/3] overflow-hidden rounded-lg relative group">
-                  <img 
-                    src={images[viewDialogImageIndex]} 
-                    alt={piano.name}
-                    className="w-full h-full object-cover"
-                  />
-                  
-                  {hasMultipleImages && (
-                    <>
-                      <button
-                        onClick={prevViewDialogImage}
-                        className="absolute left-2 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white rounded-full p-2 opacity-0 group-hover:opacity-100 transition-opacity"
-                      >
-                        <ChevronLeft className="h-5 w-5" />
-                      </button>
-                      <button
-                        onClick={nextViewDialogImage}
-                        className="absolute right-2 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white rounded-full p-2 opacity-0 group-hover:opacity-100 transition-opacity"
-                      >
-                        <ChevronRight className="h-5 w-5" />
-                      </button>
-                    </>
-                  )}
-                </div>
-                
-                {hasMultipleImages && (
-                  <div className="flex gap-2 mt-3 justify-center">
-                    {images.map((image, index) => (
-                      <button
-                        key={index}
-                        onClick={() => setViewDialogImageIndex(index)}
-                        className={`w-12 h-12 rounded border-2 overflow-hidden transition-all ${
-                          index === viewDialogImageIndex ? 'border-primary' : 'border-gray-200'
-                        }`}
-                      >
-                        <img 
-                          src={image} 
-                          alt={`${piano.name} ${index + 1}`}
-                          className="w-full h-full object-cover"
-                        />
-                      </button>
-                    ))}
-                  </div>
-                )}
-              </div>
-            )}
-            
-            <div className="space-y-4 min-h-0">
-              <div className="flex justify-between items-start">
-                <div>
-                  <p className="text-3xl font-bold text-primary">
-                    ${piano.price.toLocaleString()}
-                  </p>
-                  {piano.condition && (
-                    <p className="text-gray-600">Condition: {piano.condition}</p>
-                  )}
-                </div>
-              </div>
+      <PianoDetailsDialog
+        piano={piano}
+        isOpen={isViewDialogOpen}
+        onOpenChange={setIsViewDialogOpen}
+      />
 
-              {piano.description && (
-                <div>
-                  <h4 className="font-semibold mb-1">Description</h4>
-                  <p className="text-gray-600 text-sm">{piano.description}</p>
-                </div>
-              )}
-
-              <div className="grid grid-cols-2 gap-3 text-sm">
-                {piano.manufacturer && (
-                  <div>
-                    <span className="font-semibold">Manufacturer:</span>
-                    <p className="text-gray-600">{piano.manufacturer}</p>
-                  </div>
-                )}
-                {piano.model_year && (
-                  <div>
-                    <span className="font-semibold">Model Year:</span>
-                    <p className="text-gray-600">{piano.model_year}</p>
-                  </div>
-                )}
-                {piano.type && (
-                  <div>
-                    <span className="font-semibold">Type:</span>
-                    <p className="text-gray-600">{piano.type}</p>
-                  </div>
-                )}
-                {piano.finish && (
-                  <div>
-                    <span className="font-semibold">Finish:</span>
-                    <p className="text-gray-600">{piano.finish}</p>
-                  </div>
-                )}
-                {piano.keyboard_keys && (
-                  <div>
-                    <span className="font-semibold">Keys:</span>
-                    <p className="text-gray-600">{piano.keyboard_keys}</p>
-                  </div>
-                )}
-                {piano.pedals && (
-                  <div>
-                    <span className="font-semibold">Pedals:</span>
-                    <p className="text-gray-600">{piano.pedals}</p>
-                  </div>
-                )}
-              </div>
-
-              {(piano.width_cm || piano.height_cm || piano.depth_cm) && (
-                <div>
-                  <h4 className="font-semibold mb-1">Dimensions</h4>
-                  <div className="grid grid-cols-3 gap-2 text-sm">
-                    {piano.width_cm && (
-                      <div>
-                        <span className="text-xs text-gray-500">Width</span>
-                        <p className="font-medium">{piano.width_cm}cm</p>
-                      </div>
-                    )}
-                    {piano.height_cm && (
-                      <div>
-                        <span className="text-xs text-gray-500">Height</span>
-                        <p className="font-medium">{piano.height_cm}cm</p>
-                      </div>
-                    )}
-                    {piano.depth_cm && (
-                      <div>
-                        <span className="text-xs text-gray-500">Depth</span>
-                        <p className="font-medium">{piano.depth_cm}cm</p>
-                      </div>
-                    )}
-                  </div>
-                </div>
-              )}
-
-              <div className="pt-2 border-t">
-                <Button className="w-full" size="lg">
-                  Schedule a Viewing
-                </Button>
-              </div>
-            </div>
-          </div>
-        </DialogContent>
-      </Dialog>
-
-      {/* Edit Dialog */}
-      <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
-        <DialogContent className="sm:max-w-[600px]">
-          <DialogHeader>
-            <DialogTitle>Edit Piano Listing</DialogTitle>
-          </DialogHeader>
-          <AddPianoForm onSuccess={handleEditSuccess} initialData={piano} />
-        </DialogContent>
-      </Dialog>
+      <PianoEditDialog
+        piano={piano}
+        isOpen={isEditDialogOpen}
+        onOpenChange={setIsEditDialogOpen}
+        onSuccess={handleEditSuccess}
+      />
     </>
   );
 };
