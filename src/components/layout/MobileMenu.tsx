@@ -30,33 +30,40 @@ export const MobileMenu = ({ isOpen, onClose, session }: MobileMenuProps) => {
     };
   }, [isOpen]);
 
-  const handleClose = (e: React.MouseEvent) => {
+  const handleCloseClick = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    console.log('Close button clicked');
+    console.log('X button clicked - closing menu');
     onClose();
   };
+
+  const handleBackdropClick = (e: React.MouseEvent) => {
+    if (e.target === e.currentTarget) {
+      onClose();
+    }
+  };
+
+  if (!isOpen) {
+    return null;
+  }
 
   return (
     <>
       {/* Backdrop */}
       <div 
-        className={`fixed inset-0 bg-black/50 z-40 transition-opacity duration-300 ${
-          isOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'
-        }`}
-        onClick={onClose}
+        className="fixed inset-0 bg-black/50 z-40 transition-opacity duration-300"
+        onClick={handleBackdropClick}
       />
       
-      {/* Menu - Changed to slide from left */}
-      <div className={`fixed inset-0 bg-white z-50 overflow-y-auto transition-transform duration-300 ease-in-out ${
-        isOpen ? 'transform translate-x-0' : 'transform -translate-x-full'
-      }`}>
+      {/* Menu - Slides from left */}
+      <div className="fixed inset-y-0 left-0 w-full bg-white z-50 overflow-y-auto transform transition-transform duration-300 ease-in-out">
         <div className="flex flex-col h-full">
           {/* Header with close button on left and logo centered */}
           <div className="flex items-center p-4 border-b border-gray-200">
             <button
-              onClick={handleClose}
-              className="p-2 hover:bg-gray-100 transition-colors duration-200 rounded-md"
+              onClick={handleCloseClick}
+              className="p-2 hover:bg-gray-100 transition-colors duration-200 rounded-md z-10"
+              type="button"
             >
               <X className="h-6 w-6" />
             </button>
