@@ -13,6 +13,18 @@
     <meta property="og:type" content="website" />
     <link rel="icon" type="image/png" href="/lovable-uploads/96414221-6d22-4e38-bd12-abcb86467660.png" />
     <script async defer src="https://chatbot.chekkit.io/v1/widget.js"></script>
+    <script>
+      // Debug script to check if Chekkit widget loads
+      window.addEventListener('load', function() {
+        console.log('Page loaded, checking for Chekkit widget...');
+        setTimeout(function() {
+          const anchor = document.getElementById('chekkit-webchat-anchor');
+          console.log('Chekkit anchor element:', anchor);
+          console.log('Chekkit anchor content:', anchor ? anchor.innerHTML : 'Element not found');
+          console.log('Window.Chekkit:', window.Chekkit);
+        }, 2000);
+      });
+    </script>
   </head>
 
   <body>
