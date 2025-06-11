@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Pencil, Trash } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
@@ -65,7 +64,7 @@ export const PianoCard = ({ piano, onDelete, onUpdate }: PianoCardProps) => {
 
   return (
     <>
-      <Card className="overflow-hidden hover:shadow-lg transition-shadow">
+      <Card className="overflow-hidden hover:shadow-lg transition-shadow h-full flex flex-col">
         <div className="relative">
           {piano.image_url && (
             <div className="aspect-[4/3] overflow-hidden">
@@ -80,8 +79,8 @@ export const PianoCard = ({ piano, onDelete, onUpdate }: PianoCardProps) => {
             <div className="absolute top-2 right-2">
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button variant="outline" size="icon" className="bg-white">
-                    <Pencil className="h-4 w-4" />
+                  <Button variant="outline" size="icon" className="bg-white h-8 w-8">
+                    <Pencil className="h-3 w-3" />
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent>
@@ -96,33 +95,28 @@ export const PianoCard = ({ piano, onDelete, onUpdate }: PianoCardProps) => {
             </div>
           )}
         </div>
-        <CardHeader>
-          <CardTitle className="text-xl">{piano.name}</CardTitle>
+        <CardHeader className="pb-3">
+          <CardTitle className="text-lg leading-tight">{piano.name}</CardTitle>
           <CardDescription className="text-lg font-semibold text-primary">
             ${piano.price.toLocaleString()}
           </CardDescription>
         </CardHeader>
-        <CardContent>
-          <div className="space-y-2">
-            {piano.manufacturer && (
-              <p className="text-sm">
-                <span className="font-semibold">Manufacturer:</span> {piano.manufacturer}
-              </p>
-            )}
+        <CardContent className="pb-3 flex-1">
+          <div className="space-y-1 text-sm">
             {piano.condition && (
-              <p className="text-sm">
-                <span className="font-semibold">Condition:</span> {piano.condition}
+              <p>
+                <span className="font-medium">Condition:</span> {piano.condition}
               </p>
             )}
             {piano.type && (
-              <p className="text-sm">
-                <span className="font-semibold">Type:</span> {piano.type}
+              <p>
+                <span className="font-medium">Type:</span> {piano.type}
               </p>
             )}
           </div>
         </CardContent>
-        <CardFooter className="space-y-2">
-          <Button className="w-full" onClick={() => setIsViewDialogOpen(true)}>
+        <CardFooter className="pt-0">
+          <Button className="w-full" size="sm" onClick={() => setIsViewDialogOpen(true)}>
             View Details
           </Button>
         </CardFooter>

@@ -127,7 +127,7 @@ const Pianos = () => {
         </aside>
         
         <div className="lg:col-span-3">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
             {pianos?.map((piano) => (
               <PianoCard 
                 key={piano.id} 
