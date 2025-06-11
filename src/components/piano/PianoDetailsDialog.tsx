@@ -28,14 +28,14 @@ export const PianoDetailsDialog = ({ piano, isOpen, onOpenChange }: PianoDetails
 
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[90vw] max-h-[90vh] w-full">
-        <DialogHeader>
-          <DialogTitle className="text-2xl">{piano.name}</DialogTitle>
+      <DialogContent className="sm:max-w-[90vw] max-w-[95vw] max-h-[95vh] sm:max-h-[90vh] w-full p-3 sm:p-6 overflow-y-auto">
+        <DialogHeader className="pb-3 sm:pb-4">
+          <DialogTitle className="text-xl sm:text-2xl pr-6">{piano.name}</DialogTitle>
         </DialogHeader>
         
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 h-full">
+        <div className="flex flex-col lg:grid lg:grid-cols-2 gap-4 sm:gap-6">
           {images.length > 0 && (
-            <div className="flex-shrink-0">
+            <div className="flex-shrink-0 order-1 lg:order-none">
               <div className="aspect-[4/3] overflow-hidden rounded-lg relative group">
                 <img 
                   src={images[viewDialogImageIndex]} 
@@ -47,27 +47,27 @@ export const PianoDetailsDialog = ({ piano, isOpen, onOpenChange }: PianoDetails
                   <>
                     <button
                       onClick={prevViewDialogImage}
-                      className="absolute left-2 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white rounded-full p-2 opacity-0 group-hover:opacity-100 transition-opacity"
+                      className="absolute left-2 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white rounded-full p-1.5 sm:p-2 opacity-0 group-hover:opacity-100 transition-opacity"
                     >
-                      <ChevronLeft className="h-5 w-5" />
+                      <ChevronLeft className="h-4 w-4 sm:h-5 sm:w-5" />
                     </button>
                     <button
                       onClick={nextViewDialogImage}
-                      className="absolute right-2 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white rounded-full p-2 opacity-0 group-hover:opacity-100 transition-opacity"
+                      className="absolute right-2 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white rounded-full p-1.5 sm:p-2 opacity-0 group-hover:opacity-100 transition-opacity"
                     >
-                      <ChevronRight className="h-5 w-5" />
+                      <ChevronRight className="h-4 w-4 sm:h-5 sm:w-5" />
                     </button>
                   </>
                 )}
               </div>
               
               {hasMultipleImages && (
-                <div className="flex gap-2 mt-3 justify-center">
+                <div className="flex gap-2 mt-3 justify-center overflow-x-auto pb-2">
                   {images.map((image, index) => (
                     <button
                       key={index}
                       onClick={() => setViewDialogImageIndex(index)}
-                      className={`w-12 h-12 rounded border-2 overflow-hidden transition-all ${
+                      className={`w-10 h-10 sm:w-12 sm:h-12 rounded border-2 overflow-hidden transition-all flex-shrink-0 ${
                         index === viewDialogImageIndex ? 'border-primary' : 'border-gray-200'
                       }`}
                     >
@@ -83,26 +83,26 @@ export const PianoDetailsDialog = ({ piano, isOpen, onOpenChange }: PianoDetails
             </div>
           )}
           
-          <div className="space-y-4 min-h-0">
-            <div className="flex justify-between items-start">
+          <div className="space-y-4 min-h-0 order-2 lg:order-none">
+            <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-2">
               <div>
-                <p className="text-3xl font-bold text-primary">
+                <p className="text-2xl sm:text-3xl font-bold text-primary">
                   ${piano.price.toLocaleString()}
                 </p>
                 {piano.condition && (
-                  <p className="text-gray-600">Condition: {piano.condition}</p>
+                  <p className="text-gray-600 text-sm sm:text-base">Condition: {piano.condition}</p>
                 )}
               </div>
             </div>
 
             {piano.description && (
               <div>
-                <h4 className="font-semibold mb-1">Description</h4>
-                <p className="text-gray-600 text-sm">{piano.description}</p>
+                <h4 className="font-semibold mb-1 text-sm sm:text-base">Description</h4>
+                <p className="text-gray-600 text-xs sm:text-sm leading-relaxed">{piano.description}</p>
               </div>
             )}
 
-            <div className="grid grid-cols-2 gap-3 text-sm">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs sm:text-sm">
               {piano.manufacturer && (
                 <div>
                   <span className="font-semibold">Manufacturer:</span>
@@ -143,8 +143,8 @@ export const PianoDetailsDialog = ({ piano, isOpen, onOpenChange }: PianoDetails
 
             {(piano.width_cm || piano.height_cm || piano.depth_cm) && (
               <div>
-                <h4 className="font-semibold mb-1">Dimensions</h4>
-                <div className="grid grid-cols-3 gap-2 text-sm">
+                <h4 className="font-semibold mb-1 text-sm sm:text-base">Dimensions</h4>
+                <div className="grid grid-cols-3 gap-2 text-xs sm:text-sm">
                   {piano.width_cm && (
                     <div>
                       <span className="text-xs text-gray-500">Width</span>
@@ -168,7 +168,7 @@ export const PianoDetailsDialog = ({ piano, isOpen, onOpenChange }: PianoDetails
             )}
 
             <div className="pt-2 border-t">
-              <Button className="w-full" size="lg">
+              <Button className="w-full text-sm sm:text-base" size="lg">
                 Schedule a Viewing
               </Button>
             </div>
