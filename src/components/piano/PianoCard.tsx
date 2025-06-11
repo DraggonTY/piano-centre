@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Pencil, Trash } from "lucide-react";
+import { Pencil, Trash, ChevronLeft, ChevronRight } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
@@ -26,6 +26,12 @@ export const PianoCard = ({ piano, onDelete, onUpdate }: PianoCardProps) => {
   const { toast } = useToast();
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [isViewDialogOpen, setIsViewDialogOpen] = useState(false);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [viewDialogImageIndex, setViewDialogImageIndex] = useState(0);
+
+  // Convert single image_url to array for consistency
+  const images = piano.image_url ? [piano.image_url] : [];
+  const hasMultipleImages = images.length > 1;
 
   const handleDelete = async () => {
     try {
@@ -62,19 +68,67 @@ export const PianoCard = ({ piano, onDelete, onUpdate }: PianoCardProps) => {
     });
   };
 
+  const nextImage = () => {
+    setCurrentImageIndex((prev) => (prev + 1) % images.length);
+  };
+
+  const prevImage = () => {
+    setCurrentImageIndex((prev) => (prev - 1 + images.length) % images.length);
+  };
+
+  const nextViewDialogImage = () => {
+    setViewDialogImageIndex((prev) => (prev + 1) % images.length);
+  };
+
+  const prevViewDialogImage = () => {
+    setViewDialogImageIndex((prev) => (prev - 1 + images.length) % images.length);
+  };
+
   return (
     <>
       <Card className="overflow-hidden hover:shadow-lg transition-shadow h-full flex flex-col">
         <div className="relative">
-          {piano.image_url && (
-            <div className="aspect-[4/3] overflow-hidden">
+          {images.length > 0 && (
+            <div className="aspect-[4/3] overflow-hidden relative group">
               <img
-                src={piano.image_url}
+                src={images[currentImageIndex]}
                 alt={piano.name}
                 className="w-full h-full object-cover transform hover:scale-105 transition-transform duration-300"
               />
+              
+              {hasMultipleImages && (
+                <>
+                  <button
+                    onClick={prevImage}
+                    className="absolute left-2 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity"
+                  >
+                    <ChevronLeft className="h-4 w-4" />
+                  </button>
+                  <button
+                    onClick={nextImage}
+                    className="absolute right-2 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity"
+                  >
+                    <ChevronRight className="h-4 w-4" />
+                  </button>
+                </>
+              )}
             </div>
           )}
+          
+          {hasMultipleImages && (
+            <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-1">
+              {images.map((_, index) => (
+                <button
+                  key={index}
+                  onClick={() => setCurrentImageIndex(index)}
+                  className={`w-2 h-2 rounded-full transition-colors ${
+                    index === currentImageIndex ? 'bg-white' : 'bg-white/50'
+                  }`}
+                />
+              ))}
+            </div>
+          )}
+
           {session && (
             <div className="absolute top-2 right-2">
               <DropdownMenu>
@@ -130,15 +184,52 @@ export const PianoCard = ({ piano, onDelete, onUpdate }: PianoCardProps) => {
           </DialogHeader>
           
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 h-full">
-            {piano.image_url && (
+            {images.length > 0 && (
               <div className="flex-shrink-0">
-                <div className="aspect-[4/3] overflow-hidden rounded-lg">
+                <div className="aspect-[4/3] overflow-hidden rounded-lg relative group">
                   <img 
-                    src={piano.image_url} 
+                    src={images[viewDialogImageIndex]} 
                     alt={piano.name}
                     className="w-full h-full object-cover"
                   />
+                  
+                  {hasMultipleImages && (
+                    <>
+                      <button
+                        onClick={prevViewDialogImage}
+                        className="absolute left-2 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white rounded-full p-2 opacity-0 group-hover:opacity-100 transition-opacity"
+                      >
+                        <ChevronLeft className="h-5 w-5" />
+                      </button>
+                      <button
+                        onClick={nextViewDialogImage}
+                        className="absolute right-2 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white rounded-full p-2 opacity-0 group-hover:opacity-100 transition-opacity"
+                      >
+                        <ChevronRight className="h-5 w-5" />
+                      </button>
+                    </>
+                  )}
                 </div>
+                
+                {hasMultipleImages && (
+                  <div className="flex gap-2 mt-3 justify-center">
+                    {images.map((image, index) => (
+                      <button
+                        key={index}
+                        onClick={() => setViewDialogImageIndex(index)}
+                        className={`w-12 h-12 rounded border-2 overflow-hidden transition-all ${
+                          index === viewDialogImageIndex ? 'border-primary' : 'border-gray-200'
+                        }`}
+                      >
+                        <img 
+                          src={image} 
+                          alt={`${piano.name} ${index + 1}`}
+                          className="w-full h-full object-cover"
+                        />
+                      </button>
+                    ))}
+                  </div>
+                )}
               </div>
             )}
             
