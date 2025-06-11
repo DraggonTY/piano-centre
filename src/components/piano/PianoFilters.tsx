@@ -1,6 +1,7 @@
-
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
 import {
   Accordion,
   AccordionContent,
@@ -15,6 +16,7 @@ import { Label } from "@/components/ui/label";
 export const PianoFilters = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const [priceRange, setPriceRange] = useState([0, 100000]);
+  const [maxPrice, setMaxPrice] = useState(100000);
   
   const typeFilters = [
     { id: "grand", label: "Grand Piano" },
@@ -27,6 +29,30 @@ export const PianoFilters = () => {
     { id: "used", label: "Used" },
     { id: "restored", label: "Restored" },
   ];
+
+  // Fetch the maximum price from pianos
+  const { data: maxPriceData } = useQuery({
+    queryKey: ["max-piano-price"],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("pianos")
+        .select("price")
+        .order("price", { ascending: false })
+        .limit(1);
+
+      if (error) throw error;
+      return data?.[0]?.price || 100000;
+    },
+  });
+
+  // Update maxPrice and priceRange when maxPriceData changes
+  useEffect(() => {
+    if (maxPriceData) {
+      const calculatedMaxPrice = Math.ceil(maxPriceData * 1.3); // Add 30%
+      setMaxPrice(calculatedMaxPrice);
+      setPriceRange([0, calculatedMaxPrice]);
+    }
+  }, [maxPriceData]);
 
   const handleTypeChange = (typeId: string, checked: boolean) => {
     const currentTypes = searchParams.getAll("type");
@@ -70,7 +96,7 @@ export const PianoFilters = () => {
 
   const clearFilters = () => {
     setSearchParams({});
-    setPriceRange([0, 100000]);
+    setPriceRange([0, maxPrice]);
   };
 
   return (
@@ -89,7 +115,7 @@ export const PianoFilters = () => {
             <div className="space-y-4">
               <Slider
                 min={0}
-                max={100000}
+                max={maxPrice}
                 step={1000}
                 value={priceRange}
                 onValueChange={handlePriceRangeChange}
