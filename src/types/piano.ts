@@ -7,6 +7,8 @@ export interface Piano {
   type: string | null;
   condition: string | null;
   image_url: string | null;
+  image_urls: string[] | null;
+  key_image_url: string | null;
   created_at: string | null;
   manufacturer: string | null;
   model_year: string | null;

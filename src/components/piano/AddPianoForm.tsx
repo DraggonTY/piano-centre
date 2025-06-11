@@ -6,7 +6,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { BasicInfoFields } from "./form/BasicInfoFields";
 import { CategoryFields } from "./form/CategoryFields";
 import { DimensionsFields } from "./form/DimensionsFields";
-import { ImageUploadField } from "./form/ImageUploadField";
+import { MultipleImageUploadField } from "./form/MultipleImageUploadField";
 import { Piano } from "@/types/piano";
 import { useAuth } from "@/providers/AuthProvider";
 
@@ -33,7 +33,8 @@ export const AddPianoForm = ({ onSuccess, initialData }: AddPianoFormProps) => {
   const [pedals, setPedals] = useState("");
   const [finish, setFinish] = useState("");
   const [category, setCategory] = useState("new");
-  const [image, setImage] = useState<File | null>(null);
+  const [images, setImages] = useState<File[]>([]);
+  const [keyImageIndex, setKeyImageIndex] = useState(0);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -56,6 +57,34 @@ export const AddPianoForm = ({ onSuccess, initialData }: AddPianoFormProps) => {
     }
   }, [initialData]);
 
+  const uploadImages = async () => {
+    if (images.length === 0) return { imageUrls: [], keyImageUrl: null };
+
+    const imageUrls: string[] = [];
+    
+    for (const image of images) {
+      const fileExt = image.name.split('.').pop();
+      const fileName = `${Math.random()}.${fileExt}`;
+      const { error: uploadError } = await supabase.storage
+        .from('piano-images')
+        .upload(fileName, image);
+
+      if (uploadError) {
+        throw uploadError;
+      }
+
+      const { data: { publicUrl } } = supabase.storage
+        .from('piano-images')
+        .getPublicUrl(fileName);
+
+      imageUrls.push(publicUrl);
+    }
+
+    const keyImageUrl = imageUrls[keyImageIndex] || imageUrls[0] || null;
+    
+    return { imageUrls, keyImageUrl };
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
@@ -71,24 +100,15 @@ export const AddPianoForm = ({ onSuccess, initialData }: AddPianoFormProps) => {
     setLoading(true);
 
     try {
+      let image_urls = initialData?.image_urls || [];
+      let key_image_url = initialData?.key_image_url || null;
       let image_url = initialData?.image_url || null;
 
-      if (image) {
-        const fileExt = image.name.split('.').pop();
-        const fileName = `${Math.random()}.${fileExt}`;
-        const { error: uploadError, data } = await supabase.storage
-          .from('piano-images')
-          .upload(fileName, image);
-
-        if (uploadError) {
-          throw uploadError;
-        }
-
-        const { data: { publicUrl } } = supabase.storage
-          .from('piano-images')
-          .getPublicUrl(fileName);
-
-        image_url = publicUrl;
+      if (images.length > 0) {
+        const { imageUrls, keyImageUrl } = await uploadImages();
+        image_urls = imageUrls;
+        key_image_url = keyImageUrl;
+        image_url = keyImageUrl; // For backward compatibility
       }
 
       const pianoData = {
@@ -108,6 +128,8 @@ export const AddPianoForm = ({ onSuccess, initialData }: AddPianoFormProps) => {
         finish,
         category,
         image_url,
+        image_urls,
+        key_image_url,
         user_id: session.user.id
       };
 
@@ -143,12 +165,6 @@ export const AddPianoForm = ({ onSuccess, initialData }: AddPianoFormProps) => {
     }
   };
 
-  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files[0]) {
-      setImage(e.target.files[0]);
-    }
-  };
-
   return (
     <form onSubmit={handleSubmit} className="space-y-4 max-h-[80vh] overflow-y-auto px-4">
       <BasicInfoFields
@@ -175,6 +191,12 @@ export const AddPianoForm = ({ onSuccess, initialData }: AddPianoFormProps) => {
         price={price}
         setPrice={setPrice}
       />
+      <MultipleImageUploadField
+        images={images}
+        keyImageIndex={keyImageIndex}
+        onImagesChange={setImages}
+        onKeyImageChange={setKeyImageIndex}
+      />
       <DimensionsFields
         width={width}
         setWidth={setWidth}
@@ -187,7 +209,6 @@ export const AddPianoForm = ({ onSuccess, initialData }: AddPianoFormProps) => {
         pedals={pedals}
         setPedals={setPedals}
       />
-      <ImageUploadField handleImageChange={handleImageChange} />
       <Button type="submit" className="w-full" disabled={loading}>
         {loading ? (initialData ? "Updating..." : "Adding...") : (initialData ? "Update Piano" : "Add to Inventory")}
       </Button>
