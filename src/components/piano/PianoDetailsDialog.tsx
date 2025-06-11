@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { ChevronLeft, ChevronRight, X } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
@@ -112,43 +113,46 @@ export const PianoDetailsDialog = ({ piano, isOpen, onOpenChange }: PianoDetails
                 </div>
               )}
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs sm:text-sm">
-                {piano.manufacturer && (
-                  <div>
-                    <span className="font-semibold">Manufacturer:</span>
-                    <p className="text-gray-600">{piano.manufacturer}</p>
-                  </div>
-                )}
-                {piano.model_year && (
-                  <div>
-                    <span className="font-semibold">Model Year:</span>
-                    <p className="text-gray-600">{piano.model_year}</p>
-                  </div>
-                )}
-                {piano.type && (
-                  <div>
-                    <span className="font-semibold">Type:</span>
-                    <p className="text-gray-600">{piano.type}</p>
-                  </div>
-                )}
-                {piano.finish && (
-                  <div>
-                    <span className="font-semibold">Finish:</span>
-                    <p className="text-gray-600">{piano.finish}</p>
-                  </div>
-                )}
-                {piano.keyboard_keys && (
-                  <div>
-                    <span className="font-semibold">Keys:</span>
-                    <p className="text-gray-600">{piano.keyboard_keys}</p>
-                  </div>
-                )}
-                {piano.pedals && (
-                  <div>
-                    <span className="font-semibold">Pedals:</span>
-                    <p className="text-gray-600">{piano.pedals}</p>
-                  </div>
-                )}
+              <div>
+                <h4 className="font-semibold mb-2 text-sm sm:text-base">Specifications</h4>
+                <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 text-xs sm:text-sm">
+                  {piano.manufacturer && (
+                    <div>
+                      <span className="text-xs text-gray-500">Manufacturer</span>
+                      <p className="font-medium">{piano.manufacturer}</p>
+                    </div>
+                  )}
+                  {piano.model_year && (
+                    <div>
+                      <span className="text-xs text-gray-500">Model Year</span>
+                      <p className="font-medium">{piano.model_year}</p>
+                    </div>
+                  )}
+                  {piano.type && (
+                    <div>
+                      <span className="text-xs text-gray-500">Type</span>
+                      <p className="font-medium">{piano.type}</p>
+                    </div>
+                  )}
+                  {piano.finish && (
+                    <div>
+                      <span className="text-xs text-gray-500">Finish</span>
+                      <p className="font-medium">{piano.finish}</p>
+                    </div>
+                  )}
+                  {piano.keyboard_keys && (
+                    <div>
+                      <span className="text-xs text-gray-500">Keys</span>
+                      <p className="font-medium">{piano.keyboard_keys}</p>
+                    </div>
+                  )}
+                  {piano.pedals && (
+                    <div>
+                      <span className="text-xs text-gray-500">Pedals</span>
+                      <p className="font-medium">{piano.pedals}</p>
+                    </div>
+                  )}
+                </div>
               </div>
 
               {(piano.width_cm || piano.height_cm || piano.depth_cm) && (
