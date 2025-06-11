@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { Menu } from "lucide-react";
 import {
   NavigationMenu,
   NavigationMenuContent,
@@ -13,6 +14,7 @@ import { cn } from "@/lib/utils";
 import { useAuth } from "@/providers/AuthProvider";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
+import { useState } from "react";
 
 const ListItem = ({ className, title, href, children }: {
   className?: string;
@@ -43,6 +45,7 @@ const ListItem = ({ className, title, href, children }: {
 export const Header = () => {
   const isMobile = useIsMobile();
   const { session } = useAuth();
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const handleLogout = async () => {
     await supabase.auth.signOut();
@@ -53,79 +56,93 @@ export const Header = () => {
       <div className="container mx-auto px-4 py-4">
         <nav className={cn(
           "flex items-center",
-          isMobile ? "flex-col space-y-4" : "justify-between"
+          isMobile ? "justify-between" : "justify-between"
         )}>
           {isMobile ? (
             <>
-              {/* Mobile Layout: Navigation stacked on left, logo centered */}
-              <div className="w-full flex justify-between items-center">
-                <div className="flex-1">
-                  <NavigationMenu>
-                    <NavigationMenuList className="flex-col space-y-2 space-x-0">
-                      <NavigationMenuItem>
-                        <NavigationMenuTrigger>Pianos</NavigationMenuTrigger>
-                        <NavigationMenuContent>
-                          <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px]">
-                            <ListItem href="/pianos" title="Browse Pianos">
-                              Explore our collection of quality pianos
-                            </ListItem>
-                            <ListItem href="/pianos/new" title="New Arrivals">
-                              See our latest piano additions
-                            </ListItem>
-                            <ListItem href="/pianos/used" title="Pre-owned">
-                              Quality pre-owned pianos
-                            </ListItem>
-                            <ListItem href="/pianos/digital" title="Digital Pianos">
-                              Browse digital piano options
-                            </ListItem>
-                          </ul>
-                        </NavigationMenuContent>
-                      </NavigationMenuItem>
-
-                      <NavigationMenuItem>
-                        <NavigationMenuTrigger>Services</NavigationMenuTrigger>
-                        <NavigationMenuContent>
-                          <ul className="grid gap-3 p-4 md:w-[400px] lg:w-[500px]">
-                            <ListItem href="/services/tuning" title="Piano Tuning">
-                              Professional piano tuning services
-                            </ListItem>
-                            <ListItem href="/services/repair" title="Repairs & Restoration">
-                              Expert piano repair and restoration
-                            </ListItem>
-                            <ListItem href="/services/moving" title="Piano Moving">
-                              Safe and professional piano moving
-                            </ListItem>
-                          </ul>
-                        </NavigationMenuContent>
-                      </NavigationMenuItem>
-
-                      <NavigationMenuItem>
-                        <Link to="/contact" className={navigationMenuTriggerStyle()}>
-                          Contact
-                        </Link>
-                      </NavigationMenuItem>
-                    </NavigationMenuList>
-                  </NavigationMenu>
-                </div>
-                
-                <div className="flex-1 flex justify-center">
-                  <Link to="/" className="block">
-                    <img
-                      src="/lovable-uploads/96414221-6d22-4e38-bd12-abcb86467660.png"
-                      alt="Piano Centre Edmonton"
-                      className="h-16"
-                    />
-                  </Link>
-                </div>
-                
-                <div className="flex-1 flex justify-end">
-                  {session && (
-                    <Button variant="outline" onClick={handleLogout}>
-                      Sign Out
-                    </Button>
-                  )}
-                </div>
+              {/* Mobile Layout: Hamburger menu on left, logo centered, sign out on right */}
+              <div className="flex items-center">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                  className="p-2"
+                >
+                  <Menu className="h-6 w-6" />
+                </Button>
               </div>
+              
+              <div className="flex justify-center">
+                <Link to="/" className="block">
+                  <img
+                    src="/lovable-uploads/96414221-6d22-4e38-bd12-abcb86467660.png"
+                    alt="Piano Centre Edmonton"
+                    className="h-16"
+                  />
+                </Link>
+              </div>
+              
+              <div className="flex items-center">
+                {session && (
+                  <Button variant="outline" onClick={handleLogout} size="sm">
+                    Sign Out
+                  </Button>
+                )}
+              </div>
+
+              {/* Mobile Menu Dropdown */}
+              {mobileMenuOpen && (
+                <div className="absolute top-full left-0 w-full bg-white border-b border-gray-200 shadow-lg">
+                  <div className="container mx-auto px-4 py-4">
+                    <NavigationMenu>
+                      <NavigationMenuList className="flex-col space-y-2 space-x-0 items-start">
+                        <NavigationMenuItem className="w-full">
+                          <NavigationMenuTrigger className="w-full justify-start">Pianos</NavigationMenuTrigger>
+                          <NavigationMenuContent>
+                            <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px]">
+                              <ListItem href="/pianos" title="Browse Pianos">
+                                Explore our collection of quality pianos
+                              </ListItem>
+                              <ListItem href="/pianos/new" title="New Arrivals">
+                                See our latest piano additions
+                              </ListItem>
+                              <ListItem href="/pianos/used" title="Pre-owned">
+                                Quality pre-owned pianos
+                              </ListItem>
+                              <ListItem href="/pianos/digital" title="Digital Pianos">
+                                Browse digital piano options
+                              </ListItem>
+                            </ul>
+                          </NavigationMenuContent>
+                        </NavigationMenuItem>
+
+                        <NavigationMenuItem className="w-full">
+                          <NavigationMenuTrigger className="w-full justify-start">Services</NavigationMenuTrigger>
+                          <NavigationMenuContent>
+                            <ul className="grid gap-3 p-4 md:w-[400px] lg:w-[500px]">
+                              <ListItem href="/services/tuning" title="Piano Tuning">
+                                Professional piano tuning services
+                              </ListItem>
+                              <ListItem href="/services/repair" title="Repairs & Restoration">
+                                Expert piano repair and restoration
+                              </ListItem>
+                              <ListItem href="/services/moving" title="Piano Moving">
+                                Safe and professional piano moving
+                              </ListItem>
+                            </ul>
+                          </NavigationMenuContent>
+                        </NavigationMenuItem>
+
+                        <NavigationMenuItem className="w-full">
+                          <Link to="/contact" className={cn(navigationMenuTriggerStyle(), "w-full justify-start")}>
+                            Contact
+                          </Link>
+                        </NavigationMenuItem>
+                      </NavigationMenuList>
+                    </NavigationMenu>
+                  </div>
+                </div>
+              )}
             </>
           ) : (
             <>
