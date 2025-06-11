@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useSearchParams } from "react-router-dom";
@@ -104,7 +105,7 @@ const Pianos = () => {
   };
 
   return (
-    <div className="container mx-auto py-12 px-4">
+    <div className="container mx-auto pt-20 pb-12 px-4">
       <div className="max-w-3xl mx-auto text-center mb-12">
         <h1 className="text-4xl font-bold mb-4">{getCategoryTitle()}</h1>
         <p className="text-lg text-gray-600">
