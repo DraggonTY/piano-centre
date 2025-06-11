@@ -14,7 +14,7 @@ import { cn } from "@/lib/utils";
 import { useAuth } from "@/providers/AuthProvider";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 const ListItem = ({ className, title, href, children }: {
   className?: string;
@@ -46,6 +46,13 @@ export const Header = () => {
   const isMobile = useIsMobile();
   const { session } = useAuth();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  // Dispatch custom event when mobile menu state changes
+  useEffect(() => {
+    window.dispatchEvent(new CustomEvent('mobileMenuToggle', { 
+      detail: { isOpen: mobileMenuOpen } 
+    }));
+  }, [mobileMenuOpen]);
 
   const handleLogout = async () => {
     await supabase.auth.signOut();
@@ -98,17 +105,8 @@ export const Header = () => {
               {mobileMenuOpen && (
                 <div className="fixed inset-0 bg-white z-50 overflow-y-auto">
                   <div className="flex flex-col h-full">
-                    {/* Header with logo and close button */}
-                    <div className="flex items-center justify-between p-4 border-b border-gray-200">
-                      <div className="flex justify-center flex-1">
-                        <Link to="/" onClick={closeMobileMenu} className="block">
-                          <img
-                            src="/lovable-uploads/96414221-6d22-4e38-bd12-abcb86467660.png"
-                            alt="Piano Centre Edmonton"
-                            className="h-16"
-                          />
-                        </Link>
-                      </div>
+                    {/* Header with close button on left and logo centered */}
+                    <div className="flex items-center p-4 border-b border-gray-200">
                       <Button
                         variant="ghost"
                         size="sm"
@@ -117,6 +115,15 @@ export const Header = () => {
                       >
                         <X className="h-6 w-6" />
                       </Button>
+                      <div className="flex justify-center flex-1 -ml-12">
+                        <Link to="/" onClick={closeMobileMenu} className="block">
+                          <img
+                            src="/lovable-uploads/96414221-6d22-4e38-bd12-abcb86467660.png"
+                            alt="Piano Centre Edmonton"
+                            className="h-16"
+                          />
+                        </Link>
+                      </div>
                     </div>
 
                     {/* Navigation items */}
