@@ -16,9 +16,10 @@ interface PianoCardImageProps {
   onEdit: () => void;
   onDelete: () => void;
   onImageClick?: () => void;
+  showActions?: boolean;
 }
 
-export const PianoCardImage = ({ images, pianoName, onEdit, onDelete, onImageClick }: PianoCardImageProps) => {
+export const PianoCardImage = ({ images, pianoName, onEdit, onDelete, onImageClick, showActions = true }: PianoCardImageProps) => {
   const { session } = useAuth();
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const hasMultipleImages = images.length > 1;
@@ -75,7 +76,7 @@ export const PianoCardImage = ({ images, pianoName, onEdit, onDelete, onImageCli
         </div>
       )}
 
-      {session && (
+      {session && showActions && (
         <div className="absolute top-2 right-2">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>

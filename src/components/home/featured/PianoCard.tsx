@@ -1,9 +1,11 @@
 
 import { motion } from "framer-motion";
 import { Piano } from "@/types/piano";
-import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
 import { useState } from "react";
 import { PianoDetailsDialog } from "@/components/piano/PianoDetailsDialog";
+import { PianoCardImage } from "@/components/piano/PianoCardImage";
+import { PianoCardContent } from "@/components/piano/PianoCardContent";
 
 interface PianoCardProps {
   piano: Piano;
@@ -12,10 +14,16 @@ interface PianoCardProps {
 export const PianoCard = ({ piano }: PianoCardProps) => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
-  // Use key image if available, otherwise use first image from array, or fallback to single image_url
-  const displayImage = piano.key_image_url || 
-                      (piano.image_urls && piano.image_urls.length > 0 ? piano.image_urls[0] : null) || 
-                      piano.image_url;
+  // Use multiple images if available, fallback to single image_url, or empty array
+  const images = piano.image_urls || (piano.image_url ? [piano.image_url] : []);
+
+  const handleViewDetails = () => setIsDialogOpen(true);
+
+  const handleImageClick = () => setIsDialogOpen(true);
+
+  // Empty functions for edit/delete since these shouldn't be available on featured pianos
+  const handleEdit = () => {};
+  const handleDelete = () => {};
 
   return (
     <>
@@ -23,30 +31,22 @@ export const PianoCard = ({ piano }: PianoCardProps) => {
         initial={{ opacity: 0, y: 20 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
-        className="bg-white rounded-lg shadow-lg overflow-hidden group relative"
+        className="h-full"
       >
-        {displayImage && (
-          <div className="aspect-[4/3] overflow-hidden">
-            <img 
-              src={displayImage} 
-              alt={piano.name}
-              className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-            />
-          </div>
-        )}
-        <div className="p-6">
-          <h3 className="text-xl font-bold mb-2">{piano.name}</h3>
-          <div className="flex justify-between items-center mb-4">
-            <span className="text-2xl font-bold text-primary">
-              ${piano.price.toLocaleString()}
-            </span>
-            <span className="text-sm text-gray-500">{piano.condition}</span>
-          </div>
-          
-          <Button className="w-full" onClick={() => setIsDialogOpen(true)}>
-            View Details
-          </Button>
-        </div>
+        <Card className="overflow-hidden hover:shadow-lg transition-shadow h-full flex flex-col">
+          <PianoCardImage
+            images={images}
+            pianoName={piano.name}
+            onEdit={handleEdit}
+            onDelete={handleDelete}
+            onImageClick={handleImageClick}
+            showActions={false}
+          />
+          <PianoCardContent
+            piano={piano}
+            onViewDetails={handleViewDetails}
+          />
+        </Card>
       </motion.div>
 
       <PianoDetailsDialog
