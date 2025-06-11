@@ -30,6 +30,11 @@ export const MobileMenu = ({ isOpen, onClose, session }: MobileMenuProps) => {
     };
   }, [isOpen]);
 
+  const handleClose = () => {
+    console.log('Close button clicked');
+    onClose();
+  };
+
   return (
     <>
       {/* Backdrop */}
@@ -40,9 +45,9 @@ export const MobileMenu = ({ isOpen, onClose, session }: MobileMenuProps) => {
         onClick={onClose}
       />
       
-      {/* Menu */}
+      {/* Menu - Changed to slide from left */}
       <div className={`fixed inset-0 bg-white z-50 overflow-y-auto transition-transform duration-300 ease-in-out ${
-        isOpen ? 'transform translate-x-0' : 'transform translate-x-full'
+        isOpen ? 'transform translate-x-0' : 'transform -translate-x-full'
       }`}>
         <div className="flex flex-col h-full">
           {/* Header with close button on left and logo centered */}
@@ -50,7 +55,7 @@ export const MobileMenu = ({ isOpen, onClose, session }: MobileMenuProps) => {
             <Button
               variant="ghost"
               size="sm"
-              onClick={onClose}
+              onClick={handleClose}
               className="p-2 hover:bg-gray-100 transition-colors duration-200"
             >
               <X className="h-6 w-6" />
