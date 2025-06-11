@@ -39,7 +39,7 @@ export const PianosMenuItem = () => (
   <NavigationMenuItem>
     <NavigationMenuTrigger>Pianos</NavigationMenuTrigger>
     <NavigationMenuContent>
-      <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px]">
+      <ul className="grid w-[500px] gap-3 p-4 md:grid-cols-2">
         <ListItem href="/pianos" title="Browse Pianos">
           Explore our collection of quality pianos
         </ListItem>
@@ -61,7 +61,7 @@ export const ServicesMenuItem = () => (
   <NavigationMenuItem>
     <NavigationMenuTrigger>Services</NavigationMenuTrigger>
     <NavigationMenuContent>
-      <ul className="grid gap-3 p-4 md:w-[400px] lg:w-[500px]">
+      <ul className="grid w-[500px] gap-3 p-4">
         <ListItem href="/services/tuning" title="Piano Tuning">
           Professional piano tuning services
         </ListItem>
