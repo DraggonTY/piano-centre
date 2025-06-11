@@ -18,10 +18,19 @@ export const MultipleImageUploadField = ({
   onImagesChange, 
   onKeyImageChange 
 }: MultipleImageUploadFieldProps) => {
+  const MAX_IMAGES = 5;
+
   const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
       const newFiles = Array.from(e.target.files);
-      onImagesChange([...images, ...newFiles]);
+      const totalImages = images.length + newFiles.length;
+      
+      if (totalImages > MAX_IMAGES) {
+        const allowedFiles = newFiles.slice(0, MAX_IMAGES - images.length);
+        onImagesChange([...images, ...allowedFiles]);
+      } else {
+        onImagesChange([...images, ...newFiles]);
+      }
     }
   };
 
@@ -52,15 +61,19 @@ export const MultipleImageUploadField = ({
           multiple
           onChange={handleFileSelect}
           className="cursor-pointer"
+          disabled={images.length >= MAX_IMAGES}
         />
         <p className="text-sm text-muted-foreground">
-          Upload multiple images. Click the star to set a key image that will be used as the thumbnail.
+          Upload up to {MAX_IMAGES} images. Click the star to set a key image that will be used as the thumbnail.
+          {images.length >= MAX_IMAGES && (
+            <span className="text-orange-600 font-medium"> Maximum images reached.</span>
+          )}
         </p>
       </div>
       
       {images.length > 0 && (
         <div className="space-y-2">
-          <Label>Uploaded Images ({images.length})</Label>
+          <Label>Uploaded Images ({images.length}/{MAX_IMAGES})</Label>
           <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
             {images.map((image, index) => (
               <Card key={index} className="relative overflow-hidden">
