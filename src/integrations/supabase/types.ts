@@ -60,7 +60,9 @@ export type Database = {
           height_cm: number | null
           id: number
           image_url: string | null
+          image_urls: string[] | null
           is_featured: boolean | null
+          key_image_url: string | null
           keyboard_keys: number | null
           manufacturer: string | null
           model_year: string | null
@@ -83,7 +85,9 @@ export type Database = {
           height_cm?: number | null
           id?: never
           image_url?: string | null
+          image_urls?: string[] | null
           is_featured?: boolean | null
+          key_image_url?: string | null
           keyboard_keys?: number | null
           manufacturer?: string | null
           model_year?: string | null
@@ -106,7 +110,9 @@ export type Database = {
           height_cm?: number | null
           id?: never
           image_url?: string | null
+          image_urls?: string[] | null
           is_featured?: boolean | null
+          key_image_url?: string | null
           keyboard_keys?: number | null
           manufacturer?: string | null
           model_year?: string | null

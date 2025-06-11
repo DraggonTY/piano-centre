@@ -53,7 +53,7 @@ const Pianos = () => {
 
       if (error) throw error;
       
-      // Transform data to match Piano interface, providing defaults for new fields
+      // Transform data to match Piano interface
       const transformedData: Piano[] = (data || []).map(piano => ({
         ...piano,
         image_urls: piano.image_urls || null,

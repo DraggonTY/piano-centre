@@ -1,3 +1,4 @@
+
 import { Link } from "react-router-dom";
 import { Piano } from "@/types/piano";
 import { Button } from "@/components/ui/button";
@@ -73,7 +74,7 @@ export const FeaturedPianos = ({
         });
         if (error) throw error;
         
-        // Transform data to match Piano interface, providing defaults for new fields
+        // Transform data to match Piano interface
         const transformedData: Piano[] = (data || []).map(piano => ({
           ...piano,
           image_urls: piano.image_urls || null,
