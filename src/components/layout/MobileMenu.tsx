@@ -30,7 +30,9 @@ export const MobileMenu = ({ isOpen, onClose, session }: MobileMenuProps) => {
     };
   }, [isOpen]);
 
-  const handleClose = () => {
+  const handleClose = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
     console.log('Close button clicked');
     onClose();
   };
@@ -52,14 +54,12 @@ export const MobileMenu = ({ isOpen, onClose, session }: MobileMenuProps) => {
         <div className="flex flex-col h-full">
           {/* Header with close button on left and logo centered */}
           <div className="flex items-center p-4 border-b border-gray-200">
-            <Button
-              variant="ghost"
-              size="sm"
+            <button
               onClick={handleClose}
-              className="p-2 hover:bg-gray-100 transition-colors duration-200"
+              className="p-2 hover:bg-gray-100 transition-colors duration-200 rounded-md"
             >
               <X className="h-6 w-6" />
-            </Button>
+            </button>
             <div className="flex justify-center flex-1 -ml-12">
               <Link to="/" onClick={onClose} className="block">
                 <img
