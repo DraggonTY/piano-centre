@@ -14,6 +14,7 @@ interface BasicInfoFieldsProps {
   setSerialNumber: (value: string) => void;
   description: string;
   setDescription: (value: string) => void;
+  showDescription?: boolean;
 }
 
 export const BasicInfoFields = ({
@@ -27,6 +28,7 @@ export const BasicInfoFields = ({
   setSerialNumber,
   description,
   setDescription,
+  showDescription = true,
 }: BasicInfoFieldsProps) => {
   return (
     <div className="space-y-4">
@@ -69,16 +71,18 @@ export const BasicInfoFields = ({
           placeholder="Enter serial number"
         />
       </div>
-      <div className="space-y-2">
-        <Label htmlFor="description">Description</Label>
-        <Textarea
-          id="description"
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
-          placeholder="Describe the piano's features, condition, and any notable characteristics..."
-          rows={4}
-        />
-      </div>
+      {showDescription && (
+        <div className="space-y-2">
+          <Label htmlFor="description">Description</Label>
+          <Textarea
+            id="description"
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+            placeholder="Describe the piano's features, condition, and any notable characteristics..."
+            rows={4}
+          />
+        </div>
+      )}
     </div>
   );
 };

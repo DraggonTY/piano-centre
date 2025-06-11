@@ -178,7 +178,25 @@ export const AddPianoForm = ({ onSuccess, initialData }: AddPianoFormProps) => {
         setSerialNumber={setSerialNumber}
         description={description}
         setDescription={setDescription}
+        showDescription={false}
       />
+      <MultipleImageUploadField
+        images={images}
+        keyImageIndex={keyImageIndex}
+        onImagesChange={setImages}
+        onKeyImageChange={setKeyImageIndex}
+      />
+      <div className="space-y-2">
+        <label htmlFor="description" className="block text-sm font-medium">Description</label>
+        <textarea
+          id="description"
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
+          placeholder="Describe the piano's features, condition, and any notable characteristics..."
+          rows={4}
+          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+        />
+      </div>
       <CategoryFields
         category={category}
         setCategory={setCategory}
@@ -190,12 +208,6 @@ export const AddPianoForm = ({ onSuccess, initialData }: AddPianoFormProps) => {
         setFinish={setFinish}
         price={price}
         setPrice={setPrice}
-      />
-      <MultipleImageUploadField
-        images={images}
-        keyImageIndex={keyImageIndex}
-        onImagesChange={setImages}
-        onKeyImageChange={setKeyImageIndex}
       />
       <DimensionsFields
         width={width}
