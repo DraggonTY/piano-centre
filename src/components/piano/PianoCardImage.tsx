@@ -15,9 +15,10 @@ interface PianoCardImageProps {
   pianoName: string;
   onEdit: () => void;
   onDelete: () => void;
+  onImageClick?: () => void;
 }
 
-export const PianoCardImage = ({ images, pianoName, onEdit, onDelete }: PianoCardImageProps) => {
+export const PianoCardImage = ({ images, pianoName, onEdit, onDelete, onImageClick }: PianoCardImageProps) => {
   const { session } = useAuth();
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const hasMultipleImages = images.length > 1;
@@ -38,20 +39,21 @@ export const PianoCardImage = ({ images, pianoName, onEdit, onDelete }: PianoCar
         <img
           src={images[currentImageIndex]}
           alt={pianoName}
-          className="w-full h-full object-cover transform hover:scale-105 transition-transform duration-300"
+          className="w-full h-full object-cover transform hover:scale-105 transition-transform duration-300 cursor-pointer"
+          onClick={onImageClick}
         />
         
         {hasMultipleImages && (
           <>
             <button
               onClick={prevImage}
-              className="absolute left-2 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity"
+              className="absolute left-2 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity z-10"
             >
               <ChevronLeft className="h-4 w-4" />
             </button>
             <button
               onClick={nextImage}
-              className="absolute right-2 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity"
+              className="absolute right-2 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white rounded-full p-2 opacity-0 group-hover:opacity-100 transition-opacity z-10"
             >
               <ChevronRight className="h-4 w-4" />
             </button>

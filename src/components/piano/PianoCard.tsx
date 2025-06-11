@@ -23,6 +23,8 @@ export const PianoCard = ({ piano, onDelete, onUpdate }: PianoCardProps) => {
   // Use multiple images if available, fallback to single image_url, or empty array
   const images = piano.image_urls || (piano.image_url ? [piano.image_url] : []);
 
+  const handleViewDetails = () => setIsViewDialogOpen(true);
+
   const handleDelete = async () => {
     try {
       console.log('Attempting to delete piano with ID:', piano.id);
@@ -66,10 +68,11 @@ export const PianoCard = ({ piano, onDelete, onUpdate }: PianoCardProps) => {
           pianoName={piano.name}
           onEdit={() => setIsEditDialogOpen(true)}
           onDelete={handleDelete}
+          onImageClick={handleViewDetails}
         />
         <PianoCardContent
           piano={piano}
-          onViewDetails={() => setIsViewDialogOpen(true)}
+          onViewDetails={handleViewDetails}
         />
       </Card>
 
