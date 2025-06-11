@@ -2,8 +2,8 @@
 import { motion } from "framer-motion";
 import { Piano } from "@/types/piano";
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { useState } from "react";
+import { PianoDetailsDialog } from "@/components/piano/PianoDetailsDialog";
 
 interface PianoCardProps {
   piano: Piano;
@@ -18,146 +18,42 @@ export const PianoCard = ({ piano }: PianoCardProps) => {
                       piano.image_url;
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-      className="bg-white rounded-lg shadow-lg overflow-hidden group relative"
-    >
-      {displayImage && (
-        <div className="aspect-[4/3] overflow-hidden">
-          <img 
-            src={displayImage} 
-            alt={piano.name}
-            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-          />
+    <>
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        className="bg-white rounded-lg shadow-lg overflow-hidden group relative"
+      >
+        {displayImage && (
+          <div className="aspect-[4/3] overflow-hidden">
+            <img 
+              src={displayImage} 
+              alt={piano.name}
+              className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+            />
+          </div>
+        )}
+        <div className="p-6">
+          <h3 className="text-xl font-bold mb-2">{piano.name}</h3>
+          <div className="flex justify-between items-center mb-4">
+            <span className="text-2xl font-bold text-primary">
+              ${piano.price.toLocaleString()}
+            </span>
+            <span className="text-sm text-gray-500">{piano.condition}</span>
+          </div>
+          
+          <Button className="w-full" onClick={() => setIsDialogOpen(true)}>
+            View Details
+          </Button>
         </div>
-      )}
-      <div className="p-6">
-        <h3 className="text-xl font-bold mb-2">{piano.name}</h3>
-        <div className="flex justify-between items-center mb-4">
-          <span className="text-2xl font-bold text-primary">
-            ${piano.price.toLocaleString()}
-          </span>
-          <span className="text-sm text-gray-500">{piano.condition}</span>
-        </div>
-        
-        <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-          <DialogTrigger asChild>
-            <Button className="w-full">View Details</Button>
-          </DialogTrigger>
-          <DialogContent className="sm:max-w-[90vw] max-h-[90vh] w-full">
-            <DialogHeader>
-              <DialogTitle className="text-2xl">{piano.name}</DialogTitle>
-            </DialogHeader>
-            
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 h-full">
-              {displayImage && (
-                <div className="flex-shrink-0">
-                  <div className="aspect-[4/3] overflow-hidden rounded-lg">
-                    <img 
-                      src={displayImage} 
-                      alt={piano.name}
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
-                </div>
-              )}
-              
-              <div className="space-y-4 min-h-0">
-                <div className="flex justify-between items-start">
-                  <div>
-                    <p className="text-3xl font-bold text-primary">
-                      ${piano.price.toLocaleString()}
-                    </p>
-                    {piano.condition && (
-                      <p className="text-gray-600">Condition: {piano.condition}</p>
-                    )}
-                  </div>
-                </div>
+      </motion.div>
 
-                {piano.description && (
-                  <div>
-                    <h4 className="font-semibold mb-1">Description</h4>
-                    <p className="text-gray-600 text-sm">{piano.description}</p>
-                  </div>
-                )}
-
-                <div className="grid grid-cols-2 gap-3 text-sm">
-                  {piano.manufacturer && (
-                    <div>
-                      <span className="font-semibold">Manufacturer:</span>
-                      <p className="text-gray-600">{piano.manufacturer}</p>
-                    </div>
-                  )}
-                  {piano.model_year && (
-                    <div>
-                      <span className="font-semibold">Model Year:</span>
-                      <p className="text-gray-600">{piano.model_year}</p>
-                    </div>
-                  )}
-                  {piano.type && (
-                    <div>
-                      <span className="font-semibold">Type:</span>
-                      <p className="text-gray-600">{piano.type}</p>
-                    </div>
-                  )}
-                  {piano.finish && (
-                    <div>
-                      <span className="font-semibold">Finish:</span>
-                      <p className="text-gray-600">{piano.finish}</p>
-                    </div>
-                  )}
-                  {piano.keyboard_keys && (
-                    <div>
-                      <span className="font-semibold">Keys:</span>
-                      <p className="text-gray-600">{piano.keyboard_keys}</p>
-                    </div>
-                  )}
-                  {piano.pedals && (
-                    <div>
-                      <span className="font-semibold">Pedals:</span>
-                      <p className="text-gray-600">{piano.pedals}</p>
-                    </div>
-                  )}
-                </div>
-
-                {(piano.width_cm || piano.height_cm || piano.depth_cm) && (
-                  <div>
-                    <h4 className="font-semibold mb-1">Dimensions</h4>
-                    <div className="grid grid-cols-3 gap-2 text-sm">
-                      {piano.width_cm && (
-                        <div>
-                          <span className="text-xs text-gray-500">Width</span>
-                          <p className="font-medium">{piano.width_cm}cm</p>
-                        </div>
-                      )}
-                      {piano.height_cm && (
-                        <div>
-                          <span className="text-xs text-gray-500">Height</span>
-                          <p className="font-medium">{piano.height_cm}cm</p>
-                        </div>
-                      )}
-                      {piano.depth_cm && (
-                        <div>
-                          <span className="text-xs text-gray-500">Depth</span>
-                          <p className="font-medium">{piano.depth_cm}cm</p>
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                )}
-
-                <div className="pt-2 border-t">
-                  <Button className="w-full" size="lg">
-                    Schedule a Viewing
-                  </Button>
-                </div>
-              </div>
-            </div>
-          </DialogContent>
-        </Dialog>
-      </div>
-    </motion.div>
+      <PianoDetailsDialog
+        piano={piano}
+        isOpen={isDialogOpen}
+        onOpenChange={setIsDialogOpen}
+      />
+    </>
   );
 };
