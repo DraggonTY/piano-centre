@@ -52,27 +52,68 @@ export const useAddPianoForm = (onSuccess: () => void, initialData?: Piano) => {
   const uploadImages = async () => {
     if (images.length === 0) return { imageUrls: [], keyImageUrl: null };
 
+    console.log('Starting image upload for', images.length, 'images');
     const imageUrls: string[] = [];
     
-    for (const image of images) {
-      const fileExt = image.name.split('.').pop();
-      const fileName = `${Math.random()}.${fileExt}`;
-      const { error: uploadError } = await supabase.storage
-        .from('piano-images')
-        .upload(fileName, image);
-
-      if (uploadError) {
-        throw uploadError;
+    // Create storage bucket if it doesn't exist
+    const { data: buckets } = await supabase.storage.listBuckets();
+    const bucketExists = buckets?.find(bucket => bucket.name === 'piano-images');
+    
+    if (!bucketExists) {
+      console.log('Creating piano-images bucket');
+      const { error: bucketError } = await supabase.storage.createBucket('piano-images', {
+        public: true,
+        allowedMimeTypes: ['image/jpeg', 'image/png', 'image/webp']
+      });
+      
+      if (bucketError) {
+        console.error('Error creating bucket:', bucketError);
+        throw new Error('Failed to create storage bucket: ' + bucketError.message);
       }
+    }
+    
+    for (let i = 0; i < images.length; i++) {
+      const image = images[i];
+      console.log(`Uploading image ${i + 1}/${images.length}:`, image.name);
+      
+      try {
+        const fileExt = image.name.split('.').pop();
+        const fileName = `${Date.now()}-${Math.random().toString(36).substring(7)}.${fileExt}`;
+        
+        const { error: uploadError, data } = await supabase.storage
+          .from('piano-images')
+          .upload(fileName, image, {
+            cacheControl: '3600',
+            upsert: false
+          });
 
-      const { data: { publicUrl } } = supabase.storage
-        .from('piano-images')
-        .getPublicUrl(fileName);
+        if (uploadError) {
+          console.error('Upload error for image:', image.name, uploadError);
+          throw new Error(`Failed to upload ${image.name}: ${uploadError.message}`);
+        }
 
-      imageUrls.push(publicUrl);
+        if (!data?.path) {
+          throw new Error(`No path returned for uploaded image: ${image.name}`);
+        }
+
+        const { data: { publicUrl } } = supabase.storage
+          .from('piano-images')
+          .getPublicUrl(data.path);
+
+        if (!publicUrl) {
+          throw new Error(`Failed to get public URL for: ${image.name}`);
+        }
+
+        imageUrls.push(publicUrl);
+        console.log(`Successfully uploaded image ${i + 1}:`, publicUrl);
+      } catch (error) {
+        console.error(`Error uploading image ${i + 1}:`, error);
+        throw error;
+      }
     }
 
     const keyImageUrl = imageUrls[keyImageIndex] || imageUrls[0] || null;
+    console.log('Upload complete. Key image URL:', keyImageUrl);
     
     return { imageUrls, keyImageUrl };
   };
@@ -90,13 +131,16 @@ export const useAddPianoForm = (onSuccess: () => void, initialData?: Piano) => {
     }
 
     setLoading(true);
+    console.log('Starting piano submission...');
 
     try {
       let image_urls = initialData?.image_urls || [];
       let key_image_url = initialData?.key_image_url || null;
       let image_url = initialData?.image_url || null;
 
+      // Only upload new images if files are selected
       if (images.length > 0) {
+        console.log('New images detected, uploading...');
         const { imageUrls, keyImageUrl } = await uploadImages();
         image_urls = imageUrls;
         key_image_url = keyImageUrl;
@@ -125,21 +169,32 @@ export const useAddPianoForm = (onSuccess: () => void, initialData?: Piano) => {
         user_id: session.user.id
       };
 
+      console.log('Submitting piano data:', pianoData);
+
       if (initialData?.id) {
+        console.log('Updating existing piano:', initialData.id);
         const { error: updateError } = await supabase
           .from("pianos")
           .update(pianoData)
           .eq('id', initialData.id);
 
-        if (updateError) throw updateError;
+        if (updateError) {
+          console.error('Update error:', updateError);
+          throw updateError;
+        }
       } else {
+        console.log('Creating new piano');
         const { error: insertError } = await supabase
           .from("pianos")
           .insert([pianoData]);
 
-        if (insertError) throw insertError;
+        if (insertError) {
+          console.error('Insert error:', insertError);
+          throw insertError;
+        }
       }
 
+      console.log('Piano operation successful');
       onSuccess();
       toast({
         title: initialData ? "Piano Updated" : "Piano Added",
@@ -150,7 +205,7 @@ export const useAddPianoForm = (onSuccess: () => void, initialData?: Piano) => {
       toast({
         variant: "destructive",
         title: initialData ? "Error updating piano" : "Error adding piano",
-        description: error.message,
+        description: error.message || "An unexpected error occurred. Please try again.",
       });
     } finally {
       setLoading(false);
