@@ -34,7 +34,7 @@ export const PianoDetailsDialog = ({ piano, isOpen, onOpenChange }: PianoDetails
       <Dialog open={isOpen} onOpenChange={onOpenChange}>
         <DialogContent className="sm:max-w-[90vw] max-w-[95vw] max-h-[95vh] sm:max-h-[90vh] w-full p-3 sm:p-6 overflow-y-auto rounded-lg sm:rounded-lg">
           <DialogHeader className="pb-3 sm:pb-4">
-            <DialogTitle className="text-xl sm:text-2xl pr-6">{piano.name}</DialogTitle>
+            <DialogTitle className="sr-only">Piano Details</DialogTitle>
           </DialogHeader>
           
           <div className="flex flex-col lg:grid lg:grid-cols-2 gap-4 sm:gap-6">
