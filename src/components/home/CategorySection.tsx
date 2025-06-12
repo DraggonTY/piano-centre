@@ -1,3 +1,4 @@
+
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -54,10 +55,10 @@ export const CategorySection = () => {
                 />
               </div>
               <div className="absolute inset-0 flex flex-col justify-end p-6 z-20">
-                <h3 className="text-2xl font-bold text-white mb-2">{category.title}</h3>
-                <p className="text-gray-200 mb-4">{category.description}</p>
+                <h3 className="text-2xl font-bold text-white mb-2 drop-shadow-lg">{category.title}</h3>
+                <p className="text-gray-200 mb-4 drop-shadow-md">{category.description}</p>
                 <Link to={category.link}>
-                  <Button variant="secondary" className="w-full">
+                  <Button variant="secondary" className="w-full drop-shadow-md">
                     Explore {category.title}
                   </Button>
                 </Link>
