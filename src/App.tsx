@@ -6,6 +6,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "./providers/AuthProvider";
 import { Header } from "./components/layout/Header";
+import { Footer } from "./components/layout/Footer";
 import { ChatWidget } from "./components/chat/ChatWidget";
 import Index from "./pages/Index";
 import Auth from "./pages/Auth";
@@ -31,6 +32,7 @@ const App = () => (
                 <Route path="*" element={<NotFound />} />
               </Routes>
             </main>
+            <Footer />
             <ChatWidget />
           </div>
         </AuthProvider>
