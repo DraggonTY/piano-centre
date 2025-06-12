@@ -1,4 +1,3 @@
-
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -19,7 +18,7 @@ const categories = [
   {
     title: "Digital Pianos",
     description: "Explore our range of advanced digital pianos with modern features.",
-    image: "https://images.unsplash.com/photo-1595069906974-f8ae7ffc3e7a?auto=format&fit=crop&q=80",
+    image: "/lovable-uploads/64e0759b-e5dc-4b26-bcfa-e3e0235a96f1.png",
     link: "/pianos?category=digital"
   }
 ];
