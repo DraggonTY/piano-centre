@@ -268,7 +268,7 @@ export const HeroSection = () => {
             <DialogTrigger asChild>
               <Button 
                 size="sm" 
-                className="bg-black hover:bg-white hover:text-black text-white border border-white transition-colors"
+                className="bg-black hover:bg-gray-700 text-white border border-white transition-colors"
               >
                 <Edit className="mr-2 h-4 w-4" /> Edit Hero Section
               </Button>
@@ -432,7 +432,7 @@ export const HeroSection = () => {
                     <Button 
                       type="submit" 
                       disabled={loading}
-                      className="bg-black hover:bg-white hover:text-black text-white border border-black transition-colors"
+                      className="bg-black hover:bg-gray-700 text-white border border-black transition-colors"
                     >
                       {loading ? (
                         <>Saving...</>
@@ -470,7 +470,7 @@ export const HeroSection = () => {
             <Link to={heroContent.viewCollectionLink}>
               <Button 
                 size="lg" 
-                className="border-2 border-black bg-black text-white hover:bg-white hover:border-white hover:text-black transition-all duration-300 px-8 hover:scale-105"
+                className="border-2 border-black bg-black text-white hover:bg-gray-700 hover:border-gray-700 transition-all duration-300 px-8 hover:scale-105"
               >
                 {heroContent.viewCollectionText}
               </Button>
@@ -479,7 +479,7 @@ export const HeroSection = () => {
               <Button 
                 size="lg" 
                 variant="outline" 
-                className="border-2 border-white bg-white text-black hover:bg-black hover:border-black hover:text-white transition-all duration-300 hover:scale-105"
+                className="border-2 border-white bg-white text-black hover:bg-gray-300 hover:border-gray-300 transition-all duration-300 hover:scale-105"
               >
                 {heroContent.scheduleVisitText}
               </Button>
