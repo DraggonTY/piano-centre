@@ -12,10 +12,10 @@ export const PianoCardContent = ({ piano, onViewDetails }: PianoCardContentProps
   return (
     <>
       <CardHeader className="pb-3">
-        <CardTitle className="text-lg leading-tight">{piano.name}</CardTitle>
         <CardDescription className="text-lg font-semibold text-primary">
           ${piano.price.toLocaleString()}
         </CardDescription>
+        <CardTitle className="text-lg leading-tight">{piano.name}</CardTitle>
       </CardHeader>
       <CardContent className="pb-3 flex-1">
         <div className="space-y-1 text-sm">
