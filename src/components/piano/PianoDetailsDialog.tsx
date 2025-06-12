@@ -47,7 +47,10 @@ export const PianoDetailsDialog = ({ piano, isOpen, onOpenChange }: PianoDetails
             <div className="space-y-4 min-h-0 order-2 lg:order-none">
               <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-2">
                 <div>
-                  <p className="text-2xl sm:text-3xl font-bold text-primary">
+                  <h3 className="text-2xl sm:text-3xl font-bold">
+                    {piano.name}
+                  </h3>
+                  <p className="text-xl sm:text-2xl font-bold text-primary">
                     ${piano.price.toLocaleString()}
                   </p>
                   {piano.condition && (
