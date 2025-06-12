@@ -7,18 +7,16 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/components/ui/use-toast";
 import { HelpCircle } from "lucide-react";
+
 const Auth = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
-  const {
-    toast
-  } = useToast();
-  const from = (location.state as {
-    from?: string;
-  })?.from || "/";
+  const { toast } = useToast();
+  const from = (location.state as { from?: string })?.from || "/";
+
   const handleError = (error: any) => {
     let errorMessage = "An unexpected error occurred";
 
@@ -40,13 +38,12 @@ const Auth = () => {
       description: errorMessage
     });
   };
+
   const handleSignIn = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     try {
-      const {
-        error
-      } = await supabase.auth.signInWithPassword({
+      const { error } = await supabase.auth.signInWithPassword({
         email,
         password
       });
@@ -61,15 +58,14 @@ const Auth = () => {
       setLoading(false);
     }
   };
-  return <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
       <Card className="w-full max-w-md">
         <CardHeader>
           <div className="flex justify-between items-center">
             <div>
               <CardTitle className="text-2xl">Sign In</CardTitle>
-              <CardDescription>
-                Sign in to your Piano Centre Edmonton account
-              </CardDescription>
             </div>
             <Link to="/auth/documentation" className="text-gray-500 hover:text-gray-700" title="View Authentication Documentation">
               <HelpCircle className="h-5 w-5" />
@@ -92,8 +88,10 @@ const Auth = () => {
           </form>
         </CardContent>
         <CardFooter className="text-center text-sm text-gray-600">
-      </CardFooter>
+        </CardFooter>
       </Card>
-    </div>;
+    </div>
+  );
 };
+
 export default Auth;
