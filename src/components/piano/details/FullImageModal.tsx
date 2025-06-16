@@ -42,13 +42,21 @@ export const FullImageModal = ({ isOpen, imageUrl, pianoName, onClose }: FullIma
   }, [scale]);
 
   const handleOverlayClick = (e: React.MouseEvent) => {
-    // Close when clicking the overlay itself
-    onClose();
+    // Only close if clicking the overlay itself, not its children
+    if (e.target === e.currentTarget) {
+      onClose();
+    }
   };
 
-  const handleContentClick = (e: React.MouseEvent) => {
-    // Prevent closing when clicking on the image or close button
+  const handleImageClick = (e: React.MouseEvent) => {
+    // Prevent the overlay click handler from firing when clicking the image
     e.stopPropagation();
+  };
+
+  const handleCloseClick = (e: React.MouseEvent) => {
+    // Prevent the overlay click handler from firing when clicking the close button
+    e.stopPropagation();
+    onClose();
   };
 
   const handleKeyDown = useCallback((e: KeyboardEvent) => {
@@ -76,13 +84,13 @@ export const FullImageModal = ({ isOpen, imageUrl, pianoName, onClose }: FullIma
 
   return (
     <div 
-      className="fixed inset-0 z-[99999] bg-black/90 flex items-center justify-center p-4"
+      className="fixed inset-0 z-50 bg-black/90 flex items-center justify-center p-4"
       onClick={handleOverlayClick}
       onWheel={handleWheel}
     >
       <button
-        onClick={onClose}
-        className="absolute top-4 right-4 text-white hover:text-gray-300 z-[100000] bg-black/50 rounded-full p-2"
+        onClick={handleCloseClick}
+        className="absolute top-4 right-4 text-white hover:text-gray-300 z-10 bg-black/50 rounded-full p-2"
         type="button"
       >
         <X className="h-6 w-6" />
@@ -90,11 +98,11 @@ export const FullImageModal = ({ isOpen, imageUrl, pianoName, onClose }: FullIma
       <img
         src={imageUrl}
         alt={pianoName}
-        className="max-w-full max-h-full object-contain transition-transform duration-200 cursor-grab active:cursor-grabbing z-[100000]"
+        className="max-w-full max-h-full object-contain transition-transform duration-200 cursor-grab active:cursor-grabbing"
         style={{
           transform: `scale(${scale}) translate(${position.x}px, ${position.y}px)`,
         }}
-        onClick={handleContentClick}
+        onClick={handleImageClick}
         draggable={false}
       />
     </div>
