@@ -48,6 +48,11 @@ export const FullImageModal = ({ isOpen, imageUrl, pianoName, onClose }: FullIma
     }
   };
 
+  const handleCloseClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    onClose();
+  };
+
   const handleKeyDown = useCallback((e: KeyboardEvent) => {
     if (e.key === 'Escape') {
       e.preventDefault();
@@ -78,7 +83,7 @@ export const FullImageModal = ({ isOpen, imageUrl, pianoName, onClose }: FullIma
       onWheel={handleWheel}
     >
       <button
-        onClick={onClose}
+        onClick={handleCloseClick}
         className="absolute top-4 right-4 text-white hover:text-gray-300 z-10"
       >
         <X className="h-8 w-8" />
