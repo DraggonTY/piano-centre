@@ -64,7 +64,7 @@ export const PianoDetailsDialog = ({ piano, isOpen, onOpenChange }: PianoDetails
               {piano.description && (
                 <div className="space-y-1">
                   <h4 className="font-semibold text-sm sm:text-base">Description</h4>
-                  <p className="text-gray-600 text-xs sm:text-sm leading-relaxed line-clamp-3 sm:line-clamp-none">{piano.description}</p>
+                  <p className="text-gray-600 text-xs sm:text-sm leading-relaxed">{piano.description}</p>
                 </div>
               )}
 
