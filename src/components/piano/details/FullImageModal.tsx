@@ -41,11 +41,14 @@ export const FullImageModal = ({ isOpen, imageUrl, pianoName, onClose }: FullIma
     }
   }, [scale]);
 
-  const handleBackdropClick = (e: React.MouseEvent) => {
-    // Only close if clicking directly on the backdrop
-    if (e.target === e.currentTarget) {
-      onClose();
-    }
+  const handleOverlayClick = (e: React.MouseEvent) => {
+    // Close when clicking the overlay itself
+    onClose();
+  };
+
+  const handleContentClick = (e: React.MouseEvent) => {
+    // Prevent closing when clicking on the image or close button
+    e.stopPropagation();
   };
 
   const handleKeyDown = useCallback((e: KeyboardEvent) => {
@@ -74,26 +77,30 @@ export const FullImageModal = ({ isOpen, imageUrl, pianoName, onClose }: FullIma
   return (
     <div 
       className="fixed inset-0 z-[9999] bg-black/90 flex items-center justify-center p-4"
-      onClick={handleBackdropClick}
+      onClick={handleOverlayClick}
       onWheel={handleWheel}
     >
-      <button
-        onClick={onClose}
-        className="absolute top-4 right-4 text-white hover:text-gray-300 z-[10000] bg-black/50 rounded-full p-2"
-        type="button"
+      <div 
+        className="relative max-w-full max-h-full flex items-center justify-center"
+        onClick={handleContentClick}
       >
-        <X className="h-6 w-6" />
-      </button>
-      <img
-        src={imageUrl}
-        alt={pianoName}
-        className="max-w-full max-h-full object-contain transition-transform duration-200 cursor-grab active:cursor-grabbing"
-        style={{
-          transform: `scale(${scale}) translate(${position.x}px, ${position.y}px)`,
-        }}
-        onClick={(e) => e.stopPropagation()}
-        draggable={false}
-      />
+        <button
+          onClick={onClose}
+          className="absolute top-4 right-4 text-white hover:text-gray-300 z-[10000] bg-black/50 rounded-full p-2"
+          type="button"
+        >
+          <X className="h-6 w-6" />
+        </button>
+        <img
+          src={imageUrl}
+          alt={pianoName}
+          className="max-w-full max-h-full object-contain transition-transform duration-200 cursor-grab active:cursor-grabbing"
+          style={{
+            transform: `scale(${scale}) translate(${position.x}px, ${position.y}px)`,
+          }}
+          draggable={false}
+        />
+      </div>
     </div>
   );
 };
