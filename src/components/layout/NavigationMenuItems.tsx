@@ -38,8 +38,12 @@ const ListItem = ({ className, title, href, children }: {
 
 export const PianosMenuItem = () => (
   <NavigationMenuItem>
-    <NavigationMenuTrigger>Pianos</NavigationMenuTrigger>
-    <NavigationMenuContent>
+    <NavigationMenuTrigger 
+      className="group-hover/services:opacity-30 transition-opacity duration-200"
+    >
+      Pianos
+    </NavigationMenuTrigger>
+    <NavigationMenuContent className="group-hover/services:opacity-0 transition-opacity duration-200">
       <ul className="grid w-[500px] gap-3 p-4 md:grid-cols-2">
         <ListItem href="/pianos" title="Browse Pianos">
           Explore our collection of quality pianos
@@ -59,9 +63,13 @@ export const PianosMenuItem = () => (
 );
 
 export const ServicesMenuItem = () => (
-  <NavigationMenuItem>
-    <NavigationMenuTrigger>Services</NavigationMenuTrigger>
-    <NavigationMenuContent>
+  <NavigationMenuItem className="group/services">
+    <NavigationMenuTrigger 
+      className="group-hover/pianos:opacity-30 transition-opacity duration-200"
+    >
+      Services
+    </NavigationMenuTrigger>
+    <NavigationMenuContent className="group-hover/pianos:opacity-0 transition-opacity duration-200">
       <ul className="grid w-[500px] gap-3 p-4">
         <ListItem href="/services/tuning" title="Piano Tuning">
           Professional piano tuning services
