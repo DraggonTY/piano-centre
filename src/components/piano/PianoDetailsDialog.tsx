@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
@@ -30,9 +29,16 @@ export const PianoDetailsDialog = ({ piano, isOpen, onOpenChange }: PianoDetails
     setLightboxOpen(false);
   };
 
+  const handleDialogOpenChange = (open: boolean) => {
+    // Only close the main dialog if the lightbox is not open
+    if (!lightboxOpen) {
+      onOpenChange(open);
+    }
+  };
+
   return (
     <>
-      <Dialog open={isOpen} onOpenChange={onOpenChange}>
+      <Dialog open={isOpen} onOpenChange={handleDialogOpenChange}>
         <DialogContent className="sm:max-w-[90vw] max-w-[95vw] max-h-[95vh] sm:max-h-[90vh] w-full p-3 sm:p-6 overflow-y-auto rounded-lg sm:rounded-lg">
           <DialogHeader className="pb-3 sm:pb-4">
             <DialogTitle className="sr-only">Piano Details</DialogTitle>
@@ -80,6 +86,7 @@ export const PianoDetailsDialog = ({ piano, isOpen, onOpenChange }: PianoDetails
         </DialogContent>
       </Dialog>
 
+      {/* Render lightbox outside of the main dialog to prevent interference */}
       <FullScreenImageViewer 
         images={images}
         isOpen={lightboxOpen}
