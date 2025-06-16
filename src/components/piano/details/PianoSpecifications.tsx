@@ -18,13 +18,13 @@ export const PianoSpecifications = ({ piano }: PianoSpecificationsProps) => {
   if (specifications.length === 0) return null;
 
   return (
-    <div>
-      <h4 className="font-semibold mb-2 text-sm sm:text-base">Specifications</h4>
-      <div className="grid grid-cols-3 gap-2 text-xs sm:text-sm">
+    <div className="space-y-1">
+      <h4 className="font-semibold text-sm sm:text-base">Specifications</h4>
+      <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 text-xs sm:text-sm">
         {specifications.map((spec, index) => (
-          <div key={index}>
-            <span className="text-xs text-gray-500">{spec.label}</span>
-            <p className="font-medium">{spec.value}</p>
+          <div key={index} className="min-w-0">
+            <span className="text-xs text-gray-500 block">{spec.label}</span>
+            <p className="font-medium truncate">{spec.value}</p>
           </div>
         ))}
       </div>
