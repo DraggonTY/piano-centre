@@ -37,8 +37,16 @@ const ListItem = ({ className, title, href, children }: {
 
 export const PianosMenuItem = () => (
   <NavigationMenuItem>
-    <NavigationMenuTrigger>Pianos</NavigationMenuTrigger>
-    <NavigationMenuContent>
+    <NavigationMenuTrigger onPointerEnter={() => {
+      // Close other menus when hovering over pianos
+      const servicesContent = document.querySelector('[data-menu="services"]');
+      if (servicesContent) {
+        servicesContent.setAttribute('data-state', 'closed');
+      }
+    }}>
+      Pianos
+    </NavigationMenuTrigger>
+    <NavigationMenuContent data-menu="pianos">
       <ul className="grid w-[500px] gap-3 p-4 md:grid-cols-2">
         <ListItem href="/pianos" title="Browse Pianos">
           Explore our collection of quality pianos
@@ -59,8 +67,16 @@ export const PianosMenuItem = () => (
 
 export const ServicesMenuItem = () => (
   <NavigationMenuItem>
-    <NavigationMenuTrigger>Services</NavigationMenuTrigger>
-    <NavigationMenuContent>
+    <NavigationMenuTrigger onPointerEnter={() => {
+      // Close other menus when hovering over services
+      const pianosContent = document.querySelector('[data-menu="pianos"]');
+      if (pianosContent) {
+        pianosContent.setAttribute('data-state', 'closed');
+      }
+    }}>
+      Services
+    </NavigationMenuTrigger>
+    <NavigationMenuContent data-menu="services">
       <ul className="grid w-[500px] gap-3 p-4">
         <ListItem href="/services/tuning" title="Piano Tuning">
           Professional piano tuning services
