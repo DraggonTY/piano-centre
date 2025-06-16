@@ -42,9 +42,12 @@ export const FullImageModal = ({ isOpen, imageUrl, pianoName, onClose }: FullIma
   }, [scale]);
 
   const handleBackdropClick = (e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    onClose();
+    // Only close if clicking directly on the backdrop, not on any child elements
+    if (e.target === e.currentTarget) {
+      e.preventDefault();
+      e.stopPropagation();
+      onClose();
+    }
   };
 
   const handleImageClick = (e: React.MouseEvent) => {
@@ -80,9 +83,7 @@ export const FullImageModal = ({ isOpen, imageUrl, pianoName, onClose }: FullIma
       className="fixed inset-0 z-[100] bg-black/90 flex items-center justify-center p-4"
       onClick={handleBackdropClick}
       onWheel={handleWheel}
-      onMouseDown={(e) => e.stopPropagation()}
-      onMouseUp={(e) => e.stopPropagation()}
-      onMouseMove={(e) => e.stopPropagation()}
+      onContextMenu={(e) => e.preventDefault()}
       style={{ isolation: 'isolate' }}
     >
       <button
@@ -103,9 +104,7 @@ export const FullImageModal = ({ isOpen, imageUrl, pianoName, onClose }: FullIma
           transform: `scale(${scale}) translate(${position.x}px, ${position.y}px)`,
         }}
         onClick={handleImageClick}
-        onMouseDown={(e) => e.stopPropagation()}
-        onMouseUp={(e) => e.stopPropagation()}
-        onMouseMove={(e) => e.stopPropagation()}
+        onContextMenu={(e) => e.preventDefault()}
         draggable={false}
       />
     </div>
