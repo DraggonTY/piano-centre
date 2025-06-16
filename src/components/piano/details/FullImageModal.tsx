@@ -1,6 +1,6 @@
 
 import { X } from "lucide-react";
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 
 interface FullImageModalProps {
   isOpen: boolean;
@@ -13,8 +13,22 @@ export const FullImageModal = ({ isOpen, imageUrl, pianoName, onClose }: FullIma
   const [scale, setScale] = useState(1);
   const [position, setPosition] = useState({ x: 0, y: 0 });
 
+  // Prevent background scrolling when modal is open
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
+  }, [isOpen]);
+
   const handleWheel = useCallback((e: React.WheelEvent) => {
     e.preventDefault();
+    e.stopPropagation();
     
     const delta = e.deltaY > 0 ? -0.1 : 0.1;
     const newScale = Math.max(0.5, Math.min(5, scale + delta));
@@ -27,9 +41,30 @@ export const FullImageModal = ({ isOpen, imageUrl, pianoName, onClose }: FullIma
     }
   }, [scale]);
 
+  const handleBackdropClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    onClose();
+  };
+
   const handleImageClick = (e: React.MouseEvent) => {
+    e.preventDefault();
     e.stopPropagation();
   };
+
+  const handleKeyDown = useCallback((e: KeyboardEvent) => {
+    if (e.key === 'Escape') {
+      e.preventDefault();
+      onClose();
+    }
+  }, [onClose]);
+
+  useEffect(() => {
+    if (isOpen) {
+      document.addEventListener('keydown', handleKeyDown);
+      return () => document.removeEventListener('keydown', handleKeyDown);
+    }
+  }, [isOpen, handleKeyDown]);
 
   // Reset zoom when modal opens/closes
   if (!isOpen) {
@@ -43,11 +78,19 @@ export const FullImageModal = ({ isOpen, imageUrl, pianoName, onClose }: FullIma
   return (
     <div 
       className="fixed inset-0 z-[100] bg-black/90 flex items-center justify-center p-4"
-      onClick={onClose}
+      onClick={handleBackdropClick}
       onWheel={handleWheel}
+      onMouseDown={(e) => e.stopPropagation()}
+      onMouseUp={(e) => e.stopPropagation()}
+      onMouseMove={(e) => e.stopPropagation()}
+      style={{ isolation: 'isolate' }}
     >
       <button
-        onClick={onClose}
+        onClick={(e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          onClose();
+        }}
         className="absolute top-4 right-4 text-white hover:text-gray-300 z-10"
       >
         <X className="h-8 w-8" />
@@ -60,6 +103,9 @@ export const FullImageModal = ({ isOpen, imageUrl, pianoName, onClose }: FullIma
           transform: `scale(${scale}) translate(${position.x}px, ${position.y}px)`,
         }}
         onClick={handleImageClick}
+        onMouseDown={(e) => e.stopPropagation()}
+        onMouseUp={(e) => e.stopPropagation()}
+        onMouseMove={(e) => e.stopPropagation()}
         draggable={false}
       />
     </div>
