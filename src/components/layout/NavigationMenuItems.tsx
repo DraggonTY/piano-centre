@@ -1,5 +1,6 @@
 
 import { Link } from "react-router-dom";
+import { useState } from "react";
 import {
   NavigationMenuContent,
   NavigationMenuItem,
@@ -37,16 +38,8 @@ const ListItem = ({ className, title, href, children }: {
 
 export const PianosMenuItem = () => (
   <NavigationMenuItem>
-    <NavigationMenuTrigger onPointerEnter={() => {
-      // Close other menus when hovering over pianos
-      const servicesContent = document.querySelector('[data-menu="services"]');
-      if (servicesContent) {
-        servicesContent.setAttribute('data-state', 'closed');
-      }
-    }}>
-      Pianos
-    </NavigationMenuTrigger>
-    <NavigationMenuContent data-menu="pianos">
+    <NavigationMenuTrigger>Pianos</NavigationMenuTrigger>
+    <NavigationMenuContent>
       <ul className="grid w-[500px] gap-3 p-4 md:grid-cols-2">
         <ListItem href="/pianos" title="Browse Pianos">
           Explore our collection of quality pianos
@@ -67,16 +60,8 @@ export const PianosMenuItem = () => (
 
 export const ServicesMenuItem = () => (
   <NavigationMenuItem>
-    <NavigationMenuTrigger onPointerEnter={() => {
-      // Close other menus when hovering over services
-      const pianosContent = document.querySelector('[data-menu="pianos"]');
-      if (pianosContent) {
-        pianosContent.setAttribute('data-state', 'closed');
-      }
-    }}>
-      Services
-    </NavigationMenuTrigger>
-    <NavigationMenuContent data-menu="services">
+    <NavigationMenuTrigger>Services</NavigationMenuTrigger>
+    <NavigationMenuContent>
       <ul className="grid w-[500px] gap-3 p-4">
         <ListItem href="/services/tuning" title="Piano Tuning">
           Professional piano tuning services
