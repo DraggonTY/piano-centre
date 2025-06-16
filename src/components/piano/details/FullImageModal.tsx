@@ -41,27 +41,31 @@ export const FullImageModal = ({ isOpen, imageUrl, pianoName, onClose }: FullIma
     }
   }, [scale]);
 
-  const handleOverlayClick = (e: React.MouseEvent) => {
+  const handleOverlayClick = useCallback((e: React.MouseEvent) => {
     // Only close if clicking the overlay itself, not its children
     if (e.target === e.currentTarget) {
+      e.preventDefault();
+      e.stopPropagation();
       onClose();
     }
-  };
+  }, [onClose]);
 
-  const handleImageClick = (e: React.MouseEvent) => {
+  const handleImageClick = useCallback((e: React.MouseEvent) => {
     // Prevent the overlay click handler from firing when clicking the image
     e.stopPropagation();
-  };
+  }, []);
 
-  const handleCloseClick = (e: React.MouseEvent) => {
+  const handleCloseClick = useCallback((e: React.MouseEvent) => {
     // Prevent the overlay click handler from firing when clicking the close button
+    e.preventDefault();
     e.stopPropagation();
     onClose();
-  };
+  }, [onClose]);
 
   const handleKeyDown = useCallback((e: KeyboardEvent) => {
     if (e.key === 'Escape') {
       e.preventDefault();
+      e.stopPropagation();
       onClose();
     }
   }, [onClose]);
@@ -74,11 +78,14 @@ export const FullImageModal = ({ isOpen, imageUrl, pianoName, onClose }: FullIma
   }, [isOpen, handleKeyDown]);
 
   // Reset zoom when modal opens/closes
-  if (!isOpen) {
-    if (scale !== 1 || position.x !== 0 || position.y !== 0) {
+  useEffect(() => {
+    if (isOpen) {
       setScale(1);
       setPosition({ x: 0, y: 0 });
     }
+  }, [isOpen]);
+
+  if (!isOpen) {
     return null;
   }
 
@@ -92,6 +99,7 @@ export const FullImageModal = ({ isOpen, imageUrl, pianoName, onClose }: FullIma
         onClick={handleCloseClick}
         className="absolute top-4 right-4 text-white hover:text-gray-300 z-[10000] bg-black/50 rounded-full p-2"
         type="button"
+        aria-label="Close image"
       >
         <X className="h-6 w-6" />
       </button>
