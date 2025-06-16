@@ -36,8 +36,8 @@ export const PianoDetailsDialog = ({ piano, isOpen, onOpenChange }: PianoDetails
   return (
     <>
       <Dialog open={isMainDialogOpen} onOpenChange={onOpenChange}>
-        <DialogContent className="sm:max-w-[90vw] max-w-[95vw] max-h-[90vh] sm:max-h-[85vh] w-full p-2 sm:p-4 overflow-y-auto rounded-lg">
-          <DialogHeader className="pb-2 sm:pb-3">
+        <DialogContent className="sm:max-w-[90vw] max-w-[95vw] max-h-[90vh] sm:max-h-[85vh] w-full p-3 sm:p-4 overflow-y-auto rounded-lg [&>button]:top-3 [&>button]:right-3 sm:[&>button]:top-4 sm:[&>button]:right-4">
+          <DialogHeader className="pb-2 sm:pb-3 pt-2">
             <DialogTitle className="sr-only">Piano Details</DialogTitle>
           </DialogHeader>
           
@@ -48,16 +48,16 @@ export const PianoDetailsDialog = ({ piano, isOpen, onOpenChange }: PianoDetails
               onImageClick={openLightbox}
             />
             
-            <div className="space-y-3 min-h-0 order-2 lg:order-none">
+            <div className="space-y-2 sm:space-y-3 min-h-0 order-2 lg:order-none">
               <div className="flex flex-col gap-1">
-                <h3 className="text-xl sm:text-2xl lg:text-3xl font-bold leading-tight">
+                <h3 className="text-lg sm:text-xl lg:text-2xl font-bold leading-tight">
                   {piano.name}
                 </h3>
-                <p className="text-lg sm:text-xl lg:text-2xl font-bold text-primary">
+                <p className="text-base sm:text-lg lg:text-xl font-bold text-primary">
                   ${piano.price.toLocaleString()}
                 </p>
                 {piano.condition && (
-                  <p className="text-gray-600 text-sm">Condition: {piano.condition}</p>
+                  <p className="text-gray-600 text-xs sm:text-sm">Condition: {piano.condition}</p>
                 )}
               </div>
 
@@ -72,7 +72,7 @@ export const PianoDetailsDialog = ({ piano, isOpen, onOpenChange }: PianoDetails
               <PianoDimensions piano={piano} />
 
               <div className="pt-2 border-t">
-                <Button className="w-full text-sm sm:text-base" size="default">
+                <Button className="w-full text-sm" size="sm">
                   Schedule a Viewing
                 </Button>
               </div>
