@@ -80,7 +80,7 @@ export const PianoDetailsDialog = ({ piano, isOpen, onOpenChange }: PianoDetails
     <>
       {isMobile ? (
         <Sheet open={isMainDialogOpen} onOpenChange={onOpenChange}>
-          <SheetContent side="bottom" className="h-[100vh] p-4 overflow-y-auto [&>button]:top-8 [&>button]:right-8">
+          <SheetContent side="bottom" className="h-[100vh] pt-16 p-4 overflow-y-auto [&>button]:top-4 [&>button]:right-4">
             <SheetHeader className="pb-3">
               <SheetTitle className="sr-only">Piano Details</SheetTitle>
             </SheetHeader>
