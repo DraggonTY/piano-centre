@@ -12,7 +12,10 @@ export const FullImageModal = ({ isOpen, imageUrl, pianoName, onClose }: FullIma
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-[100] bg-black/90 flex items-center justify-center p-4">
+    <div 
+      className="fixed inset-0 z-[100] bg-black/90 flex items-center justify-center p-4"
+      onClick={onClose}
+    >
       <button
         onClick={onClose}
         className="absolute top-4 right-4 text-white hover:text-gray-300 z-10"
@@ -23,7 +26,7 @@ export const FullImageModal = ({ isOpen, imageUrl, pianoName, onClose }: FullIma
         src={imageUrl}
         alt={pianoName}
         className="max-w-full max-h-full object-contain"
-        onClick={onClose}
+        onClick={(e) => e.stopPropagation()}
       />
     </div>
   );
