@@ -41,24 +41,15 @@ export const FullImageModal = ({ isOpen, imageUrl, pianoName, onClose }: FullIma
     }
   }, [scale]);
 
-  const handleOverlayClick = useCallback((e: React.MouseEvent) => {
-    // Only close if clicking the overlay itself, not its children
-    if (e.target === e.currentTarget) {
-      e.preventDefault();
-      e.stopPropagation();
-      onClose();
-    }
+  const handleOverlayClick = useCallback(() => {
+    onClose();
   }, [onClose]);
 
   const handleImageClick = useCallback((e: React.MouseEvent) => {
-    // Prevent the overlay click handler from firing when clicking the image
     e.stopPropagation();
   }, []);
 
-  const handleCloseClick = useCallback((e: React.MouseEvent) => {
-    // Prevent the overlay click handler from firing when clicking the close button
-    e.preventDefault();
-    e.stopPropagation();
+  const handleCloseClick = useCallback(() => {
     onClose();
   }, [onClose]);
 
@@ -90,29 +81,37 @@ export const FullImageModal = ({ isOpen, imageUrl, pianoName, onClose }: FullIma
   }
 
   return (
-    <div 
-      className="fixed inset-0 z-[9999] bg-black/90 flex items-center justify-center p-4"
-      onClick={handleOverlayClick}
-      onWheel={handleWheel}
-    >
-      <button
-        onClick={handleCloseClick}
-        className="absolute top-4 right-4 text-white hover:text-gray-300 z-[10000] bg-black/50 rounded-full p-2"
-        type="button"
-        aria-label="Close image"
-      >
-        <X className="h-6 w-6" />
-      </button>
-      <img
-        src={imageUrl}
-        alt={pianoName}
-        className="max-w-full max-h-full object-contain transition-transform duration-200 cursor-grab active:cursor-grabbing relative z-[10000]"
-        style={{
-          transform: `scale(${scale}) translate(${position.x}px, ${position.y}px)`,
-        }}
-        onClick={handleImageClick}
-        draggable={false}
+    <div className="fixed inset-0 z-[9999]">
+      {/* Overlay */}
+      <div 
+        className="fixed inset-0 bg-black/90"
+        onClick={handleOverlayClick}
       />
+      
+      {/* Content */}
+      <div 
+        className="fixed inset-0 z-[10000] flex items-center justify-center p-4"
+        onWheel={handleWheel}
+      >
+        <button
+          onClick={handleCloseClick}
+          className="absolute top-4 right-4 text-white hover:text-gray-300 bg-black/50 rounded-full p-2"
+          type="button"
+          aria-label="Close image"
+        >
+          <X className="h-6 w-6" />
+        </button>
+        <img
+          src={imageUrl}
+          alt={pianoName}
+          className="max-w-full max-h-full object-contain transition-transform duration-200 cursor-grab active:cursor-grabbing"
+          style={{
+            transform: `scale(${scale}) translate(${position.x}px, ${position.y}px)`,
+          }}
+          onClick={handleImageClick}
+          draggable={false}
+        />
+      </div>
     </div>
   );
 };
