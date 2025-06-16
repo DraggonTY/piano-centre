@@ -1,4 +1,3 @@
-
 import { X } from "lucide-react";
 import { useState, useCallback, useEffect } from "react";
 
@@ -80,27 +79,23 @@ export const FullImageModal = ({ isOpen, imageUrl, pianoName, onClose }: FullIma
       onClick={handleOverlayClick}
       onWheel={handleWheel}
     >
-      <div 
-        className="relative max-w-full max-h-full flex items-center justify-center"
-        onClick={handleContentClick}
+      <button
+        onClick={onClose}
+        className="absolute top-4 right-4 text-white hover:text-gray-300 z-[10000] bg-black/50 rounded-full p-2"
+        type="button"
       >
-        <button
-          onClick={onClose}
-          className="absolute top-4 right-4 text-white hover:text-gray-300 z-[10000] bg-black/50 rounded-full p-2"
-          type="button"
-        >
-          <X className="h-6 w-6" />
-        </button>
-        <img
-          src={imageUrl}
-          alt={pianoName}
-          className="max-w-full max-h-full object-contain transition-transform duration-200 cursor-grab active:cursor-grabbing"
-          style={{
-            transform: `scale(${scale}) translate(${position.x}px, ${position.y}px)`,
-          }}
-          draggable={false}
-        />
-      </div>
+        <X className="h-6 w-6" />
+      </button>
+      <img
+        src={imageUrl}
+        alt={pianoName}
+        className="max-w-full max-h-full object-contain transition-transform duration-200 cursor-grab active:cursor-grabbing"
+        style={{
+          transform: `scale(${scale}) translate(${position.x}px, ${position.y}px)`,
+        }}
+        onClick={handleContentClick}
+        draggable={false}
+      />
     </div>
   );
 };
