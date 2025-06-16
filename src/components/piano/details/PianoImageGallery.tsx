@@ -5,7 +5,7 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 interface PianoImageGalleryProps {
   images: string[];
   pianoName: string;
-  onImageClick: () => void;
+  onImageClick: (index: number) => void;
 }
 
 export const PianoImageGallery = ({ images, pianoName, onImageClick }: PianoImageGalleryProps) => {
@@ -29,7 +29,7 @@ export const PianoImageGallery = ({ images, pianoName, onImageClick }: PianoImag
           src={images[imageIndex]} 
           alt={pianoName}
           className="w-full h-full object-cover cursor-pointer"
-          onClick={onImageClick}
+          onClick={() => onImageClick(imageIndex)}
         />
         
         {hasMultipleImages && (
