@@ -1,3 +1,4 @@
+
 import { X } from "lucide-react";
 import { useState, useCallback, useEffect } from "react";
 
@@ -75,13 +76,13 @@ export const FullImageModal = ({ isOpen, imageUrl, pianoName, onClose }: FullIma
 
   return (
     <div 
-      className="fixed inset-0 z-[9999] bg-black/90 flex items-center justify-center p-4"
+      className="fixed inset-0 z-[99999] bg-black/90 flex items-center justify-center p-4"
       onClick={handleOverlayClick}
       onWheel={handleWheel}
     >
       <button
         onClick={onClose}
-        className="absolute top-4 right-4 text-white hover:text-gray-300 z-[10000] bg-black/50 rounded-full p-2"
+        className="absolute top-4 right-4 text-white hover:text-gray-300 z-[100000] bg-black/50 rounded-full p-2"
         type="button"
       >
         <X className="h-6 w-6" />
@@ -89,7 +90,7 @@ export const FullImageModal = ({ isOpen, imageUrl, pianoName, onClose }: FullIma
       <img
         src={imageUrl}
         alt={pianoName}
-        className="max-w-full max-h-full object-contain transition-transform duration-200 cursor-grab active:cursor-grabbing"
+        className="max-w-full max-h-full object-contain transition-transform duration-200 cursor-grab active:cursor-grabbing z-[100000]"
         style={{
           transform: `scale(${scale}) translate(${position.x}px, ${position.y}px)`,
         }}
