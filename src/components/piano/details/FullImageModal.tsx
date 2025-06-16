@@ -42,29 +42,15 @@ export const FullImageModal = ({ isOpen, imageUrl, pianoName, onClose }: FullIma
   }, [scale]);
 
   const handleBackdropClick = (e: React.MouseEvent) => {
-    // Always prevent all event propagation to stop it from reaching the underlying dialog
-    e.preventDefault();
-    e.stopPropagation();
-    e.nativeEvent.stopPropagation();
-    e.nativeEvent.stopImmediatePropagation();
-    
     // Only close if clicking directly on the backdrop, not on any child elements
     if (e.target === e.currentTarget) {
       onClose();
     }
   };
 
-  const handleImageClick = (e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    e.nativeEvent.stopPropagation();
-    e.nativeEvent.stopImmediatePropagation();
-  };
-
   const handleKeyDown = useCallback((e: KeyboardEvent) => {
     if (e.key === 'Escape') {
       e.preventDefault();
-      e.stopPropagation();
       onClose();
     }
   }, [onClose]);
@@ -90,32 +76,9 @@ export const FullImageModal = ({ isOpen, imageUrl, pianoName, onClose }: FullIma
       className="fixed inset-0 z-[9999] bg-black/90 flex items-center justify-center p-4"
       onClick={handleBackdropClick}
       onWheel={handleWheel}
-      onContextMenu={(e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        e.nativeEvent.stopPropagation();
-        e.nativeEvent.stopImmediatePropagation();
-      }}
-      onMouseDown={(e) => {
-        e.stopPropagation();
-        e.nativeEvent.stopPropagation();
-        e.nativeEvent.stopImmediatePropagation();
-      }}
-      onMouseUp={(e) => {
-        e.stopPropagation();
-        e.nativeEvent.stopPropagation();
-        e.nativeEvent.stopImmediatePropagation();
-      }}
-      style={{ isolation: 'isolate' }}
     >
       <button
-        onClick={(e) => {
-          e.preventDefault();
-          e.stopPropagation();
-          e.nativeEvent.stopPropagation();
-          e.nativeEvent.stopImmediatePropagation();
-          onClose();
-        }}
+        onClick={onClose}
         className="absolute top-4 right-4 text-white hover:text-gray-300 z-10"
       >
         <X className="h-8 w-8" />
@@ -127,23 +90,7 @@ export const FullImageModal = ({ isOpen, imageUrl, pianoName, onClose }: FullIma
         style={{
           transform: `scale(${scale}) translate(${position.x}px, ${position.y}px)`,
         }}
-        onClick={handleImageClick}
-        onContextMenu={(e) => {
-          e.preventDefault();
-          e.stopPropagation();
-          e.nativeEvent.stopPropagation();
-          e.nativeEvent.stopImmediatePropagation();
-        }}
-        onMouseDown={(e) => {
-          e.stopPropagation();
-          e.nativeEvent.stopPropagation();
-          e.nativeEvent.stopImmediatePropagation();
-        }}
-        onMouseUp={(e) => {
-          e.stopPropagation();
-          e.nativeEvent.stopPropagation();
-          e.nativeEvent.stopImmediatePropagation();
-        }}
+        onClick={(e) => e.stopPropagation()}
         draggable={false}
       />
     </div>

@@ -29,9 +29,16 @@ export const PianoDetailsDialog = ({ piano, isOpen, onOpenChange }: PianoDetails
     setIsFullImageOpen(false);
   };
 
+  // Prevent main dialog from closing when full image is open
+  const handleDialogOpenChange = (open: boolean) => {
+    if (!isFullImageOpen) {
+      onOpenChange(open);
+    }
+  };
+
   return (
     <>
-      <Dialog open={isOpen} onOpenChange={onOpenChange}>
+      <Dialog open={isOpen} onOpenChange={handleDialogOpenChange}>
         <DialogContent className="sm:max-w-[90vw] max-w-[95vw] max-h-[95vh] sm:max-h-[90vh] w-full p-3 sm:p-6 overflow-y-auto rounded-lg sm:rounded-lg">
           <DialogHeader className="pb-3 sm:pb-4">
             <DialogTitle className="sr-only">Piano Details</DialogTitle>
