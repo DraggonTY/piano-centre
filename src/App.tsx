@@ -11,6 +11,7 @@ import { ChatWidget } from "./components/chat/ChatWidget";
 import Index from "./pages/Index";
 import Auth from "./pages/Auth";
 import Pianos from "./pages/Pianos";
+import Contact from "./pages/Contact";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -29,6 +30,7 @@ const App = () => (
                 <Route path="/" element={<Index />} />
                 <Route path="/auth" element={<Auth />} />
                 <Route path="/pianos" element={<Pianos />} />
+                <Route path="/contact" element={<Contact />} />
                 <Route path="*" element={<NotFound />} />
               </Routes>
             </main>
