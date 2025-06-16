@@ -45,7 +45,6 @@ export const FullImageModal = ({ isOpen, imageUrl, pianoName, onClose }: FullIma
     // Completely stop all event propagation
     e.preventDefault();
     e.stopPropagation();
-    e.stopImmediatePropagation();
     
     // Only close if clicking directly on the backdrop, not on any child elements
     if (e.target === e.currentTarget) {
@@ -56,7 +55,6 @@ export const FullImageModal = ({ isOpen, imageUrl, pianoName, onClose }: FullIma
   const handleImageClick = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    e.stopImmediatePropagation();
   };
 
   const handleKeyDown = useCallback((e: KeyboardEvent) => {
@@ -91,15 +89,12 @@ export const FullImageModal = ({ isOpen, imageUrl, pianoName, onClose }: FullIma
       onContextMenu={(e) => {
         e.preventDefault();
         e.stopPropagation();
-        e.stopImmediatePropagation();
       }}
       onMouseDown={(e) => {
         e.stopPropagation();
-        e.stopImmediatePropagation();
       }}
       onMouseUp={(e) => {
         e.stopPropagation();
-        e.stopImmediatePropagation();
       }}
       style={{ isolation: 'isolate' }}
     >
@@ -107,7 +102,6 @@ export const FullImageModal = ({ isOpen, imageUrl, pianoName, onClose }: FullIma
         onClick={(e) => {
           e.preventDefault();
           e.stopPropagation();
-          e.stopImmediatePropagation();
           onClose();
         }}
         className="absolute top-4 right-4 text-white hover:text-gray-300 z-10"
@@ -125,15 +119,12 @@ export const FullImageModal = ({ isOpen, imageUrl, pianoName, onClose }: FullIma
         onContextMenu={(e) => {
           e.preventDefault();
           e.stopPropagation();
-          e.stopImmediatePropagation();
         }}
         onMouseDown={(e) => {
           e.stopPropagation();
-          e.stopImmediatePropagation();
         }}
         onMouseUp={(e) => {
           e.stopPropagation();
-          e.stopImmediatePropagation();
         }}
         draggable={false}
       />
