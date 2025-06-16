@@ -1,6 +1,7 @@
 
 import { X } from "lucide-react";
 import { useState, useCallback, useEffect } from "react";
+import { createPortal } from 'react-dom';
 
 interface FullImageModalProps {
   isOpen: boolean;
@@ -41,18 +42,6 @@ export const FullImageModal = ({ isOpen, imageUrl, pianoName, onClose }: FullIma
     }
   }, [scale]);
 
-  const handleOverlayClick = useCallback(() => {
-    onClose();
-  }, [onClose]);
-
-  const handleImageClick = useCallback((e: React.MouseEvent) => {
-    e.stopPropagation();
-  }, []);
-
-  const handleCloseClick = useCallback(() => {
-    onClose();
-  }, [onClose]);
-
   const handleKeyDown = useCallback((e: KeyboardEvent) => {
     if (e.key === 'Escape') {
       e.preventDefault();
@@ -76,25 +65,24 @@ export const FullImageModal = ({ isOpen, imageUrl, pianoName, onClose }: FullIma
     }
   }, [isOpen]);
 
-  if (!isOpen) {
-    return null;
-  }
+  if (!isOpen) return null;
 
-  return (
+  return createPortal(
     <div className="fixed inset-0 z-[9999]">
-      {/* Overlay */}
+      {/* Background overlay - this should be the only element that receives the close click */}
       <div 
         className="fixed inset-0 bg-black/90"
-        onClick={handleOverlayClick}
+        onClick={onClose}
       />
       
-      {/* Content */}
+      {/* Content container - this should be above the overlay */}
       <div 
         className="fixed inset-0 z-[10000] flex items-center justify-center p-4"
+        onClick={(e) => e.stopPropagation()}
         onWheel={handleWheel}
       >
         <button
-          onClick={handleCloseClick}
+          onClick={onClose}
           className="absolute top-4 right-4 text-white hover:text-gray-300 bg-black/50 rounded-full p-2"
           type="button"
           aria-label="Close image"
@@ -108,10 +96,10 @@ export const FullImageModal = ({ isOpen, imageUrl, pianoName, onClose }: FullIma
           style={{
             transform: `scale(${scale}) translate(${position.x}px, ${position.y}px)`,
           }}
-          onClick={handleImageClick}
           draggable={false}
         />
       </div>
-    </div>
+    </div>,
+    document.body
   );
 };
