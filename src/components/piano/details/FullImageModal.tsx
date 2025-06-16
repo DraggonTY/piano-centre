@@ -42,15 +42,10 @@ export const FullImageModal = ({ isOpen, imageUrl, pianoName, onClose }: FullIma
   }, [scale]);
 
   const handleBackdropClick = (e: React.MouseEvent) => {
-    // Only close if clicking directly on the backdrop, not on any child elements
+    // Only close if clicking directly on the backdrop
     if (e.target === e.currentTarget) {
       onClose();
     }
-  };
-
-  const handleCloseClick = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    onClose();
   };
 
   const handleKeyDown = useCallback((e: KeyboardEvent) => {
@@ -83,10 +78,11 @@ export const FullImageModal = ({ isOpen, imageUrl, pianoName, onClose }: FullIma
       onWheel={handleWheel}
     >
       <button
-        onClick={handleCloseClick}
-        className="absolute top-4 right-4 text-white hover:text-gray-300 z-10"
+        onClick={onClose}
+        className="absolute top-4 right-4 text-white hover:text-gray-300 z-[10000] bg-black/50 rounded-full p-2"
+        type="button"
       >
-        <X className="h-8 w-8" />
+        <X className="h-6 w-6" />
       </button>
       <img
         src={imageUrl}
