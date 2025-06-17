@@ -24,7 +24,7 @@ export const PianoImageGallery = ({ images, pianoName, onImageClick }: PianoImag
 
   return (
     <div className="flex-shrink-0 order-1 lg:order-none">
-      <div className="aspect-[4/3] overflow-hidden rounded-lg relative group">
+      <div className="aspect-[3/2] overflow-hidden rounded-lg relative group">
         <img 
           src={images[imageIndex]} 
           alt={pianoName}
