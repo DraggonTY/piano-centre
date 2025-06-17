@@ -40,7 +40,7 @@ export const DesktopHeader = ({ session }: DesktopHeaderProps) => {
           <img
             src="/lovable-uploads/eb5aeada-3cd1-446e-8bce-a0352f51efca.png"
             alt="Piano Centre Edmonton"
-            className="h-24"
+            className="h-20 sm:h-24 md:h-24 object-contain"
           />
         </Link>
       </div>
