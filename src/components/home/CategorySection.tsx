@@ -27,14 +27,14 @@ const categories = [
 export const CategorySection = () => {
   return (
     <section className="py-24 bg-gray-50">
-      <div className="container px-4">
+      <div className="container mx-auto px-4 max-w-7xl">
         <div className="text-center mb-16">
           <h2 className="font-serif text-4xl font-bold mb-4">Explore Our Categories</h2>
           <p className="text-lg text-gray-600 max-w-2xl mx-auto">
             Find the perfect piano for your needs, from grand pianos to digital instruments.
           </p>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
           {categories.map((category, index) => (
             <motion.div
               key={index}
@@ -42,7 +42,7 @@ export const CategorySection = () => {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: index * 0.2 }}
-              className="relative group overflow-hidden rounded-lg shadow-lg"
+              className="relative group overflow-hidden rounded-lg shadow-lg w-full"
             >
               <div className="aspect-[4/3] overflow-hidden">
                 <div 
@@ -54,11 +54,11 @@ export const CategorySection = () => {
                   className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                 />
               </div>
-              <div className="absolute inset-0 flex flex-col justify-end p-6 z-20">
-                <h3 className="text-2xl font-bold text-white mb-2 drop-shadow-lg">{category.title}</h3>
-                <p className="text-gray-200 mb-4 drop-shadow-md">{category.description}</p>
+              <div className="absolute inset-0 flex flex-col justify-end p-4 sm:p-6 z-20">
+                <h3 className="text-xl sm:text-2xl font-bold text-white mb-2 drop-shadow-lg">{category.title}</h3>
+                <p className="text-sm sm:text-base text-gray-200 mb-3 sm:mb-4 drop-shadow-md">{category.description}</p>
                 <Link to={category.link}>
-                  <Button variant="secondary" className="w-full drop-shadow-md">
+                  <Button variant="secondary" className="w-full drop-shadow-md text-sm sm:text-base">
                     Explore {category.title}
                   </Button>
                 </Link>
