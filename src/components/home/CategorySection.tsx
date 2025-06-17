@@ -44,16 +44,18 @@ export const CategorySection = () => {
               transition={{ delay: index * 0.2 }}
               className="relative group overflow-hidden rounded-lg shadow-lg"
             >
-              <div className="aspect-[16/6] overflow-hidden">
-                <div 
-                  className="absolute inset-0 bg-gradient-to-t from-black/60 to-black/0 z-10"
-                />
-                <img 
-                  src={category.image} 
-                  alt={category.title}
-                  className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-                />
-              </div>
+              <Link to={category.link} className="block">
+                <div className="aspect-[16/6] overflow-hidden">
+                  <div 
+                    className="absolute inset-0 bg-gradient-to-t from-black/60 to-black/0 z-10"
+                  />
+                  <img 
+                    src={category.image} 
+                    alt={category.title}
+                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                  />
+                </div>
+              </Link>
               <div className="absolute inset-0 flex flex-col justify-end p-6 z-20">
                 <h3 className="text-2xl font-bold text-white mb-2 drop-shadow-lg">{category.title}</h3>
                 <p className="text-gray-200 mb-4 drop-shadow-md">{category.description}</p>
