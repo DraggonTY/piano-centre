@@ -34,7 +34,7 @@ export const CategorySection = () => {
             Find the perfect piano for your needs, from grand pianos to digital instruments.
           </p>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
           {categories.map((category, index) => (
             <motion.div
               key={index}
