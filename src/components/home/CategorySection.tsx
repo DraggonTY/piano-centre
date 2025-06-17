@@ -34,7 +34,7 @@ export const CategorySection = () => {
             Find the perfect piano for your needs, from grand pianos to digital instruments.
           </p>
         </div>
-        <div className="flex flex-col sm:flex-row gap-6 max-w-7xl mx-auto">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {categories.map((category, index) => (
             <motion.div
               key={index}
@@ -42,20 +42,18 @@ export const CategorySection = () => {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: index * 0.2 }}
-              className="relative group overflow-hidden rounded-lg shadow-lg flex-1"
+              className="relative group overflow-hidden rounded-lg shadow-lg"
             >
-              <Link to={category.link} className="block">
-                <div className="aspect-[16/9] overflow-hidden">
-                  <div 
-                    className="absolute inset-0 bg-gradient-to-t from-black/60 to-black/0 z-10"
-                  />
-                  <img 
-                    src={category.image} 
-                    alt={category.title}
-                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-                  />
-                </div>
-              </Link>
+              <div className="aspect-[4/3] overflow-hidden">
+                <div 
+                  className="absolute inset-0 bg-gradient-to-t from-black/60 to-black/0 z-10"
+                />
+                <img 
+                  src={category.image} 
+                  alt={category.title}
+                  className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                />
+              </div>
               <div className="absolute inset-0 flex flex-col justify-end p-6 z-20">
                 <h3 className="text-2xl font-bold text-white mb-2 drop-shadow-lg">{category.title}</h3>
                 <p className="text-gray-200 mb-4 drop-shadow-md">{category.description}</p>
