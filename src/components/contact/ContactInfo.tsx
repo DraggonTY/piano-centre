@@ -6,22 +6,22 @@ export const ContactInfo = () => {
     {
       icon: Phone,
       title: "Phone",
-      details: "(555) 123-4567"
+      details: "780-484-3170"
     },
     {
       icon: Mail,
       title: "Email",
-      details: "info@pianocentre.com"
+      details: "contact@pianocentre.ca"
     },
     {
       icon: MapPin,
       title: "Address",
-      details: "123 Piano Street\nMusic City, MC 12345"
+      details: "10460 - 170th St.\nEdmonton, Alberta T5S1M4"
     },
     {
       icon: Clock,
       title: "Hours",
-      details: "Mon-Fri: 9:00 AM - 6:00 PM\nSat: 10:00 AM - 4:00 PM"
+      details: "Monday - Saturday\n9:30AM - 5:30PM"
     }
   ];
 

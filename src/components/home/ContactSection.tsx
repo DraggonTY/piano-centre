@@ -24,7 +24,7 @@ export const ContactSection = () => {
             >
               <MapPin className="w-8 h-8 mx-auto mb-4 text-primary" />
               <h3 className="text-xl font-bold mb-2">Location</h3>
-              <p className="text-gray-600">123 Piano Street<br />Music City, MC 12345</p>
+              <p className="text-gray-600">10460 - 170th St.<br />Edmonton, Alberta T5S1M4</p>
             </motion.div>
             <motion.div
               initial={{ opacity: 0, y: 20 }}
@@ -35,7 +35,7 @@ export const ContactSection = () => {
             >
               <Phone className="w-8 h-8 mx-auto mb-4 text-primary" />
               <h3 className="text-xl font-bold mb-2">Phone</h3>
-              <p className="text-gray-600">(555) 123-4567</p>
+              <p className="text-gray-600">780-484-3170</p>
             </motion.div>
             <motion.div
               initial={{ opacity: 0, y: 20 }}
@@ -46,7 +46,7 @@ export const ContactSection = () => {
             >
               <Mail className="w-8 h-8 mx-auto mb-4 text-primary" />
               <h3 className="text-xl font-bold mb-2">Email</h3>
-              <p className="text-gray-600">info@pianocentre.com</p>
+              <p className="text-gray-600">contact@pianocentre.ca</p>
             </motion.div>
           </div>
           <div className="text-center mt-12">

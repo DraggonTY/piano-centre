@@ -31,7 +31,7 @@ export const ContactForm = () => {
     
     toast({
       title: "Message Sent!",
-      description: "Thank you for contacting us. We'll get back to you soon.",
+      description: "Thank you for contacting Piano Centre Edmonton. We'll get back to you soon.",
     });
     
     reset();
