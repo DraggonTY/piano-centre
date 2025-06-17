@@ -34,7 +34,7 @@ export const CategorySection = () => {
             Find the perfect piano for your needs, from grand pianos to digital instruments.
           </p>
         </div>
-        <div className="flex flex-col gap-4 max-w-4xl mx-auto">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-6xl mx-auto">
           {categories.map((category, index) => (
             <motion.div
               key={index}
@@ -45,7 +45,7 @@ export const CategorySection = () => {
               className="relative group overflow-hidden rounded-lg shadow-lg"
             >
               <Link to={category.link} className="block">
-                <div className="aspect-[16/6] sm:aspect-[4/3] lg:aspect-[16/6] overflow-hidden">
+                <div className="aspect-[4/3] overflow-hidden">
                   <div 
                     className="absolute inset-0 bg-gradient-to-t from-black/60 to-black/0 z-10"
                   />
