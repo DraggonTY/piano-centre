@@ -18,10 +18,12 @@ export const PianoCardContent = ({ piano, onViewDetails }: PianoCardContentProps
   return (
     <>
       <CardHeader className="pb-4">
-        <CardTitle className="text-2xl font-bold mb-2">{piano.name}</CardTitle>
-        <CardDescription className="text-2xl font-bold text-black">
-          ${piano.price.toLocaleString()}
-        </CardDescription>
+        <div className="flex justify-between items-start">
+          <CardTitle className="text-2xl font-bold">{piano.name}</CardTitle>
+          <CardDescription className="text-2xl font-bold text-black">
+            ${piano.price.toLocaleString()}
+          </CardDescription>
+        </div>
       </CardHeader>
       <CardContent className="pb-4 flex-1">
         <div className="space-y-2">
@@ -37,13 +39,13 @@ export const PianoCardContent = ({ piano, onViewDetails }: PianoCardContentProps
           )}
           {piano.description && (
             <p className="text-gray-600 mt-3 text-sm leading-relaxed">
-              <span className="font-medium">Description:</span> {truncateDescription(piano.description)}
+              {truncateDescription(piano.description)}
             </p>
           )}
         </div>
       </CardContent>
       <CardFooter className="pt-0">
-        <Button className="w-full bg-black hover:bg-gray-800 text-white" size="lg">
+        <Button className="w-full bg-black hover:bg-gray-800 text-white" size="lg" onClick={onViewDetails}>
           View Details
         </Button>
       </CardFooter>
