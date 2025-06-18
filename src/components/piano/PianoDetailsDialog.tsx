@@ -58,9 +58,6 @@ export const PianoDetailsDialog = ({ piano, isOpen, onOpenChange }: PianoDetails
             {piano.condition && (
               <span>Condition: {piano.condition}</span>
             )}
-            {piano.type && (
-              <span>Type: {piano.type}</span>
-            )}
           </div>
         </div>
 
