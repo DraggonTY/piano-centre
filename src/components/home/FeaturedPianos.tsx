@@ -1,14 +1,13 @@
+
 import { Link } from "react-router-dom";
 import { Piano } from "@/types/piano";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/providers/AuthProvider";
-import { useToast } from "@/components/ui/use-toast";
-import { supabase } from "@/integrations/supabase/client";
-import { useState, useEffect } from "react";
-import { PianoCard } from "./featured/PianoCard";
-import { EmptySlot } from "./featured/EmptySlot";
-import { FeaturedPianosDialog } from "./featured/FeaturedPianosDialog";
-import { useIsMobile } from "@/hooks/use-mobile";
+import { useState } from "react";
+import { PianoGrid } from "./featured/PianoGrid";
+import { AdminControls } from "./featured/AdminControls";
+import { useAdminStatus } from "./featured/useAdminStatus";
+import { useFeaturedPianos } from "./featured/useFeaturedPianos";
 
 interface FeaturedPianosProps {
   pianos?: Piano[];
@@ -21,124 +20,22 @@ export const FeaturedPianos = ({
   isLoading,
   onFeaturedUpdate
 }: FeaturedPianosProps) => {
-  const isMobile = useIsMobile();
-  const {
-    session
-  } = useAuth();
-  const {
-    toast
-  } = useToast();
-  const [isAdmin, setIsAdmin] = useState(false);
-  const [updating, setUpdating] = useState(false);
-  const [allPianos, setAllPianos] = useState<Piano[]>([]);
-  const [loadingPianos, setLoadingPianos] = useState(false);
-  const [selectedPianos, setSelectedPianos] = useState<number[]>([]);
+  const { session } = useAuth();
+  const isAdmin = useAdminStatus();
   const [dialogOpen, setDialogOpen] = useState(false);
+  
+  const {
+    allPianos,
+    selectedPianos,
+    loadingPianos,
+    updating,
+    handleFeatureToggle,
+    handlePianoSelect
+  } = useFeaturedPianos(dialogOpen, onFeaturedUpdate);
 
-  useEffect(() => {
-    const checkAdminStatus = async () => {
-      console.log("Checking admin status...");
-      console.log("Session user ID:", session?.user?.id);
-      setIsAdmin(false);
-      if (!session?.user?.id) {
-        console.log("No user session found");
-        return;
-      }
-      const {
-        data,
-        error
-      } = await supabase.from('user_roles').select('role').eq('user_id', session.user.id).eq('role', 'admin').single();
-      console.log("Admin check response:", {
-        data,
-        error
-      });
-      if (!error && data) {
-        console.log("User is admin");
-        setIsAdmin(true);
-      } else {
-        console.log("User is not admin or error occurred");
-      }
-    };
-    checkAdminStatus();
-  }, [session?.user?.id]);
-
-  useEffect(() => {
-    const loadAllPianos = async () => {
-      if (!dialogOpen) return;
-      setLoadingPianos(true);
-      try {
-        const {
-          data,
-          error
-        } = await supabase.from('pianos').select('*, image_urls, key_image_url').order('created_at', {
-          ascending: false
-        });
-        if (error) throw error;
-        
-        // Transform data to match Piano interface
-        const transformedData: Piano[] = (data || []).map(piano => ({
-          ...piano,
-          image_urls: piano.image_urls || null,
-          key_image_url: piano.key_image_url || null
-        }));
-        
-        setAllPianos(transformedData);
-        const featured = transformedData?.filter(p => p.is_featured) || [];
-        setSelectedPianos(featured.map(p => p.id));
-      } catch (error: any) {
-        toast({
-          variant: "destructive",
-          title: "Error loading pianos",
-          description: error.message
-        });
-      } finally {
-        setLoadingPianos(false);
-      }
-    };
-    loadAllPianos();
-  }, [dialogOpen]);
-
-  const handleFeatureToggle = async () => {
-    if (!session?.user?.id) return;
-    setUpdating(true);
-    try {
-      await supabase.from('pianos').update({
-        is_featured: false,
-        featured_order: null
-      }).eq('is_featured', true);
-      for (let i = 0; i < selectedPianos.length; i++) {
-        await supabase.from('pianos').update({
-          is_featured: true,
-          featured_order: i + 1
-        }).eq('id', selectedPianos[i]);
-      }
-      toast({
-        title: "Success",
-        description: "Featured pianos updated successfully"
-      });
-      if (onFeaturedUpdate) onFeaturedUpdate();
-      setDialogOpen(false);
-    } catch (error: any) {
-      toast({
-        variant: "destructive",
-        title: "Error",
-        description: error.message
-      });
-    } finally {
-      setUpdating(false);
-    }
-  };
-
-  const handlePianoSelect = (pianoId: number, checked: boolean) => {
-    if (checked && selectedPianos.length >= 4) {
-      toast({
-        variant: "destructive",
-        title: "Error",
-        description: "You can only select up to 4 featured pianos"
-      });
-      return;
-    }
-    setSelectedPianos(prev => checked ? [...prev, pianoId] : prev.filter(id => id !== pianoId));
+  const handleSave = async () => {
+    await handleFeatureToggle();
+    setDialogOpen(false);
   };
 
   const emptySlots = 3 - (pianos?.length || 0);
@@ -154,32 +51,14 @@ export const FeaturedPianos = ({
             carefully selected collection.
           </p>
         </div>
-        <div className={`grid gap-8 ${isMobile ? 'grid-cols-1' : 'grid-cols-3'}`}>
-          {isLoading ? (
-            [...Array(3)].map((_, i) => (
-              <div key={i} className="bg-gray-50 rounded-lg p-6 animate-pulse">
-                <div className="aspect-[4/3] mb-4 bg-gray-200 rounded-lg"></div>
-                <div className="h-6 bg-gray-200 rounded mb-2"></div>
-                <div className="h-4 bg-gray-200 rounded mb-2"></div>
-                <div className="h-4 bg-gray-200 rounded mb-4"></div>
-                <div className="h-10 bg-gray-200 rounded"></div>
-              </div>
-            ))
-          ) : (
-            <>
-              {pianos?.map(piano => (
-                <PianoCard key={piano.id} piano={piano} />
-              ))}
-              {emptySlots > 0 && isAdmin && [...Array(emptySlots)].map((_, index) => (
-                <EmptySlot
-                  key={`empty-${index}`}
-                  index={index}
-                  onClick={() => setDialogOpen(true)}
-                />
-              ))}
-            </>
-          )}
-        </div>
+        
+        <PianoGrid
+          pianos={pianos}
+          isLoading={isLoading}
+          isAdmin={isAdmin}
+          onEmptySlotClick={() => setDialogOpen(true)}
+        />
+        
         <div className="text-center mt-12 space-y-4">
           <Link to="/pianos">
             <Button variant="outline" size="lg">
@@ -187,20 +66,18 @@ export const FeaturedPianos = ({
             </Button>
           </Link>
           
-          {isAdmin && session?.user && (
-            <div>
-              <FeaturedPianosDialog
-                open={dialogOpen}
-                onOpenChange={setDialogOpen}
-                allPianos={allPianos}
-                selectedPianos={selectedPianos}
-                onPianoSelect={handlePianoSelect}
-                onSave={handleFeatureToggle}
-                loading={loadingPianos}
-                updating={updating}
-              />
-            </div>
-          )}
+          <AdminControls
+            isAdmin={isAdmin}
+            hasSession={!!session?.user}
+            dialogOpen={dialogOpen}
+            onDialogOpenChange={setDialogOpen}
+            allPianos={allPianos}
+            selectedPianos={selectedPianos}
+            onPianoSelect={handlePianoSelect}
+            onSave={handleSave}
+            loadingPianos={loadingPianos}
+            updating={updating}
+          />
         </div>
       </div>
     </section>
