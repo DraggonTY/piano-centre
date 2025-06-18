@@ -28,6 +28,11 @@ const categories = [
 export const CategorySection = () => {
   const isMobile = useIsMobile();
 
+  const handleCategoryClick = () => {
+    // Scroll to top when navigating to category page
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
   return (
     <section className="py-12 md:py-24 bg-gray-50">
       <div className="container mx-auto px-4 max-w-7xl">
@@ -47,7 +52,7 @@ export const CategorySection = () => {
               transition={{ delay: index * 0.2 }}
               className="relative group overflow-hidden rounded-lg shadow-lg w-full"
             >
-              <Link to={category.link} className="block">
+              <Link to={category.link} className="block" onClick={handleCategoryClick}>
                 <div className="aspect-[4/3] overflow-hidden">
                   <div 
                     className="absolute inset-0 bg-gradient-to-t from-black/60 to-black/0 z-10"
