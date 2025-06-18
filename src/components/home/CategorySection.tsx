@@ -55,10 +55,10 @@ export const CategorySection = () => {
                 />
               </div>
               <div className="absolute inset-0 flex flex-col justify-end p-4 md:p-6 z-20">
-                <h3 className="text-xl md:text-2xl font-bold text-white mb-2 drop-shadow-lg">{category.title}</h3>
-                <p className="text-sm md:text-base text-gray-200 mb-3 md:mb-4 drop-shadow-md">{category.description}</p>
+                <h3 className="text-xl md:text-2xl font-bold text-white mb-2 drop-shadow-lg break-words hyphens-auto">{category.title}</h3>
+                <p className="text-sm md:text-base text-gray-200 mb-3 md:mb-4 drop-shadow-md break-words hyphens-auto leading-relaxed">{category.description}</p>
                 <Link to={category.link}>
-                  <Button variant="secondary" className="w-full drop-shadow-md text-sm md:text-base h-9 md:h-10">
+                  <Button variant="secondary" className="w-full drop-shadow-md text-sm md:text-base h-9 md:h-10 shrink-0">
                     Explore {category.title}
                   </Button>
                 </Link>
