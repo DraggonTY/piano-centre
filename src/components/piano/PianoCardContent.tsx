@@ -9,7 +9,7 @@ interface PianoCardContentProps {
 }
 
 export const PianoCardContent = ({ piano, onViewDetails }: PianoCardContentProps) => {
-  const truncateDescription = (text: string | null, maxLength: number = 100) => {
+  const truncateDescription = (text: string | null, maxLength: number = 200) => {
     if (!text) return '';
     if (text.length <= maxLength) return text;
     return text.substring(0, maxLength) + '...';
@@ -38,7 +38,7 @@ export const PianoCardContent = ({ piano, onViewDetails }: PianoCardContentProps
             </p>
           )}
           {piano.description && (
-            <p className="text-gray-600 mt-3 text-sm leading-relaxed">
+            <p className="text-gray-600 mt-3 text-base leading-relaxed">
               {truncateDescription(piano.description)}
             </p>
           )}
