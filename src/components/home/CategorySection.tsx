@@ -11,14 +11,14 @@ const categories = [
     link: "/pianos?category=new"
   },
   {
-    title: "Used Pianos",
+    title: "Used Pianos", 
     description: "Discover our selection of carefully maintained pre-owned pianos.",
-    image: "https://images.unsplash.com/photo-1552422535-c732c61732?auto=format&fit=crop&q=80",
+    image: "https://images.unsplash.com/photo-1552422535-c45813c61732?auto=format&fit=crop&q=80",
     link: "/pianos?category=used"
   },
   {
     title: "Digital Pianos",
-    description: "Explore our range of advanced digital pianos with modern features.",
+    description: "Explore our range of advanced digital pianos with modern features.", 
     image: "/lovable-uploads/64e0759b-e5dc-4b26-bcfa-e3e0235a96f1.png",
     link: "/pianos?category=digital"
   }
