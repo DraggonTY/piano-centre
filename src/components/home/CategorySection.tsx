@@ -34,7 +34,7 @@ export const CategorySection = () => {
             Find the perfect piano for your needs, from grand pianos to digital instruments.
           </p>
         </div>
-        <div className="grid grid-cols-3 gap-2 md:gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
           {categories.map((category, index) => (
             <motion.div
               key={index}
@@ -54,11 +54,11 @@ export const CategorySection = () => {
                   className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                 />
               </div>
-              <div className="absolute inset-0 flex flex-col justify-end p-2 md:p-6 z-20">
-                <h3 className="text-sm md:text-2xl font-bold text-white mb-1 md:mb-2 drop-shadow-lg">{category.title}</h3>
-                <p className="text-xs md:text-base text-gray-200 mb-2 md:mb-4 drop-shadow-md line-clamp-2 md:line-clamp-none">{category.description}</p>
+              <div className="absolute inset-0 flex flex-col justify-end p-4 md:p-6 z-20">
+                <h3 className="text-xl md:text-2xl font-bold text-white mb-2 drop-shadow-lg">{category.title}</h3>
+                <p className="text-sm md:text-base text-gray-200 mb-3 md:mb-4 drop-shadow-md">{category.description}</p>
                 <Link to={category.link}>
-                  <Button variant="secondary" className="w-full drop-shadow-md text-xs md:text-base h-6 md:h-10 px-2 md:px-4 py-1 md:py-2">
+                  <Button variant="secondary" className="w-full drop-shadow-md text-sm md:text-base h-9 md:h-10">
                     Explore {category.title}
                   </Button>
                 </Link>
