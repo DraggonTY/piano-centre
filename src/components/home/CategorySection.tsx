@@ -29,8 +29,8 @@ export const CategorySection = () => {
     <section className="py-12 md:py-24 bg-gray-50">
       <div className="container mx-auto px-4 max-w-7xl">
         <div className="text-center mb-8 md:mb-16">
-          <h2 className="font-serif text-2xl md:text-4xl font-bold mb-2 md:mb-4">Explore Our Categories</h2>
-          <p className="text-sm md:text-lg text-gray-600 max-w-2xl mx-auto">
+          <h2 className="font-serif text-4xl font-bold mb-4">Explore Our Categories</h2>
+          <p className="text-lg text-gray-600 max-w-2xl mx-auto">
             Find the perfect piano for your needs, from grand pianos to digital instruments.
           </p>
         </div>
