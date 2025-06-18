@@ -35,6 +35,9 @@ export const PianoDetailsDialog = ({ piano, isOpen, onOpenChange }: PianoDetails
   // Hide the main dialog when lightbox is open to prevent overlay interference
   const isMainDialogOpen = isOpen && !lightboxOpen;
 
+  // Remove "Description:" prefix from description text
+  const cleanDescription = piano.description?.replace(/^Description:\s*/i, '') || '';
+
   const content = (
     <div className="flex flex-col lg:grid lg:grid-cols-2 gap-3 sm:gap-4">
       <PianoImageGallery 
@@ -61,10 +64,10 @@ export const PianoDetailsDialog = ({ piano, isOpen, onOpenChange }: PianoDetails
           </div>
         </div>
 
-        {piano.description && (
+        {cleanDescription && (
           <div className="space-y-1">
             <h4 className="font-semibold text-sm sm:text-base">Description</h4>
-            <p className="text-gray-600 text-xs sm:text-sm leading-relaxed">{piano.description}</p>
+            <p className="text-gray-600 text-xs sm:text-sm leading-relaxed">{cleanDescription}</p>
           </div>
         )}
 
