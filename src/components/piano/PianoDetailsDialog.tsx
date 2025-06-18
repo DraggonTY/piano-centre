@@ -1,6 +1,6 @@
 
 import { useState } from "react";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { Piano } from "@/types/piano";
@@ -52,9 +52,14 @@ export const PianoDetailsDialog = ({ piano, isOpen, onOpenChange }: PianoDetails
           <p className="text-base sm:text-lg lg:text-xl font-bold text-primary">
             ${piano.price.toLocaleString()}
           </p>
-          {piano.condition && (
-            <p className="text-gray-600 text-xs sm:text-sm">Condition: {piano.condition}</p>
-          )}
+          <div className="flex gap-4 text-xs sm:text-sm text-gray-600">
+            {piano.condition && (
+              <span>Condition: {piano.condition}</span>
+            )}
+            {piano.type && (
+              <span>Type: {piano.type}</span>
+            )}
+          </div>
         </div>
 
         {piano.description && (
@@ -92,6 +97,9 @@ export const PianoDetailsDialog = ({ piano, isOpen, onOpenChange }: PianoDetails
           <DialogContent className="sm:max-w-[90vw] max-w-[95vw] max-h-[90vh] sm:max-h-[85vh] w-full p-3 sm:p-4 overflow-y-auto rounded-lg [&>button]:top-3 [&>button]:right-3 sm:[&>button]:top-4 sm:[&>button]:right-4">
             <DialogHeader className="pb-2 sm:pb-3 pt-2">
               <DialogTitle className="sr-only">Piano Details</DialogTitle>
+              <DialogDescription className="sr-only">
+                Detailed information about {piano.name}
+              </DialogDescription>
             </DialogHeader>
             {content}
           </DialogContent>
