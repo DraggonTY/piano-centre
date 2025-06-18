@@ -19,8 +19,8 @@ export const PianoCardContent = ({ piano, onViewDetails }: PianoCardContentProps
     <>
       <CardHeader className="pb-4">
         <div className="flex justify-between items-start">
-          <CardTitle className="text-2xl font-bold">{piano.name}</CardTitle>
-          <CardDescription className="text-2xl font-bold text-black">
+          <CardTitle className="text-xl font-bold">{piano.name}</CardTitle>
+          <CardDescription className="text-xl font-bold text-black">
             ${piano.price.toLocaleString()}
           </CardDescription>
         </div>
@@ -28,17 +28,17 @@ export const PianoCardContent = ({ piano, onViewDetails }: PianoCardContentProps
       <CardContent className="pb-4 flex-1">
         <div className="space-y-2">
           {piano.condition && (
-            <p className="text-base">
+            <p className="text-sm">
               <span className="font-medium">Condition:</span> {piano.condition}
             </p>
           )}
           {piano.type && (
-            <p className="text-base">
+            <p className="text-sm">
               <span className="font-medium">Type:</span> {piano.type}
             </p>
           )}
           {piano.description && (
-            <p className="text-gray-600 mt-3 text-base leading-relaxed">
+            <p className="text-gray-600 mt-3 text-sm leading-relaxed">
               {truncateDescription(piano.description)}
             </p>
           )}
