@@ -1,4 +1,3 @@
-
 import { Link } from "react-router-dom";
 import { Piano } from "@/types/piano";
 import { Button } from "@/components/ui/button";
@@ -153,7 +152,7 @@ export const FeaturedPianos = ({
             carefully selected collection.
           </p>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 gap-8" style={{ gridTemplateColumns: window.innerWidth >= 932 ? 'repeat(3, 1fr)' : '1fr' }}>
           {isLoading ? (
             [...Array(3)].map((_, i) => (
               <div key={i} className="bg-gray-50 rounded-lg p-6 animate-pulse">

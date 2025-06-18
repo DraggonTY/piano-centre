@@ -34,7 +34,7 @@ export const CategorySection = () => {
             Find the perfect piano for your needs, from grand pianos to digital instruments.
           </p>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
+        <div className="grid grid-cols-1 gap-6 md:gap-8" style={{ gridTemplateColumns: window.innerWidth >= 932 ? 'repeat(3, 1fr)' : '1fr' }}>
           {categories.map((category, index) => (
             <motion.div
               key={index}
