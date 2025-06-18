@@ -1,5 +1,4 @@
-
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useSearchParams } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
@@ -21,6 +20,11 @@ const Pianos = () => {
   const conditions = searchParams.getAll("condition");
   const minPrice = searchParams.get("minPrice");
   const maxPrice = searchParams.get("maxPrice");
+
+  // Scroll to top when component mounts or category changes
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, [category]);
 
   const { data: pianos, refetch } = useQuery({
     queryKey: ["pianos", category, types, conditions, minPrice, maxPrice],

@@ -1,6 +1,5 @@
-
 import { motion } from "framer-motion";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { useIsMobile } from "@/hooks/use-mobile";
 
@@ -27,10 +26,15 @@ const categories = [
 
 export const CategorySection = () => {
   const isMobile = useIsMobile();
+  const navigate = useNavigate();
 
-  const handleCategoryClick = () => {
-    // Scroll to top when navigating to category page
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+  const handleCategoryClick = (link: string, e: React.MouseEvent) => {
+    e.preventDefault();
+    navigate(link);
+    // Use setTimeout to ensure navigation completes before scrolling
+    setTimeout(() => {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }, 100);
   };
 
   return (
@@ -52,7 +56,11 @@ export const CategorySection = () => {
               transition={{ delay: index * 0.2 }}
               className="relative group overflow-hidden rounded-lg shadow-lg w-full"
             >
-              <Link to={category.link} className="block" onClick={handleCategoryClick}>
+              <Link 
+                to={category.link} 
+                className="block" 
+                onClick={(e) => handleCategoryClick(category.link, e)}
+              >
                 <div className="aspect-[4/3] overflow-hidden">
                   <div 
                     className="absolute inset-0 bg-gradient-to-t from-black/60 to-black/0 z-10"
