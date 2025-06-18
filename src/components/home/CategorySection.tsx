@@ -2,6 +2,7 @@
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 const categories = [
   {
@@ -25,6 +26,8 @@ const categories = [
 ];
 
 export const CategorySection = () => {
+  const isMobile = useIsMobile();
+
   return (
     <section className="py-12 md:py-24 bg-gray-50">
       <div className="container mx-auto px-4 max-w-7xl">
@@ -34,7 +37,7 @@ export const CategorySection = () => {
             Find the perfect piano for your needs, from grand pianos to digital instruments.
           </p>
         </div>
-        <div className="grid grid-cols-1 gap-6 md:gap-8" style={{ gridTemplateColumns: window.innerWidth >= 932 ? 'repeat(3, 1fr)' : '1fr' }}>
+        <div className={`grid gap-6 md:gap-8 ${isMobile ? 'grid-cols-1' : 'grid-cols-3'}`}>
           {categories.map((category, index) => (
             <motion.div
               key={index}

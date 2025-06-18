@@ -8,6 +8,7 @@ import { useState, useEffect } from "react";
 import { PianoCard } from "./featured/PianoCard";
 import { EmptySlot } from "./featured/EmptySlot";
 import { FeaturedPianosDialog } from "./featured/FeaturedPianosDialog";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 interface FeaturedPianosProps {
   pianos?: Piano[];
@@ -20,6 +21,7 @@ export const FeaturedPianos = ({
   isLoading,
   onFeaturedUpdate
 }: FeaturedPianosProps) => {
+  const isMobile = useIsMobile();
   const {
     session
   } = useAuth();
@@ -152,7 +154,7 @@ export const FeaturedPianos = ({
             carefully selected collection.
           </p>
         </div>
-        <div className="grid grid-cols-1 gap-8" style={{ gridTemplateColumns: window.innerWidth >= 932 ? 'repeat(3, 1fr)' : '1fr' }}>
+        <div className={`grid gap-8 ${isMobile ? 'grid-cols-1' : 'grid-cols-3'}`}>
           {isLoading ? (
             [...Array(3)].map((_, i) => (
               <div key={i} className="bg-gray-50 rounded-lg p-6 animate-pulse">
