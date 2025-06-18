@@ -17,33 +17,33 @@ export const PianoCardContent = ({ piano, onViewDetails }: PianoCardContentProps
 
   return (
     <>
-      <CardHeader className="pb-3">
-        <CardTitle className="text-lg leading-tight">{piano.name}</CardTitle>
-        <CardDescription className="text-lg font-semibold text-primary">
+      <CardHeader className="pb-4">
+        <CardTitle className="text-2xl font-bold mb-2">{piano.name}</CardTitle>
+        <CardDescription className="text-2xl font-bold text-black">
           ${piano.price.toLocaleString()}
         </CardDescription>
       </CardHeader>
-      <CardContent className="pb-3 flex-1">
-        <div className="space-y-1 text-sm">
+      <CardContent className="pb-4 flex-1">
+        <div className="space-y-2">
           {piano.condition && (
-            <p>
+            <p className="text-base">
               <span className="font-medium">Condition:</span> {piano.condition}
             </p>
           )}
           {piano.type && (
-            <p>
+            <p className="text-base">
               <span className="font-medium">Type:</span> {piano.type}
             </p>
           )}
           {piano.description && (
-            <p className="text-gray-600 mt-2 text-xs leading-relaxed">
-              {truncateDescription(piano.description)}
+            <p className="text-gray-600 mt-3 text-sm leading-relaxed">
+              <span className="font-medium">Description:</span> {truncateDescription(piano.description)}
             </p>
           )}
         </div>
       </CardContent>
       <CardFooter className="pt-0">
-        <Button className="w-full" size="sm" onClick={onViewDetails}>
+        <Button className="w-full bg-black hover:bg-gray-800 text-white" size="lg">
           View Details
         </Button>
       </CardFooter>
