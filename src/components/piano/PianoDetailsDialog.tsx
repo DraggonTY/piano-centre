@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
@@ -52,7 +51,7 @@ export const PianoDetailsDialog = ({ piano, isOpen, onOpenChange }: PianoDetails
           <p className="text-base sm:text-lg lg:text-xl font-bold text-primary">
             ${piano.price.toLocaleString()}
           </p>
-          <div className="flex gap-4 text-xs sm:text-sm text-gray-600">
+          <div className="flex flex-col gap-1 text-xs sm:text-sm text-gray-600">
             {piano.condition && (
               <span>Condition: {piano.condition}</span>
             )}
@@ -64,7 +63,6 @@ export const PianoDetailsDialog = ({ piano, isOpen, onOpenChange }: PianoDetails
 
         {piano.description && (
           <div className="space-y-1">
-            <h4 className="font-semibold text-sm sm:text-base">Description</h4>
             <p className="text-gray-600 text-xs sm:text-sm leading-relaxed">{piano.description}</p>
           </div>
         )}
