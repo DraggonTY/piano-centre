@@ -47,25 +47,25 @@ export const CategorySection = () => {
               transition={{ delay: index * 0.2 }}
               className="relative group overflow-hidden rounded-lg shadow-lg w-full"
             >
-              <div className="aspect-[4/3] overflow-hidden">
-                <div 
-                  className="absolute inset-0 bg-gradient-to-t from-black/60 to-black/0 z-10"
-                />
-                <img 
-                  src={category.image} 
-                  alt={category.title}
-                  className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-                />
-              </div>
-              <div className="absolute inset-0 flex flex-col justify-end p-4 md:p-6 z-20">
-                <h3 className="text-xl md:text-2xl font-bold text-white mb-2 drop-shadow-lg break-words hyphens-auto">{category.title}</h3>
-                <p className="text-sm md:text-base text-gray-200 mb-3 md:mb-4 drop-shadow-md break-words hyphens-auto leading-relaxed">{category.description}</p>
-                <Link to={category.link}>
+              <Link to={category.link} className="block">
+                <div className="aspect-[4/3] overflow-hidden">
+                  <div 
+                    className="absolute inset-0 bg-gradient-to-t from-black/60 to-black/0 z-10"
+                  />
+                  <img 
+                    src={category.image} 
+                    alt={category.title}
+                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                  />
+                </div>
+                <div className="absolute inset-0 flex flex-col justify-end p-4 md:p-6 z-20">
+                  <h3 className="text-xl md:text-2xl font-bold text-white mb-2 drop-shadow-lg break-words hyphens-auto">{category.title}</h3>
+                  <p className="text-sm md:text-base text-gray-200 mb-3 md:mb-4 drop-shadow-md break-words hyphens-auto leading-relaxed">{category.description}</p>
                   <Button variant="secondary" className="w-full drop-shadow-md text-sm md:text-base h-9 md:h-10 shrink-0">
                     Explore {category.title}
                   </Button>
-                </Link>
-              </div>
+                </div>
+              </Link>
             </motion.div>
           ))}
         </div>
