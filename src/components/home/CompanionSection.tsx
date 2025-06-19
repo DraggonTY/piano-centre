@@ -9,22 +9,28 @@ export const CompanionSection = () => {
   const [isVisible, setIsVisible] = useState(true);
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      // Fade out at 34 seconds
-      setTimeout(() => setIsVisible(false), 34000);
-      // Fade back in when video restarts (assuming video is around 35-40 seconds)
-      setTimeout(() => setIsVisible(true), 36000);
-    }, 36000); // Adjust this to match your video duration
+    // Fade out at 34 seconds after component mounts
+    const fadeOutTimeout = setTimeout(() => {
+      setIsVisible(false);
+    }, 34000);
 
-    // Initial fade out at 34 seconds
-    const initialTimeout = setTimeout(() => setIsVisible(false), 34000);
-    // Initial fade back in
-    const initialFadeIn = setTimeout(() => setIsVisible(true), 36000);
+    // Fade back in at 36 seconds (assuming video restarts around this time)
+    const fadeInTimeout = setTimeout(() => {
+      setIsVisible(true);
+    }, 36000);
+
+    // Set up repeating cycle every 36 seconds (adjust to match your video duration)
+    const interval = setInterval(() => {
+      // Fade out 2 seconds before video ends
+      setTimeout(() => setIsVisible(false), 34000);
+      // Fade back in when video restarts
+      setTimeout(() => setIsVisible(true), 2000);
+    }, 36000);
 
     return () => {
+      clearTimeout(fadeOutTimeout);
+      clearTimeout(fadeInTimeout);
       clearInterval(interval);
-      clearTimeout(initialTimeout);
-      clearTimeout(initialFadeIn);
     };
   }, []);
 
@@ -58,7 +64,10 @@ export const CompanionSection = () => {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.8 }}
-          animate={{ opacity: isVisible ? 1 : 0 }}
+          animate={{ 
+            opacity: isVisible ? 1 : 0,
+            transition: { duration: 1 }
+          }}
           className="text-center text-white space-y-6"
         >
           <h2 className="font-serif text-4xl md:text-5xl lg:text-6xl font-bold max-w-4xl mx-auto leading-tight">
