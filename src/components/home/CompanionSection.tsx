@@ -2,9 +2,31 @@
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
 
 export const CompanionSection = () => {
   const videoUrl = "https://hkyldwsgagbkrshqfawi.supabase.co/storage/v1/object/public/video/test.mov";
+  const [isVisible, setIsVisible] = useState(true);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      // Fade out at 34 seconds
+      setTimeout(() => setIsVisible(false), 34000);
+      // Fade back in when video restarts (assuming video is around 35-40 seconds)
+      setTimeout(() => setIsVisible(true), 36000);
+    }, 36000); // Adjust this to match your video duration
+
+    // Initial fade out at 34 seconds
+    const initialTimeout = setTimeout(() => setIsVisible(false), 34000);
+    // Initial fade back in
+    const initialFadeIn = setTimeout(() => setIsVisible(true), 36000);
+
+    return () => {
+      clearInterval(interval);
+      clearTimeout(initialTimeout);
+      clearTimeout(initialFadeIn);
+    };
+  }, []);
 
   return (
     <section className="py-12 md:py-24 bg-white relative overflow-hidden">
@@ -36,6 +58,7 @@ export const CompanionSection = () => {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.8 }}
+          animate={{ opacity: isVisible ? 1 : 0 }}
           className="text-center text-white space-y-6"
         >
           <h2 className="font-serif text-4xl md:text-5xl lg:text-6xl font-bold max-w-4xl mx-auto leading-tight">
