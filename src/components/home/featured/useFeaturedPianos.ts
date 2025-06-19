@@ -18,10 +18,9 @@ export const useFeaturedPianos = (dialogOpen: boolean, onFeaturedUpdate?: () => 
       if (!dialogOpen) return;
       setLoadingPianos(true);
       try {
-        // Optimized query - only select needed fields and use better ordering
         const { data, error } = await supabase
           .from('pianos')
-          .select('id, name, price, image_urls, key_image_url, is_featured, featured_order, condition, type, manufacturer')
+          .select('*')
           .order('created_at', { ascending: false });
         
         if (error) throw error;

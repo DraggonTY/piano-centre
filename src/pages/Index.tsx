@@ -17,7 +17,7 @@ const Index = () => {
     queryFn: async () => {
       const { data, error } = await supabase
         .from('pianos')
-        .select('id, name, description, price, image_urls, key_image_url, condition, type, manufacturer, model_year, category')
+        .select('*')
         .eq('is_featured', true)
         .order('featured_order', { ascending: true })
         .limit(3);
