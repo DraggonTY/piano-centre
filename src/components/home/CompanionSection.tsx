@@ -4,15 +4,28 @@ import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 
 export const CompanionSection = () => {
+  const videoUrl = "https://hkyldwsgagbkrshqfawi.supabase.co/storage/v1/object/public/video/test.mov";
+
   return (
     <section className="py-12 md:py-24 bg-white relative overflow-hidden">
-      {/* Background Image */}
-      <div 
-        className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-        style={{
-          backgroundImage: "url('/lovable-uploads/faeb1a0b-1284-43e1-95fe-a51e7ca101a3.png')"
-        }}
-      >
+      {/* Background Video */}
+      <div className="absolute inset-0">
+        <video 
+          autoPlay 
+          loop 
+          muted 
+          playsInline
+          className="w-full h-full object-cover"
+        >
+          <source src={videoUrl} type="video/mp4" />
+          {/* Fallback to image if video fails to load */}
+          <div 
+            className="w-full h-full bg-cover bg-center bg-no-repeat"
+            style={{
+              backgroundImage: "url('/lovable-uploads/faeb1a0b-1284-43e1-95fe-a51e7ca101a3.png')"
+            }}
+          />
+        </video>
         <div className="absolute inset-0 bg-black/40" />
       </div>
       
