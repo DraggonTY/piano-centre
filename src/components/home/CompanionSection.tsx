@@ -1,0 +1,48 @@
+
+import { motion } from "framer-motion";
+import { Button } from "@/components/ui/button";
+import { Link } from "react-router-dom";
+
+export const CompanionSection = () => {
+  return (
+    <section className="py-12 md:py-24 bg-white relative overflow-hidden">
+      {/* Background Image */}
+      <div 
+        className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+        style={{
+          backgroundImage: "url('/lovable-uploads/faeb1a0b-1284-43e1-95fe-a51e7ca101a3.png')"
+        }}
+      >
+        <div className="absolute inset-0 bg-black/40" />
+      </div>
+      
+      {/* Content */}
+      <div className="container mx-auto px-4 max-w-7xl relative z-10">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.8 }}
+          className="text-center text-white space-y-6"
+        >
+          <h2 className="font-serif text-4xl md:text-5xl lg:text-6xl font-bold max-w-4xl mx-auto leading-tight">
+            The Ultimate Companion & Music Entertainment at home
+          </h2>
+          <p className="text-lg md:text-xl max-w-2xl mx-auto leading-relaxed">
+            Enjoy a beautiful grand piano at home and have it come to life via iPad.
+          </p>
+          <div className="pt-4">
+            <Link to="/contact">
+              <Button 
+                size="lg" 
+                className="bg-transparent border-2 border-white text-white hover:bg-white hover:text-black transition-all duration-300 px-8 py-3 text-base font-medium tracking-wider"
+              >
+                LEARN MORE
+              </Button>
+            </Link>
+          </div>
+        </motion.div>
+      </div>
+    </section>
+  );
+};

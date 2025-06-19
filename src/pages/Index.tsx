@@ -6,6 +6,7 @@ import { Piano } from "@/types/piano";
 import { HeroSection } from "@/components/home/HeroSection";
 import { FeaturedPianos } from "@/components/home/FeaturedPianos";
 import { CategorySection } from "@/components/home/CategorySection";
+import { CompanionSection } from "@/components/home/CompanionSection";
 import { ContactSection } from "@/components/home/ContactSection";
 
 const Index = () => {
@@ -50,6 +51,7 @@ const Index = () => {
         onFeaturedUpdate={refetch}
       />
       <CategorySection />
+      <CompanionSection />
       <ContactSection />
     </div>
   );
