@@ -1,4 +1,3 @@
-
 import { Link } from "react-router-dom";
 import {
   NavigationMenu,
@@ -23,13 +22,9 @@ export const DesktopHeader = ({ session }: DesktopHeaderProps) => {
       {/* Desktop Layout: Keep existing layout */}
       <div className="flex-1">
         <NavigationMenu>
-          <NavigationMenuList className="group/pianos group/services">
-            <div className="group/pianos">
-              <PianosMenuItem />
-            </div>
-            <div className="group/services">
-              <ServicesMenuItem />
-            </div>
+          <NavigationMenuList className="space-x-2">
+            <PianosMenuItem />
+            <ServicesMenuItem />
             <ContactMenuItem />
           </NavigationMenuList>
         </NavigationMenu>
