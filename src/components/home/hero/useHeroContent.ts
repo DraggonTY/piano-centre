@@ -12,39 +12,42 @@ export const useHeroContent = () => {
   const { session } = useAuth();
 
   useEffect(() => {
-    const checkAdminStatus = async () => {
-      if (!session?.user?.id) {
-        setIsAdmin(false);
-        return;
-      }
+    const checkAdminAndFetchContent = async () => {
+      // Combine admin check and hero content fetch for better performance
+      const promises = [];
       
-      const { data, error } = await supabase
-        .from('user_roles')
-        .select('role')
-        .eq('user_id', session.user.id)
-        .eq('role', 'admin')
-        .single();
-      
-      if (!error && data) {
-        setIsAdmin(true);
+      // Check admin status
+      if (session?.user?.id) {
+        promises.push(
+          supabase
+            .from('user_roles')
+            .select('role')
+            .eq('user_id', session.user.id)
+            .eq('role', 'admin')
+            .maybeSingle()
+        );
       } else {
-        setIsAdmin(false);
+        promises.push(Promise.resolve({ data: null, error: null }));
       }
-    };
-
-    checkAdminStatus();
-  }, [session?.user?.id]);
-
-  useEffect(() => {
-    const fetchHeroContent = async () => {
-      try {
-        const { data, error } = await supabase
+      
+      // Fetch hero content
+      promises.push(
+        supabase
           .from('hero_content')
           .select('*')
-          .single();
+          .maybeSingle()
+      );
+      
+      try {
+        const [adminResult, heroResult] = await Promise.all(promises);
         
-        if (error) {
-          if (error.code === 'PGRST116') {
+        // Set admin status
+        setIsAdmin(!adminResult.error && adminResult.data ? true : false);
+        
+        // Handle hero content
+        if (heroResult.error) {
+          if (heroResult.error.code === 'PGRST116') {
+            // No hero content exists, create default
             const { data: insertData, error: insertError } = await supabase
               .from('hero_content')
               .insert({
@@ -60,30 +63,20 @@ export const useHeroContent = () => {
               .select()
               .single();
             
-            if (insertError) {
-              console.error('Error inserting default hero content:', insertError);
-              return;
-            }
-            
-            if (insertData) {
+            if (!insertError && insertData) {
               setHeroContent(insertData);
             }
-          } else {
-            console.error('Error fetching hero content:', error);
           }
-          return;
-        }
-        
-        if (data) {
-          setHeroContent(data);
+        } else if (heroResult.data) {
+          setHeroContent(heroResult.data);
         }
       } catch (error) {
         console.error('Error in hero content flow:', error);
       }
     };
 
-    fetchHeroContent();
-  }, []);
+    checkAdminAndFetchContent();
+  }, [session?.user?.id]);
 
   const updateHeroContent = async (data: HeroContent, imageFile?: File) => {
     setLoading(true);

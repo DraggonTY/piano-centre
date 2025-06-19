@@ -18,10 +18,12 @@ export const useFeaturedPianos = (dialogOpen: boolean, onFeaturedUpdate?: () => 
       if (!dialogOpen) return;
       setLoadingPianos(true);
       try {
+        // Optimized query - only select needed fields and use better ordering
         const { data, error } = await supabase
           .from('pianos')
-          .select('*, image_urls, key_image_url')
+          .select('id, name, price, image_urls, key_image_url, is_featured, featured_order, condition, type, manufacturer')
           .order('created_at', { ascending: false });
+        
         if (error) throw error;
         
         const transformedData: Piano[] = (data || []).map(piano => ({
@@ -50,17 +52,30 @@ export const useFeaturedPianos = (dialogOpen: boolean, onFeaturedUpdate?: () => 
     if (!session?.user?.id) return;
     setUpdating(true);
     try {
-      await supabase
-        .from('pianos')
-        .update({ is_featured: false, featured_order: null })
-        .eq('is_featured', true);
+      // Batch operations for better performance
+      const operations = [];
       
-      for (let i = 0; i < selectedPianos.length; i++) {
-        await supabase
+      // First, unfeatured all currently featured pianos
+      operations.push(
+        supabase
           .from('pianos')
-          .update({ is_featured: true, featured_order: i + 1 })
-          .eq('id', selectedPianos[i]);
+          .update({ is_featured: false, featured_order: null })
+          .eq('is_featured', true)
+      );
+      
+      // Then feature selected pianos with order
+      if (selectedPianos.length > 0) {
+        const updatePromises = selectedPianos.map((pianoId, index) =>
+          supabase
+            .from('pianos')
+            .update({ is_featured: true, featured_order: index + 1 })
+            .eq('id', pianoId)
+        );
+        operations.push(...updatePromises);
       }
+      
+      // Execute all operations
+      await Promise.all(operations);
       
       toast({
         title: "Success",

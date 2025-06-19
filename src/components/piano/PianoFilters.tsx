@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
@@ -30,7 +31,7 @@ export const PianoFilters = () => {
     { id: "restored", label: "Restored" },
   ];
 
-  // Fetch the maximum price from pianos
+  // Optimized query - only get the max price, no other data
   const { data: maxPriceData } = useQuery({
     queryKey: ["max-piano-price"],
     queryFn: async () => {
@@ -38,17 +39,19 @@ export const PianoFilters = () => {
         .from("pianos")
         .select("price")
         .order("price", { ascending: false })
-        .limit(1);
+        .limit(1)
+        .single();
 
       if (error) throw error;
-      return data?.[0]?.price || 100000;
+      return data?.price || 100000;
     },
+    staleTime: 10 * 60 * 1000, // 10 minutes - price range doesn't change often
+    gcTime: 30 * 60 * 1000, // 30 minutes
   });
 
-  // Update maxPrice and priceRange when maxPriceData changes
   useEffect(() => {
     if (maxPriceData) {
-      const calculatedMaxPrice = Math.ceil(maxPriceData * 1.3); // Add 30%
+      const calculatedMaxPrice = Math.ceil(maxPriceData * 1.3);
       setMaxPrice(calculatedMaxPrice);
       setPriceRange([0, calculatedMaxPrice]);
     }

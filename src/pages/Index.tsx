@@ -17,7 +17,7 @@ const Index = () => {
     queryFn: async () => {
       const { data, error } = await supabase
         .from('pianos')
-        .select('*, image_urls, key_image_url')
+        .select('id, name, description, price, image_urls, key_image_url, condition, type, manufacturer, model_year, category')
         .eq('is_featured', true)
         .order('featured_order', { ascending: true })
         .limit(3);
@@ -31,7 +31,6 @@ const Index = () => {
         throw error;
       }
       
-      // Transform data to match Piano interface
       const transformedData: Piano[] = (data || []).map(piano => ({
         ...piano,
         image_urls: piano.image_urls || null,
@@ -40,6 +39,8 @@ const Index = () => {
       
       return transformedData;
     },
+    staleTime: 5 * 60 * 1000, // 5 minutes
+    gcTime: 10 * 60 * 1000, // 10 minutes
   });
 
   return (
