@@ -1,10 +1,19 @@
 
+import { useEffect } from "react";
+import { useLocation } from "react-router-dom";
 import { ContactHero } from "@/components/contact/ContactHero";
 import { ContactForm } from "@/components/contact/ContactForm";
 import { ContactInfo } from "@/components/contact/ContactInfo";
 import { LocationMap } from "@/components/contact/LocationMap";
 
 const Contact = () => {
+  const location = useLocation();
+
+  // Scroll to top when navigating to this page
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [location.pathname]);
+
   return (
     <div className="min-h-screen">
       <ContactHero />
