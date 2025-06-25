@@ -6,22 +6,30 @@ export const ContactInfo = () => {
     {
       icon: Phone,
       title: "Phone",
-      details: "780-484-3170"
+      details: "780-484-3170",
+      link: "tel:780-484-3170",
+      isClickable: true
     },
     {
       icon: Mail,
       title: "Email",
-      details: "contact@pianocentre.ca"
+      details: "contact@pianocentre.ca",
+      link: "mailto:contact@pianocentre.ca",
+      isClickable: true
     },
     {
       icon: MapPin,
       title: "Address",
-      details: "10460 - 170th St.\nEdmonton, Alberta T5S1M4"
+      details: "10460 - 170th St.\nEdmonton, Alberta T5S1M4",
+      link: "https://maps.google.com/?q=10460+170th+St,+Edmonton,+Alberta+T5S1M4",
+      isClickable: true
     },
     {
       icon: Clock,
       title: "Hours",
-      details: "Monday - Saturday\n9:30AM - 5:30PM"
+      details: "Monday - Saturday\n9:30AM - 5:30PM",
+      link: "",
+      isClickable: false
     }
   ];
 
@@ -39,9 +47,20 @@ export const ContactInfo = () => {
               </div>
               <div>
                 <h3 className="font-semibold mb-1">{item.title}</h3>
-                <p className="text-gray-700 whitespace-pre-line">
-                  {item.details}
-                </p>
+                {item.isClickable ? (
+                  <a 
+                    href={item.link}
+                    className="text-gray-700 whitespace-pre-line hover:text-primary transition-colors duration-200 cursor-pointer"
+                    target={item.link.startsWith('http') ? '_blank' : undefined}
+                    rel={item.link.startsWith('http') ? 'noopener noreferrer' : undefined}
+                  >
+                    {item.details}
+                  </a>
+                ) : (
+                  <p className="text-gray-700 whitespace-pre-line">
+                    {item.details}
+                  </p>
+                )}
               </div>
             </div>
           );
