@@ -148,15 +148,32 @@ export const MobileMenu = ({ isOpen, onClose, session }: MobileMenuProps) => {
                 </div>
               </div>
 
-              {/* Contact */}
+              {/* Contact Section */}
               <div>
-                <Link 
-                  to="/contact" 
-                  onClick={onClose}
-                  className="block text-xl font-semibold text-gray-900 hover:text-primary transition-colors duration-200"
-                >
-                  Contact
-                </Link>
+                <h3 className="text-xl font-semibold mb-4 text-gray-900">Contact</h3>
+                <div className="space-y-4">
+                  <Link 
+                    to="/contact" 
+                    onClick={onClose}
+                    className="block text-lg text-gray-700 hover:text-primary transition-colors duration-200"
+                  >
+                    Contact Us
+                  </Link>
+                  <div className="space-y-2">
+                    <a 
+                      href="tel:780-484-3170"
+                      className="block text-lg text-gray-700 hover:text-primary transition-colors duration-200"
+                    >
+                      780-484-3170
+                    </a>
+                    <a 
+                      href="mailto:contact@pianocentre.ca"
+                      className="block text-lg text-gray-700 hover:text-primary transition-colors duration-200"
+                    >
+                      contact@pianocentre.ca
+                    </a>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
