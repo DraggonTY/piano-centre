@@ -40,6 +40,29 @@ export const ContactInfo = () => {
       <div className="space-y-4">
         {contactDetails.map((item, index) => {
           const IconComponent = item.icon;
+          
+          if (item.isClickable) {
+            return (
+              <a
+                key={index}
+                href={item.link}
+                className="flex items-start gap-4 p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors duration-200 cursor-pointer"
+                target={item.link.startsWith('http') ? '_blank' : undefined}
+                rel={item.link.startsWith('http') ? 'noopener noreferrer' : undefined}
+              >
+                <div className="bg-primary/10 p-3 rounded-full">
+                  <IconComponent className="w-5 h-5 text-primary" />
+                </div>
+                <div>
+                  <h3 className="font-semibold mb-1">{item.title}</h3>
+                  <p className="text-gray-700 whitespace-pre-line">
+                    {item.details}
+                  </p>
+                </div>
+              </a>
+            );
+          }
+          
           return (
             <div key={index} className="flex items-start gap-4 p-4 bg-gray-50 rounded-lg">
               <div className="bg-primary/10 p-3 rounded-full">
@@ -47,20 +70,9 @@ export const ContactInfo = () => {
               </div>
               <div>
                 <h3 className="font-semibold mb-1">{item.title}</h3>
-                {item.isClickable ? (
-                  <a 
-                    href={item.link}
-                    className="text-gray-700 whitespace-pre-line hover:text-primary transition-colors duration-200 cursor-pointer"
-                    target={item.link.startsWith('http') ? '_blank' : undefined}
-                    rel={item.link.startsWith('http') ? 'noopener noreferrer' : undefined}
-                  >
-                    {item.details}
-                  </a>
-                ) : (
-                  <p className="text-gray-700 whitespace-pre-line">
-                    {item.details}
-                  </p>
-                )}
+                <p className="text-gray-700 whitespace-pre-line">
+                  {item.details}
+                </p>
               </div>
             </div>
           );
