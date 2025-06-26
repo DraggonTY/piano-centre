@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
@@ -93,7 +94,7 @@ export const PianoDetailsDialog = ({ piano, isOpen, onOpenChange }: PianoDetails
         </Sheet>
       ) : (
         <Dialog open={isMainDialogOpen} onOpenChange={onOpenChange}>
-          <DialogContent className="sm:max-w-[90vw] max-w-[95vw] max-h-[90vh] sm:max-h-[85vh] w-full p-3 sm:p-4 overflow-y-auto rounded-lg [&>button]:top-3 [&>button]:right-3 sm:[&>button]:top-4 sm:[&>button]:right-4">
+          <DialogContent className="sm:max-w-[90vw] max-w-[95vw] max-h-[80vh] sm:max-h-[85vh] w-full p-3 sm:p-4 overflow-y-auto rounded-lg [&>button]:top-3 [&>button]:right-3 sm:[&>button]:top-4 sm:[&>button]:right-4 my-4">
             <DialogHeader className="pb-2 sm:pb-3 pt-2">
               <DialogTitle className="sr-only">Piano Details</DialogTitle>
               <DialogDescription className="sr-only">
