@@ -30,7 +30,7 @@ export const ChatForm = ({ isOpen, onClose }: ChatFormProps) => {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed bottom-36 right-6 w-80 bg-card rounded-xl shadow-2xl z-40 border border-border overflow-hidden animate-fade-in">
+    <div className="fixed bottom-36 right-4 left-4 sm:left-auto sm:right-6 sm:w-80 w-auto bg-card rounded-xl shadow-2xl z-40 border border-border overflow-hidden animate-fade-in">
       {/* Header */}
       <div className="bg-primary p-6 text-center">
         <div className="w-16 h-16 bg-background rounded-full mx-auto mb-3 flex items-center justify-center">

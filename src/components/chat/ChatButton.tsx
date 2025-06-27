@@ -10,7 +10,7 @@ export const ChatButton = ({ onClick, isOpen }: ChatButtonProps) => {
   return (
     <button
       onClick={onClick}
-      className="fixed bottom-20 right-6 w-16 h-16 bg-primary text-primary-foreground rounded-full shadow-lg hover:shadow-xl transition-all duration-300 z-50 flex items-center justify-center group hover:scale-105"
+      className="fixed bottom-20 right-4 sm:right-6 w-16 h-16 bg-primary text-primary-foreground rounded-full shadow-lg hover:shadow-xl transition-all duration-300 z-50 flex items-center justify-center group hover:scale-105"
     >
       {isOpen ? (
         <X className="w-6 h-6 transition-transform duration-200" />
