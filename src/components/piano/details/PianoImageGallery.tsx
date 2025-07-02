@@ -10,29 +10,42 @@ interface PianoImageGalleryProps {
 
 export const PianoImageGallery = ({ images, pianoName, onImageClick }: PianoImageGalleryProps) => {
   const [imageIndex, setImageIndex] = useState(0);
+  const [imageLoaded, setImageLoaded] = useState(false);
   const hasMultipleImages = images.length > 1;
 
   const nextImage = () => {
     setImageIndex((prev) => (prev + 1) % images.length);
+    setImageLoaded(false); // Reset loading state for next image
   };
 
   const prevImage = () => {
     setImageIndex((prev) => (prev - 1 + images.length) % images.length);
+    setImageLoaded(false); // Reset loading state for previous image
   };
 
   if (images.length === 0) return null;
 
   return (
     <div className="flex-shrink-0 order-1 lg:order-none">
-      <div className="aspect-[3/2] overflow-hidden rounded-lg relative group mt-4">
+      <div className="aspect-[3/2] overflow-hidden rounded-lg relative group mt-4 bg-gray-100">
+        {!imageLoaded && (
+          <div className="absolute inset-0 bg-gray-200 animate-pulse flex items-center justify-center">
+            <div className="text-gray-400">Loading...</div>
+          </div>
+        )}
         <img 
           src={images[imageIndex]} 
           alt={pianoName}
-          className="w-full h-full object-cover cursor-pointer"
+          className={`w-full h-full object-cover cursor-pointer transition-opacity duration-300 ${
+            imageLoaded ? 'opacity-100' : 'opacity-0'
+          }`}
           onClick={() => onImageClick(imageIndex)}
+          onLoad={() => setImageLoaded(true)}
+          loading="lazy"
+          decoding="async"
         />
         
-        {hasMultipleImages && (
+        {hasMultipleImages && imageLoaded && (
           <>
             <button
               onClick={prevImage}
@@ -55,8 +68,11 @@ export const PianoImageGallery = ({ images, pianoName, onImageClick }: PianoImag
           {images.map((image, index) => (
             <button
               key={index}
-              onClick={() => setImageIndex(index)}
-              className={`w-10 h-10 sm:w-12 sm:h-12 rounded border-2 overflow-hidden transition-all flex-shrink-0 ${
+              onClick={() => {
+                setImageIndex(index);
+                setImageLoaded(false);
+              }}
+              className={`w-10 h-10 sm:w-12 sm:h-12 rounded border-2 overflow-hidden transition-all flex-shrink-0 bg-gray-100 ${
                 index === imageIndex ? 'border-primary' : 'border-gray-200'
               }`}
             >
@@ -64,6 +80,8 @@ export const PianoImageGallery = ({ images, pianoName, onImageClick }: PianoImag
                 src={image} 
                 alt={`${pianoName} ${index + 1}`}
                 className="w-full h-full object-cover"
+                loading="lazy"
+                decoding="async"
               />
             </button>
           ))}

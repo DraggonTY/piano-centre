@@ -22,6 +22,7 @@ interface PianoCardImageProps {
 export const PianoCardImage = ({ images, pianoName, onEdit, onDelete, onImageClick, showActions = true }: PianoCardImageProps) => {
   const { session } = useAuth();
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [imageLoaded, setImageLoaded] = useState(false);
   const hasMultipleImages = images.length > 1;
 
   const nextImage = () => {
@@ -36,15 +37,25 @@ export const PianoCardImage = ({ images, pianoName, onEdit, onDelete, onImageCli
 
   return (
     <div className="relative">
-      <div className="aspect-[4/3] overflow-hidden relative group">
+      <div className="aspect-[4/3] overflow-hidden relative group bg-gray-100">
+        {!imageLoaded && (
+          <div className="absolute inset-0 bg-gray-200 animate-pulse flex items-center justify-center">
+            <div className="text-gray-400">Loading...</div>
+          </div>
+        )}
         <img
           src={images[currentImageIndex]}
           alt={pianoName}
-          className="w-full h-full object-cover transform hover:scale-105 transition-transform duration-300 cursor-pointer"
+          className={`w-full h-full object-cover transform hover:scale-105 transition-transform duration-300 cursor-pointer ${
+            imageLoaded ? 'opacity-100' : 'opacity-0'
+          }`}
           onClick={onImageClick}
+          onLoad={() => setImageLoaded(true)}
+          loading="lazy"
+          decoding="async"
         />
         
-        {hasMultipleImages && (
+        {hasMultipleImages && imageLoaded && (
           <>
             <button
               onClick={prevImage}
@@ -62,7 +73,7 @@ export const PianoCardImage = ({ images, pianoName, onEdit, onDelete, onImageCli
         )}
       </div>
       
-      {hasMultipleImages && (
+      {hasMultipleImages && imageLoaded && (
         <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-1">
           {images.map((_, index) => (
             <button
