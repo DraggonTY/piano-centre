@@ -33,7 +33,7 @@ export const DesktopHeader = ({ session }: DesktopHeaderProps) => {
       <div className="flex-1 flex justify-center">
         <Link to="/" className="block">
           <img
-            src="/lovable-uploads/eb5aeada-3cd1-446e-8bce-a0352f51efca.png"
+            src="/piano-uploads/eb5aeada-3cd1-446e-8bce-a0352f51efca.png"
             alt="Piano Centre Edmonton"
             className="h-20 sm:h-24 md:h-24 object-contain"
           />

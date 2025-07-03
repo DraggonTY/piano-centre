@@ -23,5 +23,5 @@ export const defaultHeroContent: HeroContent = {
   viewCollectionLink: "/pianos",
   scheduleVisitText: "Schedule a Visit",
   scheduleVisitLink: "/contact",
-  imageUrl: "/lovable-uploads/0ac4679a-cee5-408f-a113-3252ab86e84b.png",
+  imageUrl: "/piano-uploads/0ac4679a-cee5-408f-a113-3252ab86e84b.png",
 };

@@ -32,7 +32,7 @@ export const MobileHeader = ({ session, onMenuToggle }: MobileHeaderProps) => {
       <div className="flex justify-center flex-1">
         <Link to="/" className="block">
           <img
-            src="/lovable-uploads/96414221-6d22-4e38-bd12-abcb86467660.png"
+            src="/piano-uploads/96414221-6d22-4e38-bd12-abcb86467660.png"
             alt="Piano Centre Edmonton"
             className="h-28"
           />

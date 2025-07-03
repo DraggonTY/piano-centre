@@ -50,7 +50,7 @@ export const CompanionSection = () => {
           <div 
             className="w-full h-full bg-cover bg-center bg-no-repeat"
             style={{
-              backgroundImage: "url('/lovable-uploads/faeb1a0b-1284-43e1-95fe-a51e7ca101a3.png')"
+              backgroundImage: "url('/piano-uploads/faeb1a0b-1284-43e1-95fe-a51e7ca101a3.png')"
             }}
           />
         </video>
