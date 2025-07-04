@@ -37,11 +37,30 @@
   body {
     @apply bg-background text-foreground antialiased;
   }
+  
+  /* Prevent layout issues during orientation changes */
+  html {
+    -webkit-text-size-adjust: 100%;
+    -ms-text-size-adjust: 100%;
+  }
+  
+  /* Smooth orientation change transitions */
+  @media screen and (orientation: landscape) {
+    .hero-section {
+      min-height: 60vh;
+    }
+  }
+  
+  @media screen and (orientation: portrait) {
+    .hero-section {
+      min-height: 80vh;
+    }
+  }
 }
 
 @layer components {
   .hero-section {
-    @apply relative min-h-screen flex items-center justify-center overflow-hidden pt-[88px] md:pt-[104px];
+    @apply relative flex items-center justify-center overflow-hidden;
   }
   
   .glass-card {

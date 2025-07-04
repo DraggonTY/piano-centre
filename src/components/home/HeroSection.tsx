@@ -37,7 +37,7 @@ export const HeroSection = () => {
   const [open, setOpen] = useState(false);
 
   return (
-    <section className="relative h-[600px] w-full overflow-hidden">
+    <section className="hero-section relative min-h-[500px] h-[70vh] sm:h-[80vh] w-full overflow-hidden">{" "}
       <HeroBackground imageUrl={heroContent.imageUrl} />
       
       {isAdmin && (
