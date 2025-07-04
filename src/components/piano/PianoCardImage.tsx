@@ -53,6 +53,7 @@ export const PianoCardImage = ({ images, pianoName, onEdit, onDelete, onImageCli
           onLoad={() => setImageLoaded(true)}
           loading="lazy"
           decoding="async"
+          style={{ imageOrientation: 'from-image' }}
         />
         
         {hasMultipleImages && imageLoaded && (

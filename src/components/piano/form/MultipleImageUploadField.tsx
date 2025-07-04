@@ -78,11 +78,12 @@ export const MultipleImageUploadField = ({
             {images.map((image, index) => (
               <Card key={index} className="relative overflow-hidden">
                 <CardContent className="p-2">
-                  <img
-                    src={URL.createObjectURL(image)}
-                    alt={`Upload ${index + 1}`}
-                    className="w-full h-24 object-cover rounded"
-                  />
+                   <img
+                     src={URL.createObjectURL(image)}
+                     alt={`Upload ${index + 1}`}
+                     className="w-full h-24 object-cover rounded"
+                     style={{ imageOrientation: 'from-image' }}
+                   />
                   <div className="absolute top-1 right-1 flex gap-1">
                     <Button
                       size="sm"

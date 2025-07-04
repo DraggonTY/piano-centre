@@ -43,6 +43,7 @@ export const PianoImageGallery = ({ images, pianoName, onImageClick }: PianoImag
           onLoad={() => setImageLoaded(true)}
           loading="lazy"
           decoding="async"
+          style={{ imageOrientation: 'from-image' }}
         />
         
         {hasMultipleImages && imageLoaded && (
@@ -76,13 +77,14 @@ export const PianoImageGallery = ({ images, pianoName, onImageClick }: PianoImag
                 index === imageIndex ? 'border-primary' : 'border-gray-200'
               }`}
             >
-              <img 
-                src={image} 
-                alt={`${pianoName} ${index + 1}`}
-                className="w-full h-full object-cover"
-                loading="lazy"
-                decoding="async"
-              />
+               <img 
+                 src={image} 
+                 alt={`${pianoName} ${index + 1}`}
+                 className="w-full h-full object-cover"
+                 loading="lazy"
+                 decoding="async"
+                 style={{ imageOrientation: 'from-image' }}
+               />
             </button>
           ))}
         </div>
