@@ -11,6 +11,7 @@ const Auth = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
+  const [isSignUp, setIsSignUp] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
   const { toast } = useToast();
@@ -38,6 +39,33 @@ const Auth = () => {
     });
   };
 
+  const handleSignUp = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+    try {
+      const { error } = await supabase.auth.signUp({
+        email,
+        password,
+        options: {
+          emailRedirectTo: `${window.location.origin}/`
+        }
+      });
+      if (error) {
+        handleError(error);
+      } else {
+        toast({
+          title: "Success!",
+          description: "Account created successfully. You can now sign in."
+        });
+        setIsSignUp(false);
+      }
+    } catch (error: any) {
+      handleError(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const handleSignIn = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
@@ -63,25 +91,65 @@ const Auth = () => {
       <Card className="w-full max-w-md">
         <CardHeader>
           <div>
-            <CardTitle className="text-2xl">Sign In</CardTitle>
+            <CardTitle className="text-2xl">{isSignUp ? "Sign Up" : "Sign In"}</CardTitle>
           </div>
         </CardHeader>
         <CardContent>
-          <form onSubmit={handleSignIn} className="space-y-4">
+          <form onSubmit={isSignUp ? handleSignUp : handleSignIn} className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="signin-email">Email</Label>
-              <Input id="signin-email" type="email" placeholder="Enter your email" value={email} onChange={e => setEmail(e.target.value)} required />
+              <Label htmlFor="auth-email">Email</Label>
+              <Input 
+                id="auth-email" 
+                type="email" 
+                placeholder="Enter your email" 
+                value={email} 
+                onChange={e => setEmail(e.target.value)} 
+                required 
+              />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="signin-password">Password</Label>
-              <Input id="signin-password" type="password" placeholder="Enter your password" value={password} onChange={e => setPassword(e.target.value)} required minLength={6} />
+              <Label htmlFor="auth-password">Password</Label>
+              <Input 
+                id="auth-password" 
+                type="password" 
+                placeholder="Enter your password" 
+                value={password} 
+                onChange={e => setPassword(e.target.value)} 
+                required 
+                minLength={6} 
+              />
             </div>
             <Button type="submit" className="w-full" disabled={loading}>
-              {loading ? "Signing in..." : "Sign In"}
+              {loading ? (isSignUp ? "Creating account..." : "Signing in...") : (isSignUp ? "Sign Up" : "Sign In")}
             </Button>
           </form>
         </CardContent>
         <CardFooter className="text-center text-sm text-gray-600">
+          <div className="w-full">
+            {isSignUp ? (
+              <>
+                Already have an account?{" "}
+                <Button 
+                  variant="link" 
+                  className="p-0 h-auto font-normal text-sm text-blue-600"
+                  onClick={() => setIsSignUp(false)}
+                >
+                  Sign in here
+                </Button>
+              </>
+            ) : (
+              <>
+                Don't have an account?{" "}
+                <Button 
+                  variant="link" 
+                  className="p-0 h-auto font-normal text-sm text-blue-600"
+                  onClick={() => setIsSignUp(true)}
+                >
+                  Sign up here
+                </Button>
+              </>
+            )}
+          </div>
         </CardFooter>
       </Card>
     </div>
